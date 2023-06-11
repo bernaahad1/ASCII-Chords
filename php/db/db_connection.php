@@ -19,3 +19,5 @@ class Db {
         return $this->connection;
     }
 }
+
+?>
