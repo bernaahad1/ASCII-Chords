@@ -8,9 +8,8 @@ class User extends UserValidator {
     private $last_name;
     private $email;
     private $password;
-    private $deleted;
 
-    public function __construct($username, $first_name, $last_name, $email, $password, $deleted) {
+    public function __construct($username, $first_name, $last_name, $email, $password) {
         $this->validateUsername($username);
         $this->validateFirstName($first_name);
         $this->validateLastName($last_name);
@@ -22,7 +21,6 @@ class User extends UserValidator {
         $this->last_name = $last_name;
         $this->email = $email;
         $this->password = $password;
-        $this->deleted = $deleted;
     }
 
     public function saveNewUser(): void {
@@ -81,22 +79,22 @@ class User extends UserValidator {
 
     }
 
-    /**
-     * Gets all users from the database
-    */
-    public static function getAll(): iterable {
+    // /**
+    //  * Gets all users from the database
+    // */
+    // public static function getAll(): iterable {
         
-        require_once "../src/Db.php";
+    //     require_once "../src/Db.php";
 
-        $db = new Db();
+    //     $db = new Db();
         
-        $conn = $db->getConnection();
+    //     $conn = $db->getConnection();
         
-        $selectStatement = $conn->prepare("SELECT id, username, name, registered_on FROM `users`");
-        $result = $selectStatement->execute([]);
+    //     $selectStatement = $conn->prepare("SELECT id, username, name, registered_on FROM `users`");
+    //     $result = $selectStatement->execute([]);
         
-        return $selectStatement->fetchAll();
-    }
+    //     return $selectStatement->fetchAll();
+    // }
 }
 
 ?>

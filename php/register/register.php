@@ -9,12 +9,12 @@ $username = $phpInput['username'];
 $first_name = $phpInput['first_name'];
 $last_name = $phpInput['last_name'];
 $email = $phpInput['email'];
-$password = $phpInput['password'];
-$deleted = $phpInput['deleted'];
+$password = $phpInput['password']; 
+
 
 require_once "../user/User.php";
 
-$user = new User($username, $first_name, $last_name, $email, $password, $deleted);
+$user = new User($username, $first_name, $last_name, $email, $password);
 
 try {
     $user->saveNewUser();
