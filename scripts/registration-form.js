@@ -176,23 +176,34 @@ class RegistrationForm extends HTMLElement {
       this.#_shadowRoot.getElementById("registration-form");
     const form = this.#_shadowRoot.getElementById("registration-form").elements;
 
-    let formData = new FormData();
-    console.log(form);
-    formData.append("username", form[0].value);
-    formData.append("password", form[2].value);
+    const loginFormInput = {
+      username: form[0].value,
+      first_name: form[1].value,
+      last_name: form[2].value,
+      email: form[3].value,
+      password: form[4].value
+    };
+
     try {
-      fetch("https://jsonplaceholder.typicode.com/users", {
+      fetch("../php/register/register.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(Object.fromEntries(formData))
-      });
-
-      registrationForm.reset();
-    } catch (error) {
-      console.log("Error:", error);
-    }
+        body: JSON.stringify(loginFormInput)
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            registrationForm.reset();
+            console.log("loggeeed");
+            location.hash = "#login";
+          } else {
+            console.log("error");
+            location.hash = "#home";
+          }
+        });
+    } catch {}
   };
 
   connectedCallback() {

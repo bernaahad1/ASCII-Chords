@@ -33,20 +33,14 @@ class User extends UserValidator
 
         $conn = $db->getConnection();
 
-        // if ($conn->$connect_error) {
-        //     die("Connection failed: " . $conn->$connect_error);
-        // }
+        if ($conn->$connect_error) {
+            die("Connection failed: " . $conn->$connect_error);
+        }
 
-        // $username = $this->username;
-        // $firstname = $this->first_name;
-        // $lastname = $this->last_name;
-        // $email = $this->email;
-        // $hashedPassword = password_hash($this->password, PASSWORD_DEFAULT);
-
-
+        // TODO do not define deleted here
         $insertStatement = $conn->prepare(
-            "INSERT INTO `users` (username, first_name, last_name, email, password)
-             VALUES (:username, :irst_name, :last_name, :email, :password)"
+            "INSERT INTO `users` (username, first_name, last_name, email, password, deleted)
+             VALUES (:username, :first_name, :last_name, :email, :password, :deleted)"
         );
 
         $hashedPassword = password_hash($this->password, PASSWORD_DEFAULT);
@@ -57,13 +51,8 @@ class User extends UserValidator
             'last_name' => $this->last_name,
             'email' => $this->email,
             'password' => $hashedPassword,
+            'deleted' => 0
         ]);
-
-
-        // $insertStatement = $conn->prepare("INSERT INTO users (username, first_name, last_name, email, password) VALUES (?, ?, ?, ?, ?)");
-        // $insertStatement->bindParam("sssss", $username , $firstname, $lastname, $email, $hashedPassword);
-
-        // $insertResult = $insertStatement->execute();
 
         if (!$insertResult) {
             $errorInfo = $insertStatement->errorInfo();
