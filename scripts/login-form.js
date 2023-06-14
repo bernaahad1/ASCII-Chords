@@ -105,12 +105,6 @@ function createLoginTemplate() {
   <form id="login-form">
     <h1>Log In</h1>
 
-    <label for="username">
-      <p>Username</p>
-      <input type="text" id="username" minlength="3" maxlength="10" required />
-      <p class="error" id="username-error"></p>
-    </label>
-
     <label for="email">
       <p>Email</p>
       <input type="email" id="email" required />
@@ -122,7 +116,7 @@ function createLoginTemplate() {
       <input
         type="password"
         id="password"
-        minlength="6"
+        minlength="2"
         maxlength="10"
         required
       />
@@ -145,7 +139,6 @@ const loginTemplate = createLoginTemplate();
 class LoginForm extends HTMLElement {
   #_shadowRoot = null;
   loginForm = null;
-  button = null;
 
   constructor() {
     super();
@@ -163,19 +156,39 @@ class LoginForm extends HTMLElement {
     const form = this.#_shadowRoot.getElementById("login-form").elements;
     let formData = new FormData();
 
-    formData.append("username", form[0].value);
-    formData.append("password", form[2].value);
+    formData.append("email", form[0].value);
+    formData.append("password", form[1].value);
     try {
-      fetch("https://jsonplaceholder.typicode.com/users", {
+      fetch("../php/login.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify(Object.fromEntries(formData))
       });
+      location.hash = "#chords";
+
+      console.log("successs");
+
+      fetch("../php/startSession.php", { method: "GET" })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.logged) {
+            console.log("chords", response.logged);
+            location.hash = "#chords";
+          } else {
+            console.log("home", response.logged);
+            location.hash = "#home";
+          }
+        })
+        .catch(() => {
+          location.hash = "#home";
+        });
 
       loginForm.reset();
     } catch (error) {
+      console.log("error");
+
       console.log("Error:", error);
     }
   };
