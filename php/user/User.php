@@ -34,15 +34,14 @@ class User extends UserValidator {
         //     die("Connection failed: " . $conn->$connect_error);
         // }
 
-        $insertStatement = $conn->prepare("INSERT INTO users (username, first_name, last_name, email, password, deleted) VALUES (?, ?, ?, ?, ?, ?)");
-        $insertStatement->bindParam("sssssi", $username , $firstname, $lastname, $email, $hashedPassword, $deleted);
-
         $username = $this->username;
         $firstname = $this->first_name;
         $lastname = $this->last_name;
         $email = $this->email;
         $hashedPassword = password_hash($this->password, PASSWORD_DEFAULT);
-        $deleted = 0;
+
+        $insertStatement = $conn->prepare("INSERT INTO users (username, first_name, last_name, email, password, deleted) VALUES (?, ?, ?, ?, ?, ?)");
+        $insertStatement->bindParam("sssssi", $username , $firstname, $lastname, $email, $hashedPassword);
         
         $insertResult = $insertStatement->execute();
 
@@ -96,5 +95,3 @@ class User extends UserValidator {
     //     return $selectStatement->fetchAll();
     // }
 }
-
-?>
