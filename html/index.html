@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../styles/main.css" />
     <link rel="stylesheet" href="../styles/navigation.css" />
+
     <script defer src="../scripts/navigation.js"></script>
+    <script defer type="module" src="../scripts/registration-form.js"></script>
+    <script defer type="module" src="../scripts/login-form.js"></script>
+
     <title>ASCII Chords</title>
   </head>
   <body>
@@ -19,12 +23,16 @@
         <a href="#favourites">Favorites</a>
       </div>
       <button class="icon">&#9776;</button>
-      <div class="authentivcation">
+      <div class="authentication">
         <a href="#login">Log In</a>
         <a href="#signup">Sign Up</a>
       </div>
     </nav>
-    <main class="content" id="app"></main>
+
+    <main class="content">
+      <div id="app"></div>
+    </main>
+
     <footer></footer>
   </body>
 </html>

@@ -13,16 +13,16 @@ function getContent(fragmentId, callback) {
     chords: "This is for the chords",
     import: "Imports go here",
     favourites: "Favourites section",
-    login: "Log in form here",
-    signup: "Sign up form here"
+    login: `<login-form-component></login-form-component>`,
+    signup: `<registration-form-component></registration-form-component>`
   };
 
   callback(pages[fragmentId]);
 }
 
 function loadContent() {
-  let contentDiv = document.getElementById("app"),
-    fragmentId = location.hash.substr(1);
+  let contentDiv = document.getElementById("app");
+  fragmentId = location.hash.split("#")[1] || "home";
 
   getContent(fragmentId, function (content) {
     contentDiv.innerHTML = content;
