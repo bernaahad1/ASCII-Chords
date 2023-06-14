@@ -29,6 +29,23 @@ function loadContent() {
   });
 }
 
+// fetch("../php/startSession.php", { method: "GET" })
+//   .then((response) => response.json())
+//   .then((response) => {
+//     if (response.logged) {
+//       console.log("chords",response.logged);
+
+//       location.hash = "#chords";
+//     } else {
+//       console.log("home",response.logged);
+
+//       location.hash = "#home";
+//     }
+//   })
+//   .catch(() => {
+//     location.hash = "#home";
+//   });
+
 if (!location.hash) {
   location.hash = "#home";
 }

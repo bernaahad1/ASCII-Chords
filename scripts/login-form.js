@@ -158,6 +158,12 @@ class LoginForm extends HTMLElement {
 
     formData.append("email", form[0].value);
     formData.append("password", form[1].value);
+
+    const loginFormInput = {
+      email: form[0].value,
+      password: form[1].value
+    };
+
     try {
       fetch("../php/login.php", {
         method: "POST",
@@ -170,22 +176,21 @@ class LoginForm extends HTMLElement {
 
       console.log("successs");
 
-      fetch("../php/startSession.php", { method: "GET" })
+      fetch("../php/login.php", {
+        method: "POST",
+        body: JSON.stringify(loginFormInput)
+      })
         .then((response) => response.json())
         .then((response) => {
-          if (response.logged) {
-            console.log("chords", response.logged);
+          if (response.success) {
+            loginForm.reset();
+            console.log("loggeeed");
             location.hash = "#chords";
           } else {
-            console.log("home", response.logged);
+            console.log("error");
             location.hash = "#home";
           }
-        })
-        .catch(() => {
-          location.hash = "#home";
         });
-
-      loginForm.reset();
     } catch (error) {
       console.log("error");
 
