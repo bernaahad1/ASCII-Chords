@@ -21,6 +21,16 @@ document.getElementById('login_form').addEventListener('submit', event => {
         password: loginForm.querySelector("#login_form input[name='password']").value,
     };
     
+    if (loginFormInput.email == "") {
+        document.getElementById('login_message').innerText = "Попълнeте имейл!";
+        return;
+    }
+
+    if (loginFormInput.password == "") {
+        document.getElementById('login_message').innerText = "Попълнете парола!";
+        return;
+    }
+
     fetch('../php/login.php', {
         method: 'POST',
         body: JSON.stringify(loginFormInput),
