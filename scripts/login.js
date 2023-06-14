@@ -32,7 +32,7 @@ document.getElementById('login_form').addEventListener('submit', event => {
             document.getElementById('login').remove();
             document.getElementById('logout').classList.add('show');
         } else {
-            document.getElementById('login_message').innerText = "Потребителското име и паролата не съвпадат!";
+            document.getElementById('login_message').innerText = "Имейлът и паролата не съвпадат!";
         }
     });
 });
