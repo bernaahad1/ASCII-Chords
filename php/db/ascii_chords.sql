@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Хост: 127.0.0.1
--- Време на генериране: 11 юни 2023 в 11:21
--- Версия на сървъра: 10.4.27-MariaDB
--- Версия на PHP: 8.2.0
+-- Host: 127.0.0.1
+-- Generation Time: Jun 16, 2023 at 07:37 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База данни: `ascii_chords`
+-- Database: `ascii_chords`
 --
 
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `chords`
+-- Table structure for table `chords`
 --
 
 CREATE TABLE `chords` (
@@ -34,10 +34,40 @@ CREATE TABLE `chords` (
   `deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `chords`
+--
+
+INSERT INTO `chords` (`id`, `name`, `description`, `deleted`) VALUES
+(1, 'C major', 'C-E-G', 0),
+(2, 'C# major', 'C#-E#-G#', 0),
+(3, 'D major', 'D-F#-A', 0),
+(4, 'Eb major', 'Eb-G-Bb', 0),
+(5, 'E major', 'E-G-B', 0),
+(6, 'F major', 'F-A-C', 0),
+(7, 'F# major', 'F#-A#-C#', 0),
+(8, 'G major', 'G-B-D', 0),
+(9, 'Ab major', 'Ab-C-Eb', 0),
+(10, 'A major', 'A-C#-E', 0),
+(11, 'Bb major', 'Bb-D-F', 0),
+(12, 'B major', 'B-D#-F#', 0),
+(13, 'C minor', 'C-Eb-G', 0),
+(14, 'C# minor', 'C#-E-G#', 0),
+(15, 'D minor', 'D-F-A', 0),
+(16, 'Eb minor', 'Eb-Gb-Bb', 0),
+(17, 'E minor', 'E-G-B', 0),
+(18, 'F minor', 'F-Ab-C', 0),
+(19, 'F# minor', 'F#-A-C#', 0),
+(20, 'G minor', 'G-Bb-D', 0),
+(21, 'Ab minor', 'Ab-B-Eb', 0),
+(22, 'A minor', 'A-C-E', 0),
+(23, 'Bb minor', 'Bb-Db-F', 0),
+(24, 'B minor', 'B-D-F#', 0);
+
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `favourite_chords`
+-- Table structure for table `favourite_chords`
 --
 
 CREATE TABLE `favourite_chords` (
@@ -50,7 +80,7 @@ CREATE TABLE `favourite_chords` (
 -- --------------------------------------------------------
 
 --
--- Структура на таблица `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -68,14 +98,14 @@ CREATE TABLE `users` (
 --
 
 --
--- Индекси за таблица `chords`
+-- Indexes for table `chords`
 --
 ALTER TABLE `chords`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`,`description`);
 
 --
--- Индекси за таблица `favourite_chords`
+-- Indexes for table `favourite_chords`
 --
 ALTER TABLE `favourite_chords`
   ADD PRIMARY KEY (`id`),
@@ -83,7 +113,7 @@ ALTER TABLE `favourite_chords`
   ADD KEY `Chord id constraint` (`chord_id`);
 
 --
--- Индекси за таблица `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -97,7 +127,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `chords`
 --
 ALTER TABLE `chords`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `favourite_chords`
@@ -112,11 +142,11 @@ ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- Ограничения за дъмпнати таблици
+-- Constraints for dumped tables
 --
 
 --
--- Ограничения за таблица `favourite_chords`
+-- Constraints for table `favourite_chords`
 --
 ALTER TABLE `favourite_chords`
   ADD CONSTRAINT `Chord id constraint` FOREIGN KEY (`chord_id`) REFERENCES `chords` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
