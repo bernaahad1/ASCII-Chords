@@ -46,6 +46,10 @@ function playChords(chord) {
     document.getElementById("button"  + chord.id).addEventListener('click', () => {
         chord_notes = chord.description.split("-");
         console.log(chord_notes);
+        
+        for (let i = 0; i < chord_notes.length; i++) {
+            chord_notes[i] = chord_notes[i].replace('#', '%23');
+        }
 
         var snd1  = new Audio();
         var src1  = document.createElement("source");
