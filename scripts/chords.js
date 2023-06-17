@@ -28,22 +28,26 @@ const showAllChordsData = () => {
                                         <span> Description: ${chord[i].description} </span>`;
                             
             const chordPlayButton = document.createElement('button');
-            chordPlayButton.setAttribute("id", "button"  + chord[i].id);
+            chordPlayButton.setAttribute("id", "button-play"  + chord[i].id);
             chordPlayButton.innerHTML = 'Чуй акорда!';
-            
-            
 
+            const chordExportToCSVButton = document.createElement('button');
+            chordExportToCSVButton.setAttribute("id", "button-csv"  + chord[i].id);
+            chordExportToCSVButton.innerHTML = 'Експортирай до CSV!';
+            
             container.appendChild(chordInfoElement);
             container.appendChild(chordPlayButton);
-
+            container.appendChild(chordExportToCSVButton);
+            
             playChords(chord[i]);
-            }
-        });
+            exportChordToCSV(chord[i]);
+        }
+    });
 }
 
 function playChords(chord) {
     
-    document.getElementById("button"  + chord.id).addEventListener('click', () => {
+    document.getElementById("button-play"  + chord.id).addEventListener('click', () => {
         chord_notes = chord.description.split("-");
         console.log(chord_notes);
         
@@ -74,5 +78,18 @@ function playChords(chord) {
         snd3.play();
     });  
 }
+
+function exportChordToCSV(chord) {
+    document.getElementById("button-csv"  + chord.id).addEventListener('click', () => {
+        var csvExportElement = document.createElement('a');
+        csvExportElement.setAttribute('href', 'data:text/csv;charset=utf-8, '+ encodeURIComponent(chord.name) + "," + encodeURIComponent(chord.description));
+        csvExportElement.setAttribute('download', chord.name);
+       
+        document.body.appendChild(csvExportElement);
+        
+        csvExportElement.click();
+        document.body.removeChild(csvExportElement);
+    });  
+ }
 
 showAllChordsData();
