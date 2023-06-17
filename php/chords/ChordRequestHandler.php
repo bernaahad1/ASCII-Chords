@@ -27,7 +27,7 @@ class ChordRequestHandler {
 
         $connection = (new Db())->getConnection();
 
-        $selectStatement = $connection->prepare("SELECT id FROM `chords` ORDER BY id");
+        $selectStatement = $connection->prepare("SELECT * FROM `chords`");
         $selectStatement->execute();
 
         $chords = [];
