@@ -21,20 +21,22 @@ class ChordRequestHandler {
         throw new BadRequestException('This chord cannot be accessed');
     }
 
-    public static function getAllChords(): array {
+    public static function getAllChordsIDs() {
         require_once "../db/db_connection.php";
         require_once "./Chord.php";
 
         $connection = (new Db())->getConnection();
 
-        $selectStatement = $connection->prepare("SELECT * FROM `chords`");
+        $selectStatement = $connection->prepare("SELECT id FROM `chords` ORDER BY id");
         $selectStatement->execute();
 
         $chords = [];
         foreach ($selectStatement->fetchAll() as $chord) {
-            $chords[] = Chord::fromArray($chord);
+            $chords[] = $chord;
         }
 
-        return $chords;
+       return $chords;
     }
-}   
+
+}
+

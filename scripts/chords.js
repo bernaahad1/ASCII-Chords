@@ -4,9 +4,9 @@ const showSingleChordData = chordId => {
         .then(chord => {
 
             const container = document.getElementById('chord-info');
-            container.innerHTML = '';
 
             const chordInfoElement = document.createElement('div');
+            chordInfoElement.setAttribute("id", "div"  + chordId);
             chordInfoElement.innerHTML = `<span> Name: ${chord.name} </span>
                                          <span> Description: ${chord.description} </span>`;
 
@@ -14,4 +14,15 @@ const showSingleChordData = chordId => {
         });
 }
 
-showSingleChordData(3);
+const showAllChordsData = () => {
+    fetch('../php/chords/chord_endpoints_helper.php')
+        .then(response => response.json())
+        .then(id => {
+        
+        for (let i = 0; i < id.length; i++) {
+            showSingleChordData(id[i].id);
+        }
+    });
+}
+
+showAllChordsData();
