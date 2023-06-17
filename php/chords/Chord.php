@@ -2,16 +2,18 @@
 
 class Chord
 {
+    private $id;
     private $name;
     private $description;
 
-    public function __construct($name, $description)
+    public function __construct($id, $name, $description)
     {
+        $this->id = $id;
         $this->name = $name;
         $this->description = $description;
     }
 
-    public function saveNewUser(): void
+    public function addNewChord(): void
     {
         require_once "../db/db_connection.php";
 
@@ -55,17 +57,44 @@ class Chord
         }
     }
 
-    public static function getAll(): iterable {
-        
+    public static function createFromAssoc(array $assocChord): Chord {
+        return new Chord($assocChord['id'], $assocChord['name'], $assocChord['description']);
+    }
+
+    public static function getChordById(string $chordId): Chord {
+
         require_once "../db/db_connection.php";
 
-        $db = new Db();
-        
-        $conn = $db->getConnection();
-        
-        $selectStatement = $conn->prepare("SELECT id, name, description, deleted FROM `chords`");
-        $result = $selectStatement->execute([]);
-        
-        return $selectStatement->fetchAll();
+        $sql   = "SELECT * FROM `chords` WHERE id = :chordId";
+        $selectStatement = (new Db())->getConnection()->prepare($sql);
+
+        $selectStatement->execute(['chordId' => $courseId]);
+
+        $courseDbRow = $selectStatement->fetch();
+
+        if (!$courseDbRow) {
+            throw new NotFoundException("Course with id $chordId not found");
+        }
+
+        return self::createFromAssoc($courseDbRow);
     }
+
+    public static function getAllChords(): array {
+
+        require_once "../db/db_connection.php";
+
+        $sql   = "SELECT * FROM `chords`";
+        $selectStatement = (new Db())->getConnection()->prepare($sql);
+        $selectStatement->execute();
+
+        $allChords = [];
+        foreach ($selectStatement->fetchAll() as $chord) {
+            $allChords[] = self::createFromAssoc($chord);
+        }
+
+        return $allChords;
+    }
+
 }
+
+print_r(Chord::getAllChords());
