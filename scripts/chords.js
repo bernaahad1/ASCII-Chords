@@ -34,13 +34,19 @@ const showAllChordsData = () => {
             const chordExportToCSVButton = document.createElement('button');
             chordExportToCSVButton.setAttribute("id", "button-csv"  + chord[i].id);
             chordExportToCSVButton.innerHTML = 'Експортирай до CSV!';
+
+            const chordExportToASCIIButton = document.createElement('button');
+            chordExportToASCIIButton.setAttribute("id", "button-ascii"  + chord[i].id);
+            chordExportToASCIIButton.innerHTML = 'Експортирай до ASCII!';
             
             container.appendChild(chordInfoElement);
             container.appendChild(chordPlayButton);
             container.appendChild(chordExportToCSVButton);
+            container.appendChild(chordExportToASCIIButton);
             
             playChords(chord[i]);
             exportChordToCSV(chord[i]);
+            exportChordToASCII(chord[i]);
         }
     });
 }
@@ -89,6 +95,19 @@ function exportChordToCSV(chord) {
         
         csvExportElement.click();
         document.body.removeChild(csvExportElement);
+    });  
+}
+
+function exportChordToASCII(chord) {
+    document.getElementById("button-ascii"  + chord.id).addEventListener('click', () => {
+        var asciiExportElement = document.createElement('a');
+        asciiExportElement.setAttribute('href', 'data:text/plain;charset=utf-8,'+ encodeURIComponent(chord.name) + " " + encodeURIComponent(chord.description));
+        asciiExportElement.setAttribute('download', chord.name);
+       
+        document.body.appendChild(asciiExportElement);
+        
+        asciiExportElement.click();
+        document.body.removeChild(asciiExportElement);
     });  
  }
 
