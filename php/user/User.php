@@ -2,16 +2,14 @@
 
 require "UserValidator.php";
 
-class User extends UserValidator
-{
+class User extends UserValidator {
     private $username;
     private $first_name;
     private $last_name;
     private $email;
     private $password;
 
-    public function __construct($username, $first_name, $last_name, $email, $password)
-    {
+    public function __construct($username, $first_name, $last_name, $email, $password) {
         $this->validateUsername($username);
         $this->validateFirstName($first_name);
         $this->validateLastName($last_name);
@@ -25,8 +23,7 @@ class User extends UserValidator
         $this->password = $password;
     }
 
-    public function saveNewUser(): void
-    {
+    public function saveNewUser(): void {
         require_once "../db/db_connection.php";
 
         $db = new Db();
@@ -68,8 +65,7 @@ class User extends UserValidator
         }
     }
 
-    public function login(): void
-    {
+    public function login(): void {
 
         require_once "./db/db_connection.php";
 
@@ -87,20 +83,34 @@ class User extends UserValidator
         }
     }
 
-    // /**
-    //  * Gets all users from the database
-    // */
-    // public static function getAll(): iterable {
+    /**
+     * Gets all users from the database
+    */
+    public static function getAll(): iterable {
 
-    //     require_once "../src/Db.php";
+        require_once "../src/Db.php";
 
-    //     $db = new Db();
+        $db = new Db();
 
-    //     $conn = $db->getConnection();
+        $conn = $db->getConnection();
 
-    //     $selectStatement = $conn->prepare("SELECT id, username, name, registered_on FROM `users`");
-    //     $result = $selectStatement->execute([]);
+        $selectStatement = $conn->prepare("SELECT username, first_name, last_name, email, password, deleted FROM `users`");
+        $result = $selectStatement->execute([]);
 
-    //     return $selectStatement->fetchAll();
-    // }
+        return $selectStatement->fetchAll();
+    }
+
+    public function jsonSerialize(): array {
+        return [
+            'username' => $this->username,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'email' => $this->email,
+            'password' => $this->password,
+        ];
+    }
+
+    public static function fromArray(array $userData): User {
+        return new User($userData['username'], $userData['first_name'], $userData['last_name'], $userData['email'], $userData['password']);
+    }
 }
