@@ -1,4 +1,4 @@
-fetch('../php/startSession.php', {method: 'GET'})
+fetch('../php/authentication/startSession.php', {method: 'GET'})
     .then(response=>response.json())
     .then(response => {
         if (response.logged) {
@@ -31,7 +31,7 @@ document.getElementById('login_form').addEventListener('submit', event => {
         return;
     }
 
-    fetch('../php/login.php', {
+    fetch('../php/authentication/login.php', {
         method: 'POST',
         body: JSON.stringify(loginFormInput),
     })
@@ -48,7 +48,7 @@ document.getElementById('login_form').addEventListener('submit', event => {
 });
 
 document.getElementById('logout').addEventListener('click', () => {
-    fetch('../php/logout.php', {method: 'GET'})
+    fetch('../php/authentication/logout.php', {method: 'GET'})
     .then(response=>response.json())
     .then(response => {
         if (response.success) {
