@@ -80,3 +80,25 @@ checkSession();
 loadContent();
 
 window.addEventListener("hashchange", loadContent);
+
+// Refactor maybe
+const $nav = document.querySelector(".navbar");
+const threshold = $nav.getBoundingClientRect();
+const fixedClass = "nav--fixed";
+
+// reference for update request
+let updating = false;
+const handleScroll = () => {
+  if (window.scrollY >= threshold.top || window.pageYOffset >= threshold.top)
+    $nav.classList.add(fixedClass);
+  else $nav.classList.remove(fixedClass);
+  updating = false;
+};
+// on scroll, if an update opportunity is available, update
+window.onscroll = () => {
+  if (updating) return;
+  else {
+    updating = true;
+    requestAnimationFrame(handleScroll);
+  }
+};
