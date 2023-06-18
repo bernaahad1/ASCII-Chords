@@ -21,11 +21,12 @@ function createChordListTemplate() {
     }
     
     .chord {
-      background-color: #f0f0f0;
-      border: 1px solid #ccc;
+      background-color: #ffffff;
+      border: 2px solid #ccc;
       padding: 20px;
       border-radius: 5px;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
+      position: relative;
     }
     
     .chord-buttons {
@@ -64,11 +65,33 @@ function createChordListTemplate() {
       background-color: #ffc107;
     }
     
-    .listen {
-      background-color: #f44336;
+    .speaker-icon {
+      width: 50px;
+      padding: 0;
+      background-color: transparent;
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 30;
+      margin: 10px;
+    }
+
+    .speaker-icon:hover {
+      background-color: transparent;
+    }
+
+    .speaker-icon img {
+      width: 100%;
+    }
+
+    h1{
+      font-size: 50px;
+      text-align: center;
+      margin-bottom: 10%;
     }
     </style>
 
+    <h1>Chords</h1>
     <section id="chord-list"><section>
     `;
 
@@ -90,9 +113,10 @@ class ChordList extends HTMLElement {
   }
 
   getChordElement = (chord) => {
-    return `<h2 class="chord-name">${chord.name}</h2>
-        <p class="chord-description">${chord.description}</p>
-        <button id="listen-${chord.id}" class="listen">Listen</button>
+    return `
+          <h2 class="chord-name">${chord.name} - ${chord.description}</h2>
+        <chord-image notes="${chord.description}"></chord-image>    
+        <button id="listen-${chord.id}" class="listen speaker-icon"><img src="../assets/images/speaker-icon.svg"/></button>
         <button id="export-csv-${chord.id}" class="export-csv">Export as CSV</button>
         <button id="export-ascii-${chord.id}" class="export-ascii">Export as ASCII</button>`;
   };
@@ -189,9 +213,6 @@ class ChordList extends HTMLElement {
       chordElement.setAttribute("class", `chord`);
 
       chordElement.innerHTML = this.getChordElement(chord);
-
-      const chordImage = `<chord-image notes="${chord.description}"></chord-image>`;
-      chordElement.innerHTML += chordImage;
 
       chordList.appendChild(chordElement);
 
