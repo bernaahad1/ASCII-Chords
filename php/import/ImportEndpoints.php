@@ -5,7 +5,7 @@ require "./ImportRequestHandler.php";
 $response = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['csv_file_path'])) {
-    $response = FavouriteChordsRequestHandler::getAllRecordsByUserId($_POST['file_path']);
+    $response = ImportRequestHandler::getAllDataFromCSV($_POST['file_path']);
 }
 // elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['chord_id'])) {
 //     $response = FavouriteChordsRequestHandler::getAllRecordsByChordId($_GET['chord_id']);
