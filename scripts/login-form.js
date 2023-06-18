@@ -150,7 +150,7 @@ class LoginForm extends HTMLElement {
     this.loginForm.addEventListener("submit", this.onRegisterClick.bind(this));
   }
 
-  onRegisterClick = async (event) => {
+  onRegisterClick = (event) => {
     event.preventDefault();
 
     const loginForm = this.#_shadowRoot.getElementById("login-form");
@@ -165,39 +165,26 @@ class LoginForm extends HTMLElement {
       password: form[1].value
     };
 
-    try {
-      fetch("../php/authentication/login.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(Object.fromEntries(formData))
-      });
-      location.hash = "#chords";
-
-      console.log("successs");
-
-      fetch("../php/authentication/login.php", {
-        method: "POST",
-        body: JSON.stringify(loginFormInput)
+    fetch("../php/authentication/login.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(loginFormInput)
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          loginForm.reset();
+          console.log("loggeeed");
+          location.hash = "#chords";
+        } else {
+          console.log("error");
+        }
       })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.success) {
-            loginForm.reset();
-            console.log("loggeeed");
-            location.hash = "#chords";
-            onLogIn();
-          } else {
-            console.log("error");
-            location.hash = "#home";
-          }
-        });
-    } catch (error) {
-      console.log("error");
-
-      console.log("Error:", error);
-    }
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   connectedCallback() {
