@@ -166,7 +166,7 @@ class LoginForm extends HTMLElement {
     };
 
     try {
-      fetch("../php/login.php", {
+      fetch("../php/authentication/login.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -177,7 +177,7 @@ class LoginForm extends HTMLElement {
 
       console.log("successs");
 
-      fetch("../php/login.php", {
+      fetch("../php/authentication/login.php", {
         method: "POST",
         body: JSON.stringify(loginFormInput)
       })
