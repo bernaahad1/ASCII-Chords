@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="../styles/main.css" />
     <link rel="stylesheet" href="../styles/navigation.css" />
 
-    <script defer src="../scripts/navigation.js"></script>
+    <script defer type="module" src="../scripts/navigation.js"></script>
+    <script defer type="module" src="../scripts/utils.js"></script>
     <script defer type="module" src="../scripts/registration-form.js"></script>
     <script defer type="module" src="../scripts/login-form.js"></script>
 
@@ -23,9 +24,12 @@
         <a href="#favourites">Favorites</a>
       </div>
       <button class="icon">&#9776;</button>
-      <div class="authentication">
+      <div id="authentication-nav">
         <a href="#login">Log In</a>
         <a href="#signup">Sign Up</a>
+      </div>
+      <div id="logout-nav">
+        <a href="#logout">Log Out</a>
       </div>
     </nav>
 
