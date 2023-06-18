@@ -190,6 +190,9 @@ class ChordList extends HTMLElement {
 
       chordElement.innerHTML = this.getChordElement(chord);
 
+      const chordImage = `<chord-image notes="${chord.description}"></chord-image>`;
+      chordElement.innerHTML += chordImage;
+
       chordList.appendChild(chordElement);
 
       this.playChords(chord);
