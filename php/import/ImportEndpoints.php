@@ -4,9 +4,11 @@ require "./ImportRequestHandler.php";
 
 $response = null;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['csv_file_path'])) {
-    $response = FavouriteChordsRequestHandler::getAllRecordsByUserId($_POST['file_path']);
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['csv_file_path'])) {
+    $response = ImportRequestHandler::getAllDataFromCSV($_GET['csv_file_path']);
+    //$response = "get here";
 }
+
 // elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['chord_id'])) {
 //     $response = FavouriteChordsRequestHandler::getAllRecordsByChordId($_GET['chord_id']);
 // }
@@ -21,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['csv_file_path'])) {
 // }
 
 if ($response == null) {
-    echo "There is no data to display!";
+    $response = "There is no data to display!";
 }
 
 echo json_encode($response, JSON_UNESCAPED_UNICODE);

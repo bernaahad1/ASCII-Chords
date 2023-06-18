@@ -13,16 +13,19 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
         // validate name
         // validate description
 
-        $chord = new Chord(null, $csv['0'], $csv['1']);
+
+        $chord = new Chord(null, $csv[0][0], $csv[0][1]);
 
         try {
             $chord->addNewChord();
             
+            return true;
             echo json_encode(['success' => true]);
         } catch (Exception $e) {
+            return false;
             echo json_encode([
-                'success' => false,
-                'message' => $e->getMessage(),
+                 'success' => false,
+                 'message' => $e->getMessage(),
             ]);
         }
 
