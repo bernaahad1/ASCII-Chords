@@ -10,7 +10,7 @@ document.querySelector(".navbar .icon").addEventListener("click", toggleTabs);
 function getContent(fragmentId, callback) {
   let pages = {
     home: "This is the Home page. Welcome to my site.",
-    chords: "This is for the chords",
+    chords: "<chord-list-component></chord-list-component>",
     import: "Imports go here",
     favourites: "Favourites section",
     login: `<login-form-component></login-form-component>`,
