@@ -1,15 +1,14 @@
 <?php
 
-$response = null;
+// $response = null;
 
-require "./UserRequestHandler.php";
+require "./FavouriteChordsRequestHandler.php";
 
-if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['id']) && isset($_POST['update'])) {
-    $response = UserRequestHandler::updateUserById($_GET['id'], $_PUT['update']);
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'])) {
+    $response = FavouriteChordsRequestHandler::getAllRecordsByUserId($_GET['user_id']);
 }
-    
-elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE' && isset($_GET['id'])) {
-    $response = UserRequestHandler::deleteUserById($_GET['id']);
+elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['chord_id'])) {
+    $response = FavouriteChordsRequestHandler::getAllRecordsByChordId($_GET['chord_id']);
 }
 
 if ($response == null) {
