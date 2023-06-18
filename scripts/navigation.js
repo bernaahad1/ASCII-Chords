@@ -1,4 +1,4 @@
-import { onLogIn, onLogOut } from "./utils.js";
+import { onLogIn, onLogOut, checkSession } from "./utils.js";
 
 const toggleTabs = (event) => {
   event.preventDefault();
@@ -50,29 +50,6 @@ function loadContent() {
   getContent(fragmentId, function (content) {
     contentDiv.innerHTML = content;
   });
-}
-
-function checkSession() {
-  fetch("../php/authentication/startSession.php", { method: "GET" })
-    .then((response) => response.json())
-    .then((response) => {
-      if (response.logged) {
-        console.log("chords", response.logged);
-        onLogIn();
-
-        if (!location.hash) {
-          location.hash = "#chords";
-        }
-      }
-    })
-    .catch(() => {
-      console.log("home");
-      onLogOut();
-
-      if (!location.hash) {
-        location.hash = "#home";
-      }
-    });
 }
 
 checkSession();

@@ -176,7 +176,8 @@ class LoginForm extends HTMLElement {
       .then((response) => {
         if (response.success) {
           loginForm.reset();
-          console.log("loggeeed");
+
+          onLogIn();
           location.hash = "#chords";
         } else {
           console.log("error");
