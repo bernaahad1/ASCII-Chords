@@ -67,7 +67,7 @@ class User extends UserValidator {
 
     public function login(): void {
 
-        require_once "./db/db_connection.php";
+        require_once "../db/db_connection.php";
 
         $db = new Db();
 
@@ -83,9 +83,6 @@ class User extends UserValidator {
         }
     }
 
-    /**
-     * Gets all users from the database
-    */
     public static function getAll(): iterable {
 
         require_once "../src/Db.php";
@@ -98,8 +95,8 @@ class User extends UserValidator {
         $result = $selectStatement->execute([]);
 
         return $selectStatement->fetchAll();
-    }
-
+    }    
+    
     public function jsonSerialize(): array {
         return [
             'username' => $this->username,

@@ -11,6 +11,7 @@ class UserRequestHandler {
         $selectStatement->execute([$userId]);
 
         $user = $selectStatement->fetch();
+        self::validateUserForDeleted($user);
 
         if ($user) {
             return User::fromArray($user);
@@ -25,6 +26,8 @@ class UserRequestHandler {
         require_once "../../exceptions/BadRequestException.php";
 
         $user = self::getUserById($userId);
+        self::validateUserForDeleted($user);
+
         $updatedUser = self::updateUserFields($user, $userdata);
 
         $connection = (new Db())->getConnection();
@@ -51,6 +54,7 @@ class UserRequestHandler {
         require_once "../../exceptions/BadRequestException.php";
         
         $user = self::getUserById($userId);
+        self::validateUserForDeleted($user);
 
         $connection = (new Db())->getConnection();
 
@@ -87,5 +91,11 @@ class UserRequestHandler {
         }
 
         return $user;
+    }
+
+    private static function validateUserForDeleted($favouriteChord) {
+        if ($favouriteChord['deleted'] == 1) {
+            throw new ResourceNotFoundException("The resource has already been deleted!");
+        }
     }
 }

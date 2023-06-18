@@ -1,14 +1,22 @@
 <?php
-
-// $response = null;
-
 require "./FavouriteChordsRequestHandler.php";
+
+$response = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'])) {
     $response = FavouriteChordsRequestHandler::getAllRecordsByUserId($_GET['user_id']);
 }
 elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['chord_id'])) {
     $response = FavouriteChordsRequestHandler::getAllRecordsByChordId($_GET['chord_id']);
+}
+elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GET['chord_id'])) {
+    $response = FavouriteChordsRequestHandler::getFavouriteChordByUserIdAndChordId($_GET['user_id'], $_GET['chord_id']);
+}
+elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['user_id']) && isset($_GET['chord_id'])) {
+    $response = FavouriteChordsRequestHandler::addFavouriteChord($_GET['user_id'], $_GET['chord_id']);
+}
+elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE' && isset($_GET['user_id']) && isset($_GET['chord_id'])) {
+    $response = FavouriteChordsRequestHandler::deleteFavouriteChord($_GET['user_id'], $_GET['chord_id']);
 }
 
 if ($response == null) {
