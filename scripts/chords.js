@@ -51,37 +51,56 @@ const showAllChordsData = () => {
     });
 }
 
+function createAudioPlaying(notes) {
+    for (key of Object.keys(notes)) {
+        let note = new Audio();
+        let src = document.createElement("source");
+        src.type = "audio/mpeg";
+        src.src = '../assets/' + key + '.mp3';
+        note.appendChild(src);
+        notes[key] = note;
+    }
+
+    return notes;
+}
+
+function getAudioForNotes() {
+    const notes = {
+        'A': new Audio(),
+        'A%23': new Audio(),
+        'Ab': new Audio(),
+        'B': new Audio(),
+        'Bb': new Audio(),
+        'C': new Audio(),
+        'C%23': new Audio(),
+        'D': new Audio(),
+        'Db': new Audio(),
+        'D%23': new Audio(),
+        'E': new Audio(),
+        'Eb': new Audio(),
+        'F': new Audio(),
+        'F%23': new Audio(),
+        'G': new Audio(),
+        'G%23': new Audio(),    
+        'Gb': new Audio(), 
+    }
+
+    return createAudioPlaying(notes);
+}
+
 function playChords(chord) {
     
     document.getElementById("button-play"  + chord.id).addEventListener('click', () => {
         chord_notes = chord.description.split("-");
-        console.log(chord_notes);
         
+        notes = getAudioForNotes();
+
         for (let i = 0; i < chord_notes.length; i++) {
             chord_notes[i] = chord_notes[i].replace('#', '%23');
+            notes[chord_notes[i]].play();
+            notes[chord_notes[i]].play();
+            notes[chord_notes[i]].play();
         }
-
-        var snd1  = new Audio();
-        var src1  = document.createElement("source");
-        src1.type = "audio/mpeg";
-        src1.src  = '../assets/' + chord_notes[0] + '.mp3';
-        snd1.appendChild(src1);
-        
-        var snd2  = new Audio();
-        var src2  = document.createElement("source");
-        src2.type = "audio/mpeg";
-        src2.src  = '../assets/' + chord_notes[1] + '.mp3';
-        snd2.appendChild(src2);
-
-        var snd3  = new Audio();
-        var src3  = document.createElement("source");
-        src3.type = "audio/mpeg";
-        src3.src  = '../assets/' + chord_notes[2] + '.mp3';
-        snd3.appendChild(src3);
-        
-        snd1.play(); 
-        snd2.play(); 
-        snd3.play();
     });  
 }
 
