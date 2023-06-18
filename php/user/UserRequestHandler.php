@@ -1,6 +1,6 @@
 <?php
 class UserRequestHandler {
-    public static function getUserById(string $useId): User {
+    public static function getUserById(string $userId): User {
         require_once "../db/db_connection.php";
         require_once "./User.php";
         require_once "../../exceptions/BadRequestException.php";
@@ -19,7 +19,7 @@ class UserRequestHandler {
         throw new BadRequestException('This user cannot be accessed');
     }
 
-   public static function updateUserById(string $userId, array $userdata) : User {
+    public static function updateUserById(string $userId, array $userdata) : User {
         require_once "../db/db_connection.php";
         require_once "./User.php";
         require_once "../../exceptions/BadRequestException.php";
@@ -43,9 +43,9 @@ class UserRequestHandler {
         }
 
         throw new BadRequestException('This user cannot be accessed');
-   }
+    }
 
-   public static function deleteUserById(string $userId) {
+    public static function deleteUserById(string $userId) {
         require_once "../db/db_connection.php";
         require_once "./User.php";
         require_once "../../exceptions/BadRequestException.php";
@@ -67,9 +67,9 @@ class UserRequestHandler {
         }
 
         throw new BadRequestException('This user cannot be accessed');
-   }
+    }
 
-   private static function updateUserFields(User $user, array $userdata) : User {
+    private static function updateUserFields(User $user, array $userdata) : User {
         if ($userdata["username"] != null) {
             $user["username"] = $userdata["username"];
         }
@@ -87,5 +87,5 @@ class UserRequestHandler {
         }
 
         return $user;
-   }
+    }
 }
