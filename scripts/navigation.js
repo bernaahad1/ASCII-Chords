@@ -27,17 +27,21 @@ function loadContent() {
   const contentDiv = document.getElementById("app");
   const fragmentId = location.hash.split("#")[1] || "home";
 
+  // TODO fix logout
   if (fragmentId == "logout") {
-    fetch("../php/logout.php", { method: "GET" })
+    fetch("../php/authentication/logout.php", { method: "GET" })
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
-          document.location.reload();
+          // document.location.reload();
+          location.hash = "#chords";
+
           onLogOut();
         }
       })
       .catch(() => {
         console.log("Error");
+        location.hash = "#chords";
       });
 
     return;
@@ -49,7 +53,7 @@ function loadContent() {
 }
 
 function checkSession() {
-  fetch("../php/startSession.php", { method: "GET" })
+  fetch("../php/authentication/startSession.php", { method: "GET" })
     .then((response) => response.json())
     .then((response) => {
       if (response.logged) {

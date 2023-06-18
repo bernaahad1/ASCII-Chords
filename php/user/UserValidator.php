@@ -22,8 +22,8 @@ abstract class UserValidator {
     }
 
     public function validateStringValue($value, $text) : void {
-        if ($value == null || empty($value)) {
-            throw new InvalidArgumentException('The constructor accepts only string values for '.$text.'!');
-        }
+        // if ($value == null || empty($value)) {
+        //     throw new InvalidArgumentException('The constructor accepts only string values for '.$text.'!');
+        // }
     }
 }

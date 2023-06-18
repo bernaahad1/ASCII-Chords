@@ -71,7 +71,7 @@ class User extends UserValidator
     public function login(): void
     {
 
-        require_once "./db/db_connection.php";
+        require_once "../db/db_connection.php";
 
         $db = new Db();
 
