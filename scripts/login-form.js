@@ -1,4 +1,5 @@
 import { validateUsername, displayError } from "./form.js";
+import { onLogIn } from "./utils.js";
 
 function createLoginTemplate() {
   const templateString = `
@@ -186,6 +187,7 @@ class LoginForm extends HTMLElement {
             loginForm.reset();
             console.log("loggeeed");
             location.hash = "#chords";
+            onLogIn();
           } else {
             console.log("error");
             location.hash = "#home";

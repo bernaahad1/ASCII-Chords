@@ -1,3 +1,5 @@
+import { onLogIn, onLogOut } from "./utils.js";
+
 const toggleTabs = (event) => {
   event.preventDefault();
   console.log("aloo");
@@ -14,41 +16,62 @@ function getContent(fragmentId, callback) {
     import: "Imports go here",
     favourites: "Favourites section",
     login: `<login-form-component></login-form-component>`,
-    signup: `<registration-form-component></registration-form-component>`
+    signup: `<registration-form-component></registration-form-component>`,
+    logout: "Logged out"
   };
 
   callback(pages[fragmentId]);
 }
 
 function loadContent() {
-  let contentDiv = document.getElementById("app");
-  fragmentId = location.hash.split("#")[1] || "home";
+  const contentDiv = document.getElementById("app");
+  const fragmentId = location.hash.split("#")[1] || "home";
+
+  if (fragmentId == "logout") {
+    fetch("../php/logout.php", { method: "GET" })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          document.location.reload();
+          onLogOut();
+        }
+      })
+      .catch(() => {
+        console.log("Error");
+      });
+
+    return;
+  }
 
   getContent(fragmentId, function (content) {
     contentDiv.innerHTML = content;
   });
 }
 
-// fetch("../php/startSession.php", { method: "GET" })
-//   .then((response) => response.json())
-//   .then((response) => {
-//     if (response.logged) {
-//       console.log("chords",response.logged);
+function checkSession() {
+  fetch("../php/startSession.php", { method: "GET" })
+    .then((response) => response.json())
+    .then((response) => {
+      if (response.logged) {
+        console.log("chords", response.logged);
+        onLogIn();
 
-//       location.hash = "#chords";
-//     } else {
-//       console.log("home",response.logged);
+        if (!location.hash) {
+          location.hash = "#chords";
+        }
+      }
+    })
+    .catch(() => {
+      console.log("home");
+      onLogOut();
 
-//       location.hash = "#home";
-//     }
-//   })
-//   .catch(() => {
-//     location.hash = "#home";
-//   });
-
-if (!location.hash) {
-  location.hash = "#home";
+      if (!location.hash) {
+        location.hash = "#home";
+      }
+    });
 }
+
+checkSession();
 
 loadContent();
 
