@@ -38,15 +38,21 @@ const showAllChordsData = () => {
             const chordExportToASCIIButton = document.createElement('button');
             chordExportToASCIIButton.setAttribute("id", "button-ascii"  + chord[i].id);
             chordExportToASCIIButton.innerHTML = 'Експортирай до ASCII!';
+
+            const addToMelodyButton = document.createElement('button');
+            addToMelodyButton.setAttribute("id", "button-to-melody"  + chord[i].id);
+            addToMelodyButton.innerHTML = 'Добави към мелодия!';
             
             container.appendChild(chordInfoElement);
             container.appendChild(chordPlayButton);
             container.appendChild(chordExportToCSVButton);
             container.appendChild(chordExportToASCIIButton);
+            container.appendChild(addToMelodyButton);
             
             playChords(chord[i]);
             exportChordToCSV(chord[i]);
             exportChordToASCII(chord[i]);
+            addToMelody(chord[i]);
         }
     });
 }
@@ -129,5 +135,43 @@ function exportChordToASCII(chord) {
         document.body.removeChild(asciiExportElement);
     });  
  }
+
+ melody = [];
+ async function addToMelody(chord) {
+    document.getElementById("button-to-melody"  + chord.id).addEventListener('click', () => {
+        melody.push(chord);
+        console.log(melody);
+    });  
+ }
+
+ function waitforme(millisec) {
+    return new Promise(resolve => {
+        setTimeout(() => { resolve('') }, millisec);
+    })
+}
+
+ async function pkayMelody() {
+    for (chord of melody) {
+        chord_notes = chord.description.split("-");
+    
+        notes = getAudioForNotes();
+
+        for (let i = 0; i < chord_notes.length; i++) {
+            chord_notes[i] = chord_notes[i].replace('#', '%23');
+            notes[chord_notes[i]].play();
+            notes[chord_notes[i]].play();
+            notes[chord_notes[i]].play();
+        }
+
+        await waitforme(1200);
+
+    }
+ }
+   
+ document.getElementById("play_melody").addEventListener('click', pkayMelody);
+        
+
+
+
 
 showAllChordsData();
