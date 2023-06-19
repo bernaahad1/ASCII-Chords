@@ -88,6 +88,23 @@ class FavouriteChordsRequestHandler {
         return true;
     }
 
+    public static function deleteAllFavouriteChordsByUserId($userId, $connection) {
+        // $user = self::getAllRecordsByUserId($userId);
+        // self::validateUserForDeleted($user);
+
+        // $connection = (new Db())->getConnection();
+
+        $selectStatement = $connection->prepare("UPDATE favourite_chords
+                                                SET deleted = 1
+                                                WHERE user_id = ?");
+
+        if ($selectStatement->execute([$userId])) {
+            return true;
+        }
+
+        throw new BadRequestException('This user cannot be accessed');
+    }
+
     public static function deleteFavouriteChord($userId, $chordId) {
         $favouriteChord = self::getFavouriteChordByUserIdAndChordId($userId, $chordId);
         self::validateFavouriteChordForDeleted($favouriteChord);
@@ -98,12 +115,8 @@ class FavouriteChordsRequestHandler {
         $selectStatement = $connection->prepare("UPDATE favourite_chords
                                                 SET user_id = ?, chord_id = ?, deleted = 1
                                                 WHERE user_id = ? AND chord_id = ?");
-        
-        $selectStatement->execute([$favouriteChord->getUserId(), $favouriteChord->getChordId(), $userId, $chordId]);
 
-        $favChordFromDb = $selectStatement->fetch();
-
-        if ($favChordFromDb) {
+        if ($selectStatement->execute([$favouriteChord->getUserId(), $favouriteChord->getChordId(), $userId, $chordId])) {
             return true;
         }
 

@@ -8,8 +8,9 @@ class User extends UserValidator {
     private $last_name;
     private $email;
     private $password;
+    private $deleted;
 
-    public function __construct($username, $first_name, $last_name, $email, $password) {
+    public function __construct($username, $first_name, $last_name, $email, $password, $deleted) {
         $this->validateUsername($username);
         $this->validateFirstName($first_name);
         $this->validateLastName($last_name);
@@ -21,6 +22,7 @@ class User extends UserValidator {
         $this->last_name = $last_name;
         $this->email = $email;
         $this->password = $password;
+        $this->deleted = $deleted;
     }
 
     public function getUsername() {
@@ -41,6 +43,10 @@ class User extends UserValidator {
 
     public function getPassword() {
         return $this->password;
+    }
+
+    public function getDeleted() {
+        return $this->deleted;
     }
 
     public function setUsername($username) {
@@ -139,6 +145,6 @@ class User extends UserValidator {
     }
 
     public static function fromArray(array $userData): User {
-        return new User($userData['username'], $userData['first_name'], $userData['last_name'], $userData['email'], $userData['password']);
+        return new User($userData['username'], $userData['first_name'], $userData['last_name'], $userData['email'], $userData['password'], $userData['deleted']);
     }
 }

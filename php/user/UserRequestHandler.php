@@ -2,6 +2,7 @@
 require "../db/db_connection.php";
 require "./User.php";
 require "../../exceptions/BadRequestException.php";
+require "../favourite_chords/FavouriteChordsRequestHandler.php";
 
 class UserRequestHandler {
     public static function getUserById($userId): User {
@@ -11,22 +12,23 @@ class UserRequestHandler {
         $selectStatement->execute([$userId]);
 
         $user = $selectStatement->fetch();
-        //self::validateUserForDeleted($user);
 
         if ($user) {
             $userEntity = User::fromArray($user);
+            self::validateUserForDeleted($userEntity);
+
             return $userEntity;
         }
 
         throw new BadRequestException('This user cannot be accessed');
     }
 
-    public static function updateUserById($userId) : User {
 
+    public static function updateUserById($userId)  {
         $userdata = json_decode(file_get_contents('php://input'), true);
 
         $user = self::getUserById($userId);
-        //self::validateUserForDeleted($user);
+        self::validateUserForDeleted($user);
 
         $updatedUser = self::updateUserFields($user, $userdata);
 
@@ -36,40 +38,34 @@ class UserRequestHandler {
                                                 SET username = ?, first_name = ?, last_name = ?, email = ?
                                                 WHERE id = ?");
         
-        $selectStatement->execute([$updatedUser->getUsername(), $updatedUser->getFirstName(), $updatedUser->getLastName(), $updatedUser->getEmail(), $userId]);
-        
-        // echo $selectStatement->fetch()['email'];
-        // $UserFromDb = $selectStatement->fetch();
+        if($selectStatement->execute([$updatedUser->getUsername(), $updatedUser->getFirstName(), 
+        $updatedUser->getLastName(), $updatedUser->getEmail(), $userId])) {
+            return true;
+        }
 
-        // echo $UserFromDb;
-        // if ($UserFromDb) {
-        //     return User::fromArray($UserFromDb);
-        // }
-
-        // throw new BadRequestException('This user cannot be accessed');
+        throw new BadRequestException('This user cannot be accessed');
     }
 
+
     public static function deleteUserById($userId) {
-        
         $user = self::getUserById($userId);
-        //self::validateUserForDeleted($user);
+        self::validateUserForDeleted($user);
 
         $connection = (new Db())->getConnection();
 
         $selectStatement = $connection->prepare("UPDATE users
                                                 SET deleted = 1
                                                 WHERE id = ?");
-        
-        $selectStatement->execute([$userId]);
 
-        // $UserFromDb = $selectStatement->fetch();
 
-        // if ($UserFromDb) {
-        //     return User::fromArray($UserFromDb);
-        // }
+        if ($selectStatement->execute([$userId])) {
+            FavouriteChordsRequestHandler::deleteAllFavouriteChordsByUserId($userId, $connection);
+            return true;
+        } 
 
-        // throw new BadRequestException('This user cannot be accessed');
+        throw new BadRequestException('This user cannot be accessed');
     }
+
 
     private static function updateUserFields($user, $userdata) : User {
         if ($userdata["username"] != null) {
@@ -91,9 +87,10 @@ class UserRequestHandler {
         return $user;
     }
 
-    // private static function validateUserForDeleted($user) {
-    //     if ($user['deleted'] == 1) {
-    //         throw new ResourceNotFoundException("The user has already been deleted!");
-    //     }
-    // }
+
+    private static function validateUserForDeleted($user) {
+        if ($user->getDeleted() == 1) {
+            throw new ResourceNotFoundException("The user has already been deleted!");
+        }
+    }
 }
