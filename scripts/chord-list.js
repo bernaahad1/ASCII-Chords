@@ -64,9 +64,8 @@ function createChordListTemplate() {
     .export-ascii {
       background-color: #ffc107;
     }
-    
-    .speaker-icon {
-      width: 50px;
+
+    .left-icon-buttons {
       padding: 0;
       background-color: transparent;
       position: absolute;
@@ -74,6 +73,22 @@ function createChordListTemplate() {
       right: 0;
       z-index: 30;
       margin: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .left-icon-buttons button{
+      background-color: transparent;
+      width: 50px;
+      padding: 0;
+      z-index: 30;
+      margin: 0;
+    }
+
+    .left-icon-buttons button img {
+      width: 100%;
     }
 
     .speaker-icon:hover {
@@ -116,7 +131,10 @@ class ChordList extends HTMLElement {
     return `
           <h2 class="chord-name">${chord.name} - ${chord.description}</h2>
         <chord-image notes="${chord.description}"></chord-image>    
+        <div class="left-icon-buttons">
         <button id="listen-${chord.id}" class="listen speaker-icon"><img src="../assets/images/speaker-icon.svg"/></button>
+        <button id="heart-button-${chord.id}" class="heart-button"><img src="../assets/images/heart-solid.svg"/></button>
+        </div>
         <button id="export-csv-${chord.id}" class="export-csv">Export as CSV</button>
         <button id="export-ascii-${chord.id}" class="export-ascii">Export as ASCII</button>`;
   };
@@ -197,6 +215,18 @@ class ChordList extends HTMLElement {
       });
   };
 
+  addFavouriteClicklistener = (chord) => {
+    this.#_shadowRoot
+      .getElementById(`heart-button-${chord.id}`)
+      .addEventListener("click", (event) => {
+        event.preventDefault();
+        if (event.target.style.backgroundColor === "red") {
+          event.target.style.backgroundColor = "transparent";
+        } else {
+          event.target.style.backgroundColor = "red";
+        }
+      });
+  };
   renderChords(chords) {
     if (!chords) {
       return;
@@ -217,6 +247,7 @@ class ChordList extends HTMLElement {
       this.playChords(chord);
       this.exportChordToCSV(chord);
       this.exportChordToASCII(chord);
+      this.addFavouriteClicklistener(chord);
     }
   }
 
