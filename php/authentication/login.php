@@ -13,7 +13,7 @@ if (isset($_SESSION['email'])) {
     $email = $loginInput['email'];
     $password = $loginInput['password'];
 
-    require_once "./user/User.php";
+    require_once "../user/User.php";
 
     $user = new User(null, null, null, $loginInput['email'], $loginInput['password']);
     try {

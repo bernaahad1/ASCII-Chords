@@ -1,0 +1,57 @@
+/* #chord-list {
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: stretch;
+  padding: 20px;
+}
+
+.chord {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.chord-buttons {
+  display: flex;
+}
+
+.chord-name {
+  font-size: 24px;
+  margin: 0 0 10px;
+}
+
+.chord-description {
+  margin: 0 0 15px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.export-css {
+  background-color: #2196f3;
+}
+
+.export-ascii {
+  background-color: #ffc107;
+}
+
+.listen {
+  background-color: #f44336;
+} */
