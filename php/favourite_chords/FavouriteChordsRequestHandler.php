@@ -5,8 +5,6 @@ require "../../exceptions/BadRequestException.php";
 
 class FavouriteChordsRequestHandler {
     public static function getAllRecordsByUserId(string $userId): array {
-
-        
         $connection = (new Db())->getConnection();
 
         $selectStatement = $connection->prepare("SELECT * FROM `favourite_chords` WHERE user_id = ?");
@@ -14,18 +12,17 @@ class FavouriteChordsRequestHandler {
 
         $favourite_chords = [];
         foreach ($selectStatement->fetchAll() as $favourite_chord) {
-            self::validateFavouriteChordForDeleted($favourite_chord);
-            
-            $favourite_chords[] = $favourite_chord;
+            $favouriteChord = FavouriteChords::fromArray($favourite_chord);
+
+            if (!self::isFavouriteChordForDeleted($favouriteChord)) {
+                $favourite_chords[] = $favourite_chord;
+            }
         }
 
         return $favourite_chords;
     }
 
     public static function getAllRecordsByChordId(string $chordId): array {
-        require_once "../db/db_connection.php";
-        require_once "./FavouriteChords.php";
-        require_once "../../exceptions/BadRequestException.php";
         
         $connection = (new Db())->getConnection();
 
@@ -34,46 +31,40 @@ class FavouriteChordsRequestHandler {
 
         $favourite_chords = [];
         foreach ($selectStatement->fetchAll() as $favourite_chord) {
-            self::validateFavouriteChordForDeleted($favourite_chord);
+            $favouriteChord = FavouriteChords::fromArray($favourite_chord);
 
-            $favourite_chords[] = $favourite_chord;
+            if (!self::isFavouriteChordForDeleted($favouriteChord)) {
+                $favourite_chords[] = $favourite_chord;
+            }
         }
 
         return $favourite_chords;
     }
 
     public static function getFavouriteChordByUserIdAndChordId($userId, $chordId): FavouriteChords {
-        require_once "../db/db_connection.php";
-        require_once "./FavouriteChords.php";
-        require_once "../../exceptions/BadRequestException.php";
         
         $connection = (new Db())->getConnection();
 
         $selectStatement = $connection->prepare("SELECT * FROM `favourite_chords` WHERE user_id = ? AND chord_id = ?");
         $selectStatement->execute([$userId, $chordId]);
 
-        $favouriteChord = $selectStatement->fetch();
-        self::validateFavouriteChordForDeleted($favouriteChord);
+        $favouriteChordFromDB = $selectStatement->fetch();
+        
+        if ($favouriteChordFromDB) {
+            $favouriteChord = FavouriteChords::fromArray($favouriteChordFromDB);
+            self::validateFavouriteChordForDeleted($favouriteChord);
 
-        if ($favouriteChord) {
-            return FavouriteChords::fromArray($favouriteChord);
+            return $favouriteChord;
         }
 
         throw new BadRequestException('This chord cannot be accessed');
     }
 
-    public static function addFavouriteChord($userId, $chordId) : void {
-        require_once "../db/db_connection.php";
-        require_once "./FavouriteChords.php";
-        require_once "../../exceptions/BadRequestException.php";
+    public static function addFavouriteChord($userId, $chordId) : bool {
 
         $db = new Db();
 
         $conn = $db->getConnection();
-
-        if ($conn->$connect_error) {
-            die("Connection failed: " . $conn->$connect_error);
-        }
 
         $insertStatement = $conn->prepare(
             "INSERT INTO `favourite_chords` (user_id, chord_id, deleted)
@@ -98,24 +89,22 @@ class FavouriteChordsRequestHandler {
 
             throw new Exception($errorMessage);
         }
+
+        return true;
     }
 
-    public static function deleteFavouriteChord($userId, $chordId) : bool {
-        require_once "../db/db_connection.php";
-        require_once "./FavouriteChords.php";
-        require_once "../../exceptions/ResourceNotFoundException.php";
-
+    public static function deleteFavouriteChord($userId, $chordId) {
         
         $favouriteChord = self::getFavouriteChordByUserIdAndChordId($userId, $chordId);
         self::validateFavouriteChordForDeleted($favouriteChord);
 
         $connection = (new Db())->getConnection();
 
-        $selectStatement = $connection->prepare("UPDATE users
+        $selectStatement = $connection->prepare("UPDATE favourite_chords
                                                 SET user_id = ?, chord_id = ?, deleted = 1
                                                 WHERE user_id = ? AND chord_id = ?");
         
-        $selectStatement->execute([$favouriteChord["user_id"], $favouriteChord["chord_id"], $userId, $chordId]);
+        $selectStatement->execute([$favouriteChord->getUserId(), $favouriteChord->getChordId(), $userId, $chordId]);
 
         $favChordFromDb = $selectStatement->fetch();
 
@@ -123,12 +112,14 @@ class FavouriteChordsRequestHandler {
             return true;
         }
 
-        throw new BadRequestException('This user cannot be accessed');
+        throw new BadRequestException('This favourite chord cannot be accessed');
     }
 
-    private static function validateFavouriteChordForDeleted($favouriteChord) {
-        if ($favouriteChord['deleted'] == 1) {
-            throw new ResourceNotFoundException("The resource has already been deleted!");
-        }
+    private static function isFavouriteChordForDeleted($favouriteChord) : bool {
+        return $favouriteChord->getDeleted() == 1;
+    }
+
+    private static function validateFavouriteChordForDeleted($favouriteChord) : void {
+        throw new ResourceNotFoundException("The resource has already been deleted!");
     }
 }
