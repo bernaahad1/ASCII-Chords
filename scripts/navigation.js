@@ -17,6 +17,7 @@ function getContent(fragmentId, callback) {
     favorites: "<favorites-list-component></favorites-list-component>",
     login: `<login-form-component></login-form-component>`,
     signup: `<registration-form-component></registration-form-component>`,
+    userProfile: `<user-profile></user-profile>`,
     logout: "Logged out"
   };
 

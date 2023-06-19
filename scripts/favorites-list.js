@@ -280,8 +280,6 @@ class FavoritesList extends HTMLElement {
     const filtered = FavChordsTemp.filter((chord) => chord?.favorite === true);
     this.chords = filtered;
     this.renderChords(filtered);
-
-    console.log(filtered);
   }
 
   connectedCallback() {
