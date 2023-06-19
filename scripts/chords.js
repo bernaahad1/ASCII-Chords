@@ -41,7 +41,7 @@ const showAllChordsData = () => {
 
             const addToMelodyButton = document.createElement('button');
             addToMelodyButton.setAttribute("id", "button-to-melody"  + chord[i].id);
-            addToMelodyButton.innerHTML = 'Добави към мелодия!';
+            addToMelodyButton.innerHTML = '+';
             
             container.appendChild(chordInfoElement);
             container.appendChild(chordPlayButton);
@@ -141,37 +141,54 @@ function exportChordToASCII(chord) {
     document.getElementById("button-to-melody"  + chord.id).addEventListener('click', () => {
         melody.push(chord);
         console.log(melody);
+
+        const container = document.getElementById('melody-info');
+       
+        const chordExportToASCIIButton = document.createElement('button');
+        number =  melody.length - 1;
+        chordExportToASCIIButton.setAttribute("id", "button-chord"  + number);
+        chordExportToASCIIButton.innerHTML = melody[melody.length - 1].name + ' -';
+        container.appendChild(chordExportToASCIIButton);
+        
+        removeChordFromMelody();
     });  
  }
 
- function waitforme(millisec) {
+ function delay(millisec) {
     return new Promise(resolve => {
         setTimeout(() => { resolve('') }, millisec);
     })
 }
 
- async function pkayMelody() {
+ async function playMelody() {
     for (chord of melody) {
         chord_notes = chord.description.split("-");
     
         notes = getAudioForNotes();
-
+        await delay(2000);
+        
         for (let i = 0; i < chord_notes.length; i++) {
             chord_notes[i] = chord_notes[i].replace('#', '%23');
             notes[chord_notes[i]].play();
             notes[chord_notes[i]].play();
             notes[chord_notes[i]].play();
         }
-
-        await waitforme(1200);
-
     }
+   
  }
    
- document.getElementById("play_melody").addEventListener('click', pkayMelody);
-        
+function removeChordFromMelody() {
+    for (let i = 0; i < melody.length; i++) {
+        console.log(i)
+        document.getElementById("button-chord" + i).addEventListener('click', () => {
+            document.getElementById("button-chord" + i).remove();
+            melody.splice(i, 1);
+            console.log(1111111);
+        });  
+    }
+}
 
-
+ document.getElementById("play_melody").addEventListener('click', playMelody);
 
 
 showAllChordsData();
