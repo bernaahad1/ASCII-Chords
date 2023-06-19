@@ -1,9 +1,11 @@
 <?php
+require "../db/db_connection.php";
+require "./FavouriteChords.php";
+require "../../exceptions/BadRequestException.php";
+
 class FavouriteChordsRequestHandler {
     public static function getAllRecordsByUserId(string $userId): array {
-        require_once "../db/db_connection.php";
-        require_once "./FavouriteChords.php";
-        require_once "../../exceptions/BadRequestException.php";
+
         
         $connection = (new Db())->getConnection();
 
@@ -17,7 +19,7 @@ class FavouriteChordsRequestHandler {
             $favourite_chords[] = $favourite_chord;
         }
 
-        return $chords;
+        return $favourite_chords;
     }
 
     public static function getAllRecordsByChordId(string $chordId): array {
@@ -37,7 +39,7 @@ class FavouriteChordsRequestHandler {
             $favourite_chords[] = $favourite_chord;
         }
 
-        return $chords;
+        return $favourite_chords;
     }
 
     public static function getFavouriteChordByUserIdAndChordId($userId, $chordId): FavouriteChords {

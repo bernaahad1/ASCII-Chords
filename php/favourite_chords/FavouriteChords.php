@@ -1,4 +1,6 @@
 <?php
+require "./FavouriteChordsValidator.php";
+
 class FavouriteChords extends FavouriteChordsValidator {
     private $user_id;
     private $chord_id;

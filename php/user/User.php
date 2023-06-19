@@ -30,10 +30,6 @@ class User extends UserValidator {
 
         $conn = $db->getConnection();
 
-        if ($conn->$connect_error) {
-            die("Connection failed: " . $conn->$connect_error);
-        }
-
         // TODO do not define deleted here
         $insertStatement = $conn->prepare(
             "INSERT INTO `users` (username, first_name, last_name, email, password, deleted)

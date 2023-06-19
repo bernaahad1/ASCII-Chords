@@ -20,7 +20,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE' && isset($_GET['user_id']) && iss
 }
 
 if ($response == null) {
-    echo "There is no data to display!";
+    $response = "There is no data to display!";
 }
 
 echo json_encode($response, JSON_UNESCAPED_UNICODE);
