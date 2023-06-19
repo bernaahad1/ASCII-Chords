@@ -121,7 +121,7 @@ function removeChordFromMelody() {
 
  function exportChordToCSV(chord) {
     document.getElementById("button-csv"  + chord.id).addEventListener('click', () => {
-        var csvExportElement = document.createElement('a');
+        let csvExportElement = document.createElement('a');
         csvExportElement.setAttribute('href', 'data:text/csv;charset=utf-8, '+ encodeURIComponent(chord.name) + "," + encodeURIComponent(chord.description));
         csvExportElement.setAttribute('download', chord.name);
        
@@ -134,7 +134,7 @@ function removeChordFromMelody() {
 
 function exportChordToASCII(chord) {
     document.getElementById("button-ascii"  + chord.id).addEventListener('click', () => {
-        var asciiExportElement = document.createElement('a');
+        let asciiExportElement = document.createElement('a');
         asciiExportElement.setAttribute('href', 'data:text/plain;charset=utf-8,'+ encodeURIComponent(chord.name) + " " + encodeURIComponent(chord.description));
         asciiExportElement.setAttribute('download', chord.name);
        
@@ -142,6 +142,19 @@ function exportChordToASCII(chord) {
         
         asciiExportElement.click();
         document.body.removeChild(asciiExportElement);
+    });  
+ }
+
+ function exportChordToJSON(chord) {
+    document.getElementById("button-json"  + chord.id).addEventListener('click', () => {
+        let JSONExportElement = document.createElement('a');
+        JSONExportElement.setAttribute('href', 'data:text/json;charset=utf-8,'+ encodeURIComponent(JSON.stringify({ name:chord.name,description:chord.description })));
+        JSONExportElement.setAttribute('download', chord.name + '.json');
+       
+        document.body.appendChild(JSONExportElement);
+        
+        JSONExportElement.click();
+        document.body.removeChild(JSONExportElement);
     });  
  }
 
@@ -170,6 +183,10 @@ function exportChordToASCII(chord) {
             chordExportToASCIIButton.setAttribute("id", "button-ascii"  + chord[i].id);
             chordExportToASCIIButton.innerHTML = 'Експортирай до ASCII!';
 
+            const chordExportToJSONButton = document.createElement('button');
+            chordExportToJSONButton.setAttribute("id", "button-json"  + chord[i].id);
+            chordExportToJSONButton.innerHTML = 'Експортирай до JSON!';
+
             const addToMelodyButton = document.createElement('button');
             addToMelodyButton.setAttribute("id", "button-to-melody"  + chord[i].id);
             addToMelodyButton.innerHTML = '+';
@@ -178,11 +195,13 @@ function exportChordToASCII(chord) {
             container.appendChild(chordPlayButton);
             container.appendChild(chordExportToCSVButton);
             container.appendChild(chordExportToASCIIButton);
+            container.appendChild(chordExportToJSONButton);
             container.appendChild(addToMelodyButton);
             
             playChords(chord[i]);
             exportChordToCSV(chord[i]);
             exportChordToASCII(chord[i]);
+            exportChordToJSON(chord[i]);
             addToMelody(chord[i]);
         }
     });
