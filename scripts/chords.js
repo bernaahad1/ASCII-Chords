@@ -94,20 +94,21 @@ function playChords(chord) {
 
  async function playMelody() {
     for (let i = 0; i < melody.length; i++) {
-        chord_notes = melody[i].description.split("-");
-    
-        notes = getAudioForNotes();
+        if (melody[i] != null) {
+            chord_notes = melody[i].description.split("-");
         
-        if (i != 0) {
-            await delay(1100);
-        }
+            notes = getAudioForNotes();
+            
 
-        for (let j = 0; j < chord_notes.length; j++) {
-            chord_notes[j] = chord_notes[j].replace('#', '%23');
-            notes[chord_notes[j]].play();
-            notes[chord_notes[j]].play();
-            notes[chord_notes[j]].play();
-        }   
+            await delay(1100);
+
+            for (let j = 0; j < chord_notes.length; j++) {
+                chord_notes[j] = chord_notes[j].replace('#', '%23');
+                notes[chord_notes[j]].play();
+                notes[chord_notes[j]].play();
+                notes[chord_notes[j]].play();
+            }  
+        } 
     }
  }
    
@@ -115,7 +116,7 @@ function removeChordFromMelody(index) {
     if (document.getElementById("button-chord" + index) != null) {
     document.getElementById("button-chord" + index).addEventListener('click', () => {
         document.getElementById("button-chord" + index).remove();
-        melody.splice(index, 1);
+        melody[index] = null;
     });
 }}
 
