@@ -21,7 +21,7 @@ class UserRequestHandler {
         throw new BadRequestException('This user cannot be accessed');
     }
 
-    public static function updateUserById(string $userId) : User {
+    public static function updateUserById($userId) : User {
 
         $userdata = json_decode(file_get_contents('php://input'), true);
 
@@ -33,22 +33,23 @@ class UserRequestHandler {
         $connection = (new Db())->getConnection();
 
         $selectStatement = $connection->prepare("UPDATE users
-                                                SET usename = ?, first_name = ?, last_name = ?, email = ?, password = ?, deleted = 0
+                                                SET username = ?, first_name = ?, last_name = ?, email = ?
                                                 WHERE id = ?");
         
-        $selectStatement->execute([$updatedUser["username"], $updatedUser["first_name"], $updatedUser["last_name"],
-         $updatedUser["email"], $updatedUser["password"], $userId]);
+        $selectStatement->execute([$updatedUser->getUsername(), $updatedUser->getFirstName(), $updatedUser->getLastName(), $updatedUser->getEmail(), $userId]);
+        
+        // echo $selectStatement->fetch()['email'];
+        // $UserFromDb = $selectStatement->fetch();
 
-        $UserFromDb = $selectStatement->fetch();
+        // echo $UserFromDb;
+        // if ($UserFromDb) {
+        //     return User::fromArray($UserFromDb);
+        // }
 
-        if ($UserFromDb) {
-            return User::fromArray($UserFromDb);
-        }
-
-        throw new BadRequestException('This user cannot be accessed');
+        // throw new BadRequestException('This user cannot be accessed');
     }
 
-    public static function deleteUserById(string $userId) {
+    public static function deleteUserById($userId) {
         
         $user = self::getUserById($userId);
         //self::validateUserForDeleted($user);
@@ -56,36 +57,35 @@ class UserRequestHandler {
         $connection = (new Db())->getConnection();
 
         $selectStatement = $connection->prepare("UPDATE users
-                                                SET usename = ?, first_name = ?, last_name = ?, email = ?, password = ?, deleted = 1
+                                                SET deleted = 1
                                                 WHERE id = ?");
         
-        $selectStatement->execute([$user["username"], $user["first_name"], $user["last_name"], $user["email"], $user["password"], $userId]);
+        $selectStatement->execute([$userId]);
 
-        $UserFromDb = $selectStatement->fetch();
+        // $UserFromDb = $selectStatement->fetch();
 
-        if ($UserFromDb) {
-            return User::fromArray($UserFromDb);
-        }
+        // if ($UserFromDb) {
+        //     return User::fromArray($UserFromDb);
+        // }
 
-        throw new BadRequestException('This user cannot be accessed');
+        // throw new BadRequestException('This user cannot be accessed');
     }
 
     private static function updateUserFields($user, $userdata) : User {
         if ($userdata["username"] != null) {
-            $user["username"] = $userdata["username"];
+            $user->setUsername($userdata["username"]);
         }
 
         if ($userdata["first_name"] != null) {
-            $user["first_name"] = $userdata["first_name"];
+            $user->setFirstName($userdata["first_name"]);
         }
 
         if ($userdata["last_name"] != null) {
-            $user["last_name"] = $userdata["last_name"];
+            $user->setLastName($userdata["last_name"]);
         }
 
         if ($userdata["email"] != null) {
-            echo "Da";
-            $user["email"] = $userdata["email"];
+            $user->setEmail($userdata["email"]);
         }
 
         return $user;
