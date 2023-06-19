@@ -125,7 +125,6 @@ class ChordList extends HTMLElement {
     this.#_shadowRoot
       .getElementById(`listen-${chord.id}`)
       .addEventListener("click", () => {
-        console.log(chord);
         const chord_notes = chord.description.split("-");
 
         for (let i = 0; i < chord_notes.length; i++) {
@@ -206,7 +205,6 @@ class ChordList extends HTMLElement {
     const [chordList] = this.#_shadowRoot.querySelectorAll("#chord-list");
     chordList.innerHTML = "";
 
-    console.log(chords);
     for (const chord of chords) {
       const chordElement = document.createElement("div");
       chordElement.setAttribute("id", `chord-${chord.id}`);
