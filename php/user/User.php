@@ -23,6 +23,22 @@ class User extends UserValidator {
         $this->password = $password;
     }
 
+    public function getUsername() {
+        return $this->username;
+    }
+
+    public function getFirstName() {
+        return $this->first_name;
+    }
+
+    public function getLastName() {
+        return $this->last_name;
+    }
+
+    public function getEmail() {
+        return $this->email;
+    }
+
     public function saveNewUser(): void {
         require_once "../db/db_connection.php";
 
@@ -99,7 +115,6 @@ class User extends UserValidator {
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
-            'password' => $this->password,
         ];
     }
 

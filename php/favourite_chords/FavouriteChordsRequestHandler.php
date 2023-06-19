@@ -7,15 +7,14 @@ class FavouriteChordsRequestHandler {
     public static function getAllRecordsByUserId(string $userId): array {
         $connection = (new Db())->getConnection();
 
+        echo "getAllRecordsByUserId";
         $selectStatement = $connection->prepare("SELECT * FROM `favourite_chords` WHERE user_id = ?");
         $selectStatement->execute([$userId]);
 
         $favourite_chords = [];
         foreach ($selectStatement->fetchAll() as $favourite_chord) {
-            $favouriteChord = FavouriteChords::fromArray($favourite_chord);
-
-            if (!self::isFavouriteChordForDeleted($favouriteChord)) {
-                $favourite_chords[] = $favourite_chord;
+            if (!self::isFavouriteChordForDeleted($favourite_chord)) {
+                $favourite_chords[] = FavouriteChords::fromArray($favourite_chord)->jsonSerialize();
             }
         }
 
@@ -26,15 +25,14 @@ class FavouriteChordsRequestHandler {
         
         $connection = (new Db())->getConnection();
 
+        echo "getAllRecordsByChordId";
         $selectStatement = $connection->prepare("SELECT * FROM `favourite_chords` WHERE chord_id = ?");
         $selectStatement->execute([$chordId]);
 
         $favourite_chords = [];
         foreach ($selectStatement->fetchAll() as $favourite_chord) {
-            $favouriteChord = FavouriteChords::fromArray($favourite_chord);
-
-            if (!self::isFavouriteChordForDeleted($favouriteChord)) {
-                $favourite_chords[] = $favourite_chord;
+            if (!self::isFavouriteChordForDeleted($favourite_chord)) {
+                $favourite_chords[] = FavouriteChords::fromArray($favourite_chord)->jsonSerialize();
             }
         }
 
@@ -42,31 +40,28 @@ class FavouriteChordsRequestHandler {
     }
 
     public static function getFavouriteChordByUserIdAndChordId($userId, $chordId): FavouriteChords {
-        
         $connection = (new Db())->getConnection();
 
+        echo "getFavouriteChordByUserIdAndChordId";
         $selectStatement = $connection->prepare("SELECT * FROM `favourite_chords` WHERE user_id = ? AND chord_id = ?");
         $selectStatement->execute([$userId, $chordId]);
 
         $favouriteChordFromDB = $selectStatement->fetch();
         
         if ($favouriteChordFromDB) {
-            $favouriteChord = FavouriteChords::fromArray($favouriteChordFromDB);
-            self::validateFavouriteChordForDeleted($favouriteChord);
+            self::validateFavouriteChordForDeleted($favouriteChordFromDB);
 
-            return $favouriteChord;
+            return FavouriteChords::fromArray($favouriteChordFromDB);
         }
 
         throw new BadRequestException('This chord cannot be accessed');
     }
 
     public static function addFavouriteChord($userId, $chordId) : bool {
+        $connection = (new Db())->getConnection();
 
-        $db = new Db();
-
-        $conn = $db->getConnection();
-
-        $insertStatement = $conn->prepare(
+        echo "addFavouriteChord";
+        $insertStatement = $connection->prepare(
             "INSERT INTO `favourite_chords` (user_id, chord_id, deleted)
              VALUES (:user_id, :chord_id, :deleted)"
         );
@@ -94,10 +89,10 @@ class FavouriteChordsRequestHandler {
     }
 
     public static function deleteFavouriteChord($userId, $chordId) {
-        
         $favouriteChord = self::getFavouriteChordByUserIdAndChordId($userId, $chordId);
         self::validateFavouriteChordForDeleted($favouriteChord);
 
+        echo "deleteFavouriteChord";
         $connection = (new Db())->getConnection();
 
         $selectStatement = $connection->prepare("UPDATE favourite_chords
@@ -116,10 +111,12 @@ class FavouriteChordsRequestHandler {
     }
 
     private static function isFavouriteChordForDeleted($favouriteChord) : bool {
-        return $favouriteChord->getDeleted() == 1;
+        return $favouriteChord['deleted'] == 1;
     }
 
     private static function validateFavouriteChordForDeleted($favouriteChord) : void {
-        throw new ResourceNotFoundException("The resource has already been deleted!");
+        if (self::isFavouriteChordForDeleted($favouriteChord)) {
+            throw new ResourceNotFoundException("The resource has already been deleted!");
+        } 
     }
 }

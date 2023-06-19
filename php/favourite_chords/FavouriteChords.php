@@ -15,14 +15,6 @@ class FavouriteChords extends FavouriteChordsValidator {
         $this->deleted = $deleted;
     }
 
-    public function jsonSerialize(): array {
-        return [
-            'user_id' => $this->user_id,
-            'chord_id' => $this->chord_id,
-            'deleted' => $this->deleted,
-        ];
-    }
-
     public function getUserId() : int {
         return $this->user_id;
     }
@@ -33,6 +25,13 @@ class FavouriteChords extends FavouriteChordsValidator {
 
     public function getDeleted() : int {
         return $this->deleted;
+    }
+
+    public function jsonSerialize(): array {
+        return [
+            'user_id' => $this->user_id,
+            'chord_id' => $this->chord_id,
+        ];
     }
 
     public static function fromArray(array $favChordsData): FavouriteChords {

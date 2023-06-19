@@ -1,32 +1,32 @@
 <?php
+require "../db/db_connection.php";
+require "./User.php";
+require "../../exceptions/BadRequestException.php";
+
 class UserRequestHandler {
-    public static function getUserById(string $userId): User {
-        require_once "../db/db_connection.php";
-        require_once "./User.php";
-        require_once "../../exceptions/BadRequestException.php";
-        
+    public static function getUserById($userId): User {
         $connection = (new Db())->getConnection();
 
         $selectStatement = $connection->prepare("SELECT * FROM `users` WHERE id = ?");
         $selectStatement->execute([$userId]);
 
         $user = $selectStatement->fetch();
-        self::validateUserForDeleted($user);
+        //self::validateUserForDeleted($user);
 
         if ($user) {
-            return User::fromArray($user);
+            $userEntity = User::fromArray($user);
+            return $userEntity;
         }
 
         throw new BadRequestException('This user cannot be accessed');
     }
 
-    public static function updateUserById(string $userId, array $userdata) : User {
-        require_once "../db/db_connection.php";
-        require_once "./User.php";
-        require_once "../../exceptions/BadRequestException.php";
+    public static function updateUserById(string $userId) : User {
+
+        $userdata = json_decode(file_get_contents('php://input'), true);
 
         $user = self::getUserById($userId);
-        self::validateUserForDeleted($user);
+        //self::validateUserForDeleted($user);
 
         $updatedUser = self::updateUserFields($user, $userdata);
 
@@ -49,12 +49,9 @@ class UserRequestHandler {
     }
 
     public static function deleteUserById(string $userId) {
-        require_once "../db/db_connection.php";
-        require_once "./User.php";
-        require_once "../../exceptions/BadRequestException.php";
         
         $user = self::getUserById($userId);
-        self::validateUserForDeleted($user);
+        //self::validateUserForDeleted($user);
 
         $connection = (new Db())->getConnection();
 
@@ -73,7 +70,7 @@ class UserRequestHandler {
         throw new BadRequestException('This user cannot be accessed');
     }
 
-    private static function updateUserFields(User $user, array $userdata) : User {
+    private static function updateUserFields($user, $userdata) : User {
         if ($userdata["username"] != null) {
             $user["username"] = $userdata["username"];
         }
@@ -87,15 +84,16 @@ class UserRequestHandler {
         }
 
         if ($userdata["email"] != null) {
+            echo "Da";
             $user["email"] = $userdata["email"];
         }
 
         return $user;
     }
 
-    private static function validateUserForDeleted($favouriteChord) {
-        if ($favouriteChord['deleted'] == 1) {
-            throw new ResourceNotFoundException("The resource has already been deleted!");
-        }
-    }
+    // private static function validateUserForDeleted($user) {
+    //     if ($user['deleted'] == 1) {
+    //         throw new ResourceNotFoundException("The user has already been deleted!");
+    //     }
+    // }
 }
