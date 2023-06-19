@@ -59,7 +59,7 @@ class UserRequestHandler {
 
 
         if ($selectStatement->execute([$userId])) {
-            FavouriteChordsRequestHandler::deleteAllFavouriteChordsByUserId($userId, $connection);
+            //FavouriteChordsRequestHandler::deleteAllFavouriteChordsByUserId($userId, $connection);
             return true;
         } 
 
