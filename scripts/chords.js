@@ -70,9 +70,10 @@ function playChords(chord) {
  melody = [];
  async function addToMelody(chord) {
     document.getElementById("button-to-melody"  + chord.id).addEventListener('click', () => {
+        
         melody.push(chord);
         console.log(melody);
-
+        
         const container = document.getElementById('melody-info');
        
         const chordExportToASCIIButton = document.createElement('button');
@@ -80,9 +81,9 @@ function playChords(chord) {
         chordExportToASCIIButton.setAttribute("id", "button-chord"  + number);
         chordExportToASCIIButton.innerHTML = melody[melody.length - 1].name + ' -';
         container.appendChild(chordExportToASCIIButton);
-        
-        removeChordFromMelody();
-    });  
+
+        removeChordFromMelody(melody.length - 1);
+    }); 
  }
 
  function delay(millisec) {
@@ -92,30 +93,31 @@ function playChords(chord) {
 }
 
  async function playMelody() {
-    for (chord of melody) {
-        chord_notes = chord.description.split("-");
+    for (let i = 0; i < melody.length; i++) {
+        chord_notes = melody[i].description.split("-");
     
         notes = getAudioForNotes();
-        await delay(2000);
         
-        for (let i = 0; i < chord_notes.length; i++) {
-            chord_notes[i] = chord_notes[i].replace('#', '%23');
-            notes[chord_notes[i]].play();
-            notes[chord_notes[i]].play();
-            notes[chord_notes[i]].play();
+        if (i != 0) {
+            await delay(1100);
         }
+
+        for (let j = 0; j < chord_notes.length; j++) {
+            chord_notes[j] = chord_notes[j].replace('#', '%23');
+            notes[chord_notes[j]].play();
+            notes[chord_notes[j]].play();
+            notes[chord_notes[j]].play();
+        }   
     }
-   
  }
    
-function removeChordFromMelody() {
-    for (let i = 0; i < melody.length; i++) {
-        document.getElementById("button-chord" + i).addEventListener('click', () => {
-            document.getElementById("button-chord" + i).remove();
-            melody.splice(i, 1);
-        });  
-    }
-}
+function removeChordFromMelody(index) {
+    if (document.getElementById("button-chord" + index) != null) {
+    document.getElementById("button-chord" + index).addEventListener('click', () => {
+        document.getElementById("button-chord" + index).remove();
+        melody.splice(index, 1);
+    });
+}}
 
  document.getElementById("play_melody").addEventListener('click', playMelody);
 
@@ -135,8 +137,8 @@ function removeChordFromMelody() {
 function exportChordToASCII(chord) {
     document.getElementById("button-ascii"  + chord.id).addEventListener('click', () => {
         let asciiExportElement = document.createElement('a');
-        asciiExportElement.setAttribute('href', 'data:text/plain;charset=utf-8,'+ encodeURIComponent(chord.name) + " " + encodeURIComponent(chord.description));
-        asciiExportElement.setAttribute('download', chord.name);
+        asciiExportElement.setAttribute('href', 'data:text/plain;charset=utf-8,'+ encodeURIComponent(chord.name) + "|" + encodeURIComponent(chord.description));
+        asciiExportElement.setAttribute('download', chord.name + '.asc');
        
         document.body.appendChild(asciiExportElement);
         
@@ -203,8 +205,14 @@ function exportChordToASCII(chord) {
             exportChordToASCII(chord[i]);
             exportChordToJSON(chord[i]);
             addToMelody(chord[i]);
+            // removeChordFromMelody(melody.length - 1);
+            
+            
         }
+
+        
     });
+    
 }
 
 showAllChordsData();
