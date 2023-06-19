@@ -14,7 +14,7 @@ function getContent(fragmentId, callback) {
     home: "This is the Home page. Welcome to my site.",
     chords: "<chord-list-component></chord-list-component>",
     import: "Imports go here",
-    favourites: "Favourites section",
+    favorites: "<favorites-list-component></favorites-list-component>",
     login: `<login-form-component></login-form-component>`,
     signup: `<registration-form-component></registration-form-component>`,
     logout: "Logged out"
