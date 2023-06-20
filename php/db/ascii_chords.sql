@@ -40,7 +40,7 @@ CREATE TABLE `chords` (
 
 INSERT INTO `chords` (`id`, `name`, `description`, `deleted`) VALUES
 (1, 'C major', 'C-E-G', 0),
-(2, 'C# major', 'C#-E#-G#', 0),
+(2, 'C# major', 'C#-E-G#', 0),
 (3, 'D major', 'D-F#-A', 0),
 (4, 'Eb major', 'Eb-G-Bb', 0),
 (5, 'E major', 'E-G-B', 0),

@@ -8,12 +8,13 @@
 
 body {
   height: 100vh;
+  background-color: #f1f1f1;
 }
 
 .content {
-  margin: 0 20%;
+  margin: 0 10%;
   background-color: #f1f1f1;
-  box-shadow: 0 0 4px 0px #0000003d;
+  /* box-shadow: 0 0 4px 0px #0000003d; */
   padding-top: 10%;
-  height: 100vh;
+  min-height: 100%;
 }

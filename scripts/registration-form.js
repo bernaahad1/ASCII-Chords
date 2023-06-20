@@ -1,3 +1,5 @@
+import { checkSession } from "./utils.js";
+
 function createRegistrationTemplate() {
   const templateString = `
     <style>
@@ -198,6 +200,7 @@ class RegistrationForm extends HTMLElement {
             registrationForm.reset();
             console.log("loggeeed");
             location.hash = "#login";
+            checkSession();
           } else {
             console.log("error");
             location.hash = "#home";
