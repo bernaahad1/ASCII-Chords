@@ -11,8 +11,9 @@ document.querySelector(".navbar .icon").addEventListener("click", toggleTabs);
 
 function getContent(fragmentId, callback) {
   let pages = {
-    home: "This is the Home page. Welcome to my site.",
+    home: "Home",
     chords: "<chord-list-component></chord-list-component>",
+    createMelody: "<create-melody-component></create-melody-component>",
     import: "Imports go here",
     favorites: "<favorites-list-component></favorites-list-component>",
     login: `<login-form-component></login-form-component>`,

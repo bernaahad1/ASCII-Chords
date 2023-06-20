@@ -1,39 +1,6 @@
-function createAudioPlaying(notes) {
-  for (let key of Object.keys(notes)) {
-    let note = new Audio();
-    let src = document.createElement("source");
-    src.type = "audio/mpeg";
-    src.src = "../assets/" + key + ".mp3";
-    note.appendChild(src);
-    notes[key] = note;
-  }
+import { AUDIOS } from "./chord-list.js";
 
-  return notes;
-}
-
-const notes = {
-  A: undefined,
-  "A%23": undefined,
-  Ab: undefined,
-  B: undefined,
-  Bb: undefined,
-  C: undefined,
-  "C%23": undefined,
-  D: undefined,
-  Db: undefined,
-  "D%23": undefined,
-  E: undefined,
-  Eb: undefined,
-  F: undefined,
-  "F%23": undefined,
-  G: undefined,
-  "G%23": undefined,
-  Gb: undefined
-};
-
-export const AUDIOS = createAudioPlaying(notes);
-
-function createChordListTemplate() {
+function createCreateMelodyTemplate() {
   const templateString = `
     <style>
     *,
@@ -45,7 +12,7 @@ function createChordListTemplate() {
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    #chord-list {
+    #create-melody {
       display: flex;
       align-items: stretch;
       flex-direction: row;
@@ -141,11 +108,14 @@ function createChordListTemplate() {
     }
     </style>
 
-    <h1>Chords</h1>
-    <button><a href="#createMelody">Start creating melody</a>
-    </button>
-    <section id="chord-list"></section>
-    
+    <h1>Creating melody</h1>
+    <div id="melody-info"></div>
+    <button type="button" id="play_melody">Play Melody</button>
+    <button type="button" id="export-melody-csv">Export to CSV!</button>
+    <button type="button" id="export-melody-json">Export to JSON!</button>
+    <button type="button" id="export-melody-ascii">Export to ASCII!</button>
+    <section id="create-melody"></section>
+   
     `;
 
   const templateElement = document.createElement("template");
@@ -153,19 +123,20 @@ function createChordListTemplate() {
   return templateElement;
 }
 
-const chordListTemplate = createChordListTemplate();
+const createMelodyTemplate = createCreateMelodyTemplate();
 
 // TODO delete this when php endpoints are ready
 export let FavChordsTemp = [];
 
-class ChordList extends HTMLElement {
+class CreateMelody extends HTMLElement {
   #_shadowRoot = null;
   chords = null;
+  melody = [];
 
   constructor() {
     super();
     this.#_shadowRoot = this.attachShadow({ mode: "closed" });
-    this.#_shadowRoot.appendChild(chordListTemplate.content.cloneNode(true));
+    this.#_shadowRoot.appendChild(createMelodyTemplate.content.cloneNode(true));
   }
 
   getChordElement = (chord) => {
@@ -176,9 +147,8 @@ class ChordList extends HTMLElement {
         <button id="listen-${chord.id}" class="listen speaker-icon"><img src="../assets/images/speaker-icon.svg"/></button>
         <button id="heart-button-${chord.id}" class="heart-button"><img src="../assets/images/heart-solid.svg"/></button>
         </div>
-        <button id="export-csv-${chord.id}" class="export-csv">Export as CSV</button>
-        <button id="export-ascii-${chord.id}" class="export-ascii">Export as ASCII</button>
-        <button id="button-json-${chord.id}" class="export-json">Export as JSON</button>`;
+        <button id="button-to-melody-${chord.id}" class="heart-button">Add to melody</button>
+        `;
   };
 
   playChords = (chord) => {
@@ -191,48 +161,6 @@ class ChordList extends HTMLElement {
           chord_notes[i] = chord_notes[i].replace("#", "%23");
           AUDIOS[chord_notes[i]].play();
         }
-      });
-  };
-
-  exportChordToCSV = (chord) => {
-    this.#_shadowRoot
-      .getElementById(`export-csv-${chord.id}`)
-      .addEventListener("click", () => {
-        var csvExportElement = document.createElement("a");
-        csvExportElement.setAttribute(
-          "href",
-          "data:text/csv;charset=utf-8, " +
-            encodeURIComponent(chord.name) +
-            "," +
-            encodeURIComponent(chord.description)
-        );
-        csvExportElement.setAttribute("download", chord.name);
-
-        this.#_shadowRoot.appendChild(csvExportElement);
-
-        csvExportElement.click();
-        this.#_shadowRoot.removeChild(csvExportElement);
-      });
-  };
-
-  exportChordToASCII = (chord) => {
-    this.#_shadowRoot
-      .getElementById(`export-ascii-${chord.id}`)
-      .addEventListener("click", () => {
-        var asciiExportElement = document.createElement("a");
-        asciiExportElement.setAttribute(
-          "href",
-          "data:text/plain;charset=utf-8," +
-            encodeURIComponent(chord.name) +
-            " " +
-            encodeURIComponent(chord.description)
-        );
-        asciiExportElement.setAttribute("download", chord.name);
-
-        this.#_shadowRoot.appendChild(asciiExportElement);
-
-        asciiExportElement.click();
-        this.#_shadowRoot.removeChild(asciiExportElement);
       });
   };
 
@@ -272,28 +200,151 @@ class ChordList extends HTMLElement {
       });
   };
 
-  exportChordToJSON = (chord) => {
+  addToMelody = (chord) => {
     this.#_shadowRoot
-      .getElementById("button-json-" + chord.id)
+      .getElementById("button-to-melody-" + chord.id)
       .addEventListener("click", () => {
-        let JSONExportElement = document.createElement("a");
-        JSONExportElement.setAttribute(
-          "href",
-          "data:text/json;charset=utf-8," +
-            encodeURIComponent(
-              JSON.stringify({
-                name: chord.name,
-                description: chord.description
-              })
-            )
-        );
-        JSONExportElement.setAttribute("download", chord.name + ".json");
+        this.melody.push(chord);
 
-        this.#_shadowRoot.appendChild(JSONExportElement);
+        const container = this.#_shadowRoot.getElementById("melody-info");
 
-        JSONExportElement.click();
-        this.#_shadowRoot.removeChild(JSONExportElement);
+        const chordExportToASCIIButton = document.createElement("button");
+        const number = this.melody.length - 1;
+
+        chordExportToASCIIButton.setAttribute("id", "button-chord-" + number);
+        chordExportToASCIIButton.innerHTML =
+          this.melody[this.melody.length - 1].name + " -";
+        container.appendChild(chordExportToASCIIButton);
+
+        this.removeChordFromMelody(this.melody.length - 1);
       });
+  };
+
+  delay = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
+  removeChordFromMelody = (index) => {
+    const chordButton = this.#_shadowRoot.getElementById(
+      "button-chord-" + index
+    );
+
+    if (!chordButton) {
+      return;
+    }
+
+    chordButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.target.remove();
+
+      this.melody[index] = null;
+    });
+  };
+
+  exportMelodyToCsv = () => {
+    this.#_shadowRoot
+      .getElementById("export-melody-csv")
+      .addEventListener("click", () => {
+        let csvExportElement = document.createElement("a");
+
+        let InfoForExport = "";
+        for (let i = 0; i < this.melody.length; i++) {
+          if (this.melody[i] != null) {
+            InfoForExport +=
+              encodeURIComponent(this.melody[i].name) +
+              "," +
+              encodeURIComponent(this.melody[i].description) +
+              "\n";
+          }
+        }
+
+        csvExportElement.setAttribute(
+          "href",
+          "data:text/csv;charset=utf-8," + InfoForExport
+        );
+        csvExportElement.setAttribute("download", "name");
+
+        this.#_shadowRoot.appendChild(csvExportElement);
+
+        csvExportElement.click();
+        this.#_shadowRoot.removeChild(csvExportElement);
+      });
+  };
+
+  exportMelodyToAscii = () => {
+    this.#_shadowRoot
+      .getElementById("export-melody-ascii")
+      .addEventListener("click", () => {
+        let csvExportElement = document.createElement("a");
+
+        let InfoForExport = "";
+        for (let i = 0; i < this.melody.length; i++) {
+          if (this.melody[i] != null) {
+            InfoForExport +=
+              encodeURIComponent(this.melody[i].name) +
+              "|" +
+              encodeURIComponent(this.melody[i].description) +
+              "\n";
+          }
+        }
+
+        csvExportElement.setAttribute(
+          "href",
+          "data:text/plain;charset=utf-8," + InfoForExport
+        );
+        csvExportElement.setAttribute("download", "name");
+
+        this.#_shadowRoot.appendChild(csvExportElement);
+
+        csvExportElement.click();
+        this.#_shadowRoot.removeChild(csvExportElement);
+      });
+  };
+
+  exportMelodyToJson = () => {
+    this.#_shadowRoot
+      .getElementById("export-melody-json")
+      .addEventListener("click", () => {
+        let csvExportElement = document.createElement("a");
+
+        let InfoForExport = "";
+        for (let i = 0; i < this.melody.length; i++) {
+          if (this.melody[i] != null) {
+            InfoForExport += encodeURIComponent(
+              JSON.stringify({
+                name: this.melody[i].name,
+                description: this.melody[i].description
+              })
+            );
+          }
+        }
+
+        csvExportElement.setAttribute(
+          "href",
+          "data:text/json;charset=utf-8," + InfoForExport
+        );
+        csvExportElement.setAttribute("download", "name" + ".json");
+
+        this.#_shadowRoot.appendChild(csvExportElement);
+
+        csvExportElement.click();
+        this.#_shadowRoot.removeChild(csvExportElement);
+      });
+  };
+
+  playMelody = async () => {
+    for (let i = 0; i < this.melody.length; i++) {
+      if (this.melody[i] != null) {
+        const chord_notes = this.melody[i].description.split("-");
+
+        await this.delay(1100);
+
+        for (let j = 0; j < chord_notes.length; j++) {
+          chord_notes[j] = chord_notes[j].replace("#", "%23");
+          AUDIOS[chord_notes[j]].play();
+        }
+      }
+    }
   };
 
   renderChords(chords) {
@@ -301,8 +352,8 @@ class ChordList extends HTMLElement {
       return;
     }
 
-    const [chordList] = this.#_shadowRoot.querySelectorAll("#chord-list");
-    chordList.innerHTML = "";
+    const [createMelody] = this.#_shadowRoot.querySelectorAll("#create-melody");
+    createMelody.innerHTML = "";
 
     for (const chord of chords) {
       const chordElement = document.createElement("div");
@@ -311,7 +362,7 @@ class ChordList extends HTMLElement {
 
       chordElement.innerHTML = this.getChordElement(chord);
 
-      chordList.appendChild(chordElement);
+      createMelody.appendChild(chordElement);
 
       this.#_shadowRoot.getElementById(
         `heart-button-${chord.id}`
@@ -321,11 +372,17 @@ class ChordList extends HTMLElement {
         : "transparent";
 
       this.playChords(chord);
-      this.exportChordToCSV(chord);
-      this.exportChordToASCII(chord);
-      this.exportChordToJSON(chord);
 
       this.addFavoriteClickListener(chord);
+
+      this.#_shadowRoot
+        .getElementById("play_melody")
+        .addEventListener("click", this.playMelody);
+
+      this.addToMelody(chord);
+      this.exportMelodyToCsv();
+      this.exportMelodyToJson();
+      this.exportMelodyToAscii();
     }
   }
 
@@ -346,4 +403,4 @@ class ChordList extends HTMLElement {
   }
 }
 
-customElements.define("chord-list-component", ChordList);
+customElements.define("create-melody-component", CreateMelody);
