@@ -1,4 +1,6 @@
-function createChordListTemplate() {
+import { FavChordsTemp } from "./chord-list.js";
+
+function createFavoritesListTemplate() {
   const templateString = `
     <style>
     *,
@@ -10,7 +12,7 @@ function createChordListTemplate() {
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    #chord-list {
+    #favorites-list {
       display: flex;
       align-items: stretch;
       flex-direction: row;
@@ -106,8 +108,8 @@ function createChordListTemplate() {
     }
     </style>
 
-    <h1>Chords</h1>
-    <section id="chord-list"><section>
+    <h1>Favorite Chords</h1>
+    <section id="favorites-list"><section>
     `;
 
   const templateElement = document.createElement("template");
@@ -115,12 +117,9 @@ function createChordListTemplate() {
   return templateElement;
 }
 
-const chordListTemplate = createChordListTemplate();
+const chordListTemplate = createFavoritesListTemplate();
 
-// TODO delete this when php endpoints are ready
-export let FavChordsTemp = [];
-
-class ChordList extends HTMLElement {
+class FavoritesList extends HTMLElement {
   #_shadowRoot = null;
   chords = null;
 
@@ -218,24 +217,10 @@ class ChordList extends HTMLElement {
       });
   };
 
-  favoriteChord = (id) => {
-    const chord = this.chords.find((obj) => obj.id === id);
-    if (chord) {
-      chord.favorite = true;
-    }
-    // this.chords[id] = { ...this.chords[id], favorite: true };
-    // TODO here also add the fetch to the correct api when ready
-    FavChordsTemp = this.chords;
-  };
-
   unfavoriteChord = (id) => {
-    const chord = this.chords.find((obj) => obj.id === id);
-    if (chord) {
-      chord.favorite = false;
-    }
-    // this.chords[id] = { ...this.chords[id], favourite: false };
-    // TODO here also add the fetch to the correct api when ready
-    FavChordsTemp = this.chords;
+    // TODO here also add the delete from favs endpoint
+    const chord = this.#_shadowRoot.querySelector(`#chord-${id}`);
+    this.#_shadowRoot.getElementById(`favorites-list`).removeChild(chord);
   };
 
   addFavoriteClickListener = (chord) => {
@@ -245,11 +230,7 @@ class ChordList extends HTMLElement {
         event.preventDefault();
 
         if (this.chords.find((obj) => obj.id === chord.id)?.favorite) {
-          event.target.style.backgroundColor = "transparent";
           this.unfavoriteChord(chord.id);
-        } else {
-          event.target.style.backgroundColor = "red";
-          this.favoriteChord(chord.id);
         }
       });
   };
@@ -259,7 +240,7 @@ class ChordList extends HTMLElement {
       return;
     }
 
-    const [chordList] = this.#_shadowRoot.querySelectorAll("#chord-list");
+    const [chordList] = this.#_shadowRoot.querySelectorAll("#favorites-list");
     chordList.innerHTML = "";
 
     for (const chord of chords) {
@@ -286,15 +267,19 @@ class ChordList extends HTMLElement {
   }
 
   loadChords() {
-    fetch("../php/chords/chord_endpoints_helper.php")
-      .then((res) =>
-        res.ok ? res.json() : Promise.reject(new Error("Error loading chords"))
-      )
-      .then((chords) => {
-        this.chords = chords;
-        this.renderChords(chords);
-      })
-      .catch((err) => console.error(err));
+    // TODO here change it with the favorites endpoint
+    // fetch("../php/chords/chord_endpoints_helper.php")
+    //   .then((res) =>
+    //     res.ok ? res.json() : Promise.reject(new Error("Error loading chords"))
+    //   )
+    //   .then((chords) => {
+    //     this.chords = chords;
+    //     this.renderChords(chords);
+    //   })
+    //   .catch((err) => console.error(err));
+    const filtered = FavChordsTemp.filter((chord) => chord?.favorite === true);
+    this.chords = filtered;
+    this.renderChords(filtered);
   }
 
   connectedCallback() {
@@ -302,4 +287,4 @@ class ChordList extends HTMLElement {
   }
 }
 
-customElements.define("chord-list-component", ChordList);
+customElements.define("favorites-list-component", FavoritesList);

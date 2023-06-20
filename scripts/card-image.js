@@ -80,14 +80,12 @@ class ChordImage extends HTMLElement {
     super();
     this.#_shadowRoot = this.attachShadow({ mode: "closed" });
     this.#_shadowRoot.appendChild(chordImageTemplate.content.cloneNode(true));
-    console.log(this.getAttribute("notes"));
-    this.notes = this.getAttribute("notes")?.split("-");
 
+    this.notes = this.getAttribute("notes")?.split("-");
     this.container = this.#_shadowRoot.querySelector(".image-container");
   }
 
   renderChords = () => {
-    console.log(this.notes);
     this.notes.forEach((element) => {
       let note = element;
       let signElement = null;
@@ -121,7 +119,6 @@ class ChordImage extends HTMLElement {
 
       //Bottom
       const bottom = (this.chords[note] - 2) * 8.5;
-      console.log(bottom);
       noteElement.style.bottom = `${bottom}%`;
     });
   };
