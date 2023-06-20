@@ -130,7 +130,7 @@ function removeChordFromMelody(index) {
        
         document.body.appendChild(csvExportElement);
         
-        csvExportElement.click();
+        csvExportElement.click();   
         document.body.removeChild(csvExportElement);
     });  
 }
@@ -139,7 +139,7 @@ function exportChordToASCII(chord) {
     document.getElementById("button-ascii"  + chord.id).addEventListener('click', () => {
         let asciiExportElement = document.createElement('a');
         asciiExportElement.setAttribute('href', 'data:text/plain;charset=utf-8,'+ encodeURIComponent(chord.name) + "|" + encodeURIComponent(chord.description));
-        asciiExportElement.setAttribute('download', chord.name + '.asc');
+        asciiExportElement.setAttribute('download', chord.name);
        
         document.body.appendChild(asciiExportElement);
         
@@ -200,15 +200,12 @@ function exportChordToASCII(chord) {
             container.appendChild(chordExportToASCIIButton);
             container.appendChild(chordExportToJSONButton);
             container.appendChild(addToMelodyButton);
-            
+
             playChords(chord[i]);
             exportChordToCSV(chord[i]);
             exportChordToASCII(chord[i]);
             exportChordToJSON(chord[i]);
-            addToMelody(chord[i]);
-            // removeChordFromMelody(melody.length - 1);
-            
-            
+            addToMelody(chord[i]);    
         }
 
         
@@ -217,3 +214,61 @@ function exportChordToASCII(chord) {
 }
 
 showAllChordsData();
+
+document.getElementById("export-melody-csv").addEventListener('click', () => {
+    let csvExportElement = document.createElement('a');
+    
+    InfoForExport = '';
+    for (let i = 0; i < melody.length; i++) {
+        if (melody[i] != null) {
+            InfoForExport += encodeURIComponent(melody[i].name) + "," + encodeURIComponent(melody[i].description) + "\n";
+        }
+    }
+
+    csvExportElement.setAttribute('href', 'data:text/csv;charset=utf-8,'+ InfoForExport);
+    csvExportElement.setAttribute('download', 'name');
+
+    document.body.appendChild(csvExportElement);
+    
+    csvExportElement.click();   
+    document.body.removeChild(csvExportElement);
+}); 
+
+
+document.getElementById("export-melody-ascii").addEventListener('click', () => {
+    let csvExportElement = document.createElement('a');
+    
+    InfoForExport = '';
+    for (let i = 0; i < melody.length; i++) {
+        if (melody[i] != null) {
+            InfoForExport += encodeURIComponent(melody[i].name) + "|" + encodeURIComponent(melody[i].description) + "\n";
+        }
+    }
+
+    csvExportElement.setAttribute('href', 'data:text/plain;charset=utf-8,'+ InfoForExport);
+    csvExportElement.setAttribute('download', 'name');
+
+    document.body.appendChild(csvExportElement);
+    
+    csvExportElement.click();   
+    document.body.removeChild(csvExportElement);
+}); 
+
+document.getElementById("export-melody-json").addEventListener('click', () => {
+    let csvExportElement = document.createElement('a');
+    
+    InfoForExport = '';
+    for (let i = 0; i < melody.length; i++) {
+        if (melody[i] != null) {
+            InfoForExport += encodeURIComponent(JSON.stringify({ name:melody[i].name,description:melody[i].description }));
+        }
+    }
+
+    csvExportElement.setAttribute('href', 'data:text/json;charset=utf-8,'+ InfoForExport);
+    csvExportElement.setAttribute('download', 'name' + '.json');
+
+    document.body.appendChild(csvExportElement);
+
+    csvExportElement.click();   
+    document.body.removeChild(csvExportElement);
+}); 
