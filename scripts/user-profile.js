@@ -184,7 +184,8 @@ class UserProfile extends HTMLElement {
     const editedInfo = {
       username: updatedUsername,
       first_name: updatedFirstName,
-      last_name: updatedLastName
+      last_name: updatedLastName,
+      email: updatedEmail
     };
 
     fetch("../php/user/UserEndpoints.php", {
@@ -229,18 +230,18 @@ class UserProfile extends HTMLElement {
   }
 
   renderUser() {
-    const { firstName, lastName, email, username } = this.user || {};
+    const { first_name, last_name, email, username } = this.user || {};
 
     this.#_shadowRoot.innerHTML += `
     <div class="profile-container">
       <h1>Profile</h1>
       <div class="field">
         <label>First Name:</label>
-        <input type="text" class="first-name" value="${firstName}" disabled>
+        <input type="text" class="first-name" value="${first_name}" disabled>
       </div>
       <div class="field">
         <label>Last Name:</label>
-        <input type="text" class="last-name" value="${lastName}" disabled>
+        <input type="text" class="last-name" value="${last_name}" disabled>
       </div>
       <div class="field">
         <label>Email:</label>
