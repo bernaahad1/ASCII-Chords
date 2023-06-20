@@ -1,4 +1,4 @@
-import { onLogIn, onLogOut } from "./utils.js";
+import { onLogIn, onLogOut, checkSession } from "./utils.js";
 
 const toggleTabs = (event) => {
   event.preventDefault();
@@ -14,9 +14,10 @@ function getContent(fragmentId, callback) {
     home: "This is the Home page. Welcome to my site.",
     chords: "<chord-list-component></chord-list-component>",
     import: "Imports go here",
-    favourites: "Favourites section",
+    favorites: "<favorites-list-component></favorites-list-component>",
     login: `<login-form-component></login-form-component>`,
     signup: `<registration-form-component></registration-form-component>`,
+    userProfile: `<user-profile></user-profile>`,
     logout: "Logged out"
   };
 
@@ -52,31 +53,30 @@ function loadContent() {
   });
 }
 
-function checkSession() {
-  fetch("../php/authentication/startSession.php", { method: "GET" })
-    .then((response) => response.json())
-    .then((response) => {
-      if (response.logged) {
-        console.log("chords", response.logged);
-        onLogIn();
-
-        if (!location.hash) {
-          location.hash = "#chords";
-        }
-      }
-    })
-    .catch(() => {
-      console.log("home");
-      onLogOut();
-
-      if (!location.hash) {
-        location.hash = "#home";
-      }
-    });
-}
-
 checkSession();
 
 loadContent();
 
 window.addEventListener("hashchange", loadContent);
+
+// Refactor maybe
+const $nav = document.querySelector(".navbar");
+const threshold = $nav.getBoundingClientRect();
+const fixedClass = "nav--fixed";
+
+// reference for update request
+let updating = false;
+const handleScroll = () => {
+  if (window.scrollY >= threshold.top || window.pageYOffset >= threshold.top)
+    $nav.classList.add(fixedClass);
+  else $nav.classList.remove(fixedClass);
+  updating = false;
+};
+// on scroll, if an update opportunity is available, update
+window.onscroll = () => {
+  if (updating) return;
+  else {
+    updating = true;
+    requestAnimationFrame(handleScroll);
+  }
+};
