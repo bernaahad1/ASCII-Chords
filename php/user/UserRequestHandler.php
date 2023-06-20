@@ -1,6 +1,6 @@
 <?php
 //include_once "../db/db_connection.php";
-include_once "./User.php";
+include_once "User.php";
 include_once "../exceptions/BadRequestException.php";
 include_once "../favourite_chords/FavouriteChordsRequestHandler.php";
 
@@ -18,6 +18,21 @@ class UserRequestHandler {
             self::validateUserForDeleted($userEntity);
 
             return $userEntity;
+        }
+
+        throw new BadRequestException('This user cannot be accessed');
+    }
+
+    public static function getUserByEmail($userEmail) : int {
+        $connection = (new Db())->getConnection();
+
+        $selectStatement = $connection->prepare("SELECT id FROM `users` WHERE email = ?");
+        $selectStatement->execute([$userEmail]);
+
+        $userId = $selectStatement->fetch();
+
+        if ($userId) {
+            return $userId;
         }
 
         throw new BadRequestException('This user cannot be accessed');
@@ -54,7 +69,7 @@ class UserRequestHandler {
         $connection = (new Db())->getConnection();
 
         $selectStatement = $connection->prepare("UPDATE users
-                                                SET deleted = 1
+                                                SET email = null, deleted = 1
                                                 WHERE id = ?");
 
 

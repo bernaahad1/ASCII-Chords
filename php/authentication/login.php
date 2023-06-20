@@ -1,4 +1,5 @@
 <?php
+include_once "../user/UserRequestHandler.php";
 
 session_start();
 
@@ -19,6 +20,7 @@ if (isset($_SESSION['email'])) {
     try {
         $user->login();
 
+        $_SESSION['user_id'] = UserRequestHandler::getUserByEmail($_SESSION['email']);
         $_SESSION['email'] = $loginInput['email'];
 
         echo json_encode([
