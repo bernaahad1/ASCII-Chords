@@ -61,8 +61,6 @@ function playChords(chord) {
       for (let i = 0; i < chord_notes.length; i++) {
         chord_notes[i] = chord_notes[i].replace("#", "%23");
         notes[chord_notes[i]].play();
-        notes[chord_notes[i]].play();
-        notes[chord_notes[i]].play();
       }
     });
 }
@@ -88,69 +86,25 @@ async function addToMelody(chord) {
     });
 }
 
-// function delay(millisec) {
-//   return new Promise((resolve) => {
-//     setTimeout(() => {
-//       resolve("");
-//       console.log("here");
-//     }, millisec);
-//   });
-// }
-
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function playMelody() {
-  let i = 0;
-  const intervalID = setInterval(
-    (function alo() {
-      console.log(i);
-      if (melody[i] != null) {
-        chord_notes = melody[i].description.split("-");
+  for (let i = 0; i < melody.length; i++) {
+    if (melody[i] != null) {
+      chord_notes = melody[i].description.split("-");
 
-        notes = getAudioForNotes();
+      notes = getAudioForNotes();
 
-        console.log(i);
-        //   if (i != 0) {
-        //   await delay(1000);
-        console.log("after");
-        //   }
+        await delay(1100);
 
-        for (let j = 0; j < chord_notes.length; j++) {
-          chord_notes[j] = chord_notes[j].replace("#", "%23");
-          notes[chord_notes[j]].play();
-        }
+      for (let j = 0; j < chord_notes.length; j++) {
+        chord_notes[j] = chord_notes[j].replace("#", "%23");
+        notes[chord_notes[j]].play();
       }
-      i++;
-
-      if (i > melody.length) {
-        clearInterval(intervalID);
-      }
-
-      return alo;
-    })(),
-    1000
-  );
-
-  //   for (let i = 0; i < melody.length; i++) {
-  //     if (melody[i] != null) {
-  //       chord_notes = melody[i].description.split("-");
-
-  //       notes = getAudioForNotes();
-
-  //       console.log(i);
-  //       //   if (i != 0) {
-  //       //   await delay(1000);
-  //       console.log("after");
-  //       //   }
-
-  //       for (let j = 0; j < chord_notes.length; j++) {
-  //         chord_notes[j] = chord_notes[j].replace("#", "%23");
-  //         await notes[chord_notes[j]].play();
-  //       }
-  //     }
-  //   }
+    }
+  }
 }
 
 function removeChordFromMelody(index) {
