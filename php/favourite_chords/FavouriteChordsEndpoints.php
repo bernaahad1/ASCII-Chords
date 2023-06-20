@@ -1,5 +1,5 @@
 <?php
-require "./FavouriteChordsRequestHandler.php";
+include_once "FavouriteChordsRequestHandler.php";
 
 $response = null;
 

@@ -1,5 +1,4 @@
 <?php
-
 abstract class UserValidator {
     public function validateUsername($username): void {
         $this->validateStringValue($username, 'username');

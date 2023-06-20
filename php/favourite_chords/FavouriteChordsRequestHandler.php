@@ -1,7 +1,7 @@
 <?php
-require "../db/db_connection.php";
-require "./FavouriteChords.php";
-require "../../exceptions/BadRequestException.php";
+include_once "../db/db_connection.php";
+include_once "FavouriteChords.php";
+include_once "../exceptions/BadRequestException.php";
 
 class FavouriteChordsRequestHandler {
     public static function getAllRecordsByUserId(string $userId): array {
@@ -107,7 +107,7 @@ class FavouriteChordsRequestHandler {
 
     public static function deleteFavouriteChord($userId, $chordId) {
         $favouriteChord = self::getFavouriteChordByUserIdAndChordId($userId, $chordId);
-        self::validateFavouriteChordForDeleted($favouriteChord);
+        self::validateFavouriteChordForDeletedObject($favouriteChord);
 
         echo "deleteFavouriteChord";
         $connection = (new Db())->getConnection();
@@ -129,6 +129,12 @@ class FavouriteChordsRequestHandler {
 
     private static function validateFavouriteChordForDeleted($favouriteChord) : void {
         if (self::isFavouriteChordForDeleted($favouriteChord)) {
+            throw new ResourceNotFoundException("The resource has already been deleted!");
+        } 
+    }
+
+    private static function validateFavouriteChordForDeletedObject($favouriteChord) : void {
+        if ($favouriteChord->getDeleted()) {
             throw new ResourceNotFoundException("The resource has already been deleted!");
         } 
     }

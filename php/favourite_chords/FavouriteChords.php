@@ -1,5 +1,5 @@
 <?php
-require "./FavouriteChordsValidator.php";
+include_once "FavouriteChordsValidator.php";
 
 class FavouriteChords extends FavouriteChordsValidator {
     private $user_id;

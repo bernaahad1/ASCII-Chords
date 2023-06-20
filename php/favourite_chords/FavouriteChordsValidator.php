@@ -1,5 +1,4 @@
 <?php
-
 abstract class FavouriteChordsValidator {
     public function validateUserId($userId): void {
         if ($userId <= 0) {

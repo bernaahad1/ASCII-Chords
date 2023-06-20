@@ -1,5 +1,5 @@
 <?php
-require "./UserRequestHandler.php";
+include_once "./UserRequestHandler.php";
 
 $response = null;
 

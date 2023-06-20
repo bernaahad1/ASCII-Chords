@@ -15,7 +15,7 @@ if (isset($_SESSION['email'])) {
 
     require_once "../user/User.php";
 
-    $user = new User(null, null, null, $loginInput['email'], $loginInput['password']);
+    $user = new User(null, null, null, $loginInput['email'], $loginInput['password'], 0);
     try {
         $user->login();
 

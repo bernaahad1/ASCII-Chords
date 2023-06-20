@@ -1,8 +1,8 @@
 <?php
-require "../db/db_connection.php";
-require "./User.php";
-require "../../exceptions/BadRequestException.php";
-require "../favourite_chords/FavouriteChordsRequestHandler.php";
+//include_once "../db/db_connection.php";
+include_once "./User.php";
+include_once "../exceptions/BadRequestException.php";
+include_once "../favourite_chords/FavouriteChordsRequestHandler.php";
 
 class UserRequestHandler {
     public static function getUserById($userId): User {

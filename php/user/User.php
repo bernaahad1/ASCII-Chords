@@ -1,6 +1,6 @@
 <?php
 
-require "UserValidator.php";
+include "UserValidator.php";
 
 class User extends UserValidator {
     private $username;
