@@ -32,7 +32,7 @@ class UserRequestHandler {
         $userId = $selectStatement->fetch();
 
         if ($userId) {
-            return $userId;
+            return $userId['id'];
         }
 
         throw new BadRequestException('This user cannot be accessed');
