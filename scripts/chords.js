@@ -1,55 +1,55 @@
-// const showSingleChordData = chordId => {
-//     fetch('../php/chords/chord_endpoints_helper.php?id=' + chordId)
-//         .then(response => response.json())
-//         .then(chord => {
+const showSingleChordData = chordId => {
+    fetch('../php/chords/../php/chords/ChordEndpoints.php?id=' + chordId)
+        .then(response => response.json())
+        .then(chord => {
 
-//             const container = document.getElementById('chord-info');
+            const container = document.getElementById('chord-info');
 
-//             const chordInfoElement = document.createElement('div');
-//             chordInfoElement.setAttribute("id", "div"  + chordId);
-//             chordInfoElement.innerHTML = `<span> Name: ${chord.name} </span>
-//                                          <span> Description: ${chord.description} </span>`;
+            const chordInfoElement = document.createElement('div');
+            chordInfoElement.setAttribute("id", "div"  + chordId);
+            chordInfoElement.innerHTML = `<span> Name: ${chord.name} </span>
+                                         <span> Description: ${chord.description} </span>`;
 
-//             container.appendChild(chordInfoElement);
-//         });
-// }
+            container.appendChild(chordInfoElement);
+        });
+}
 
-// const showAllChordsData = () => {
-//     fetch('../php/chords/chord_endpoints_helper.php')
-//         .then(response => response.json())
-//         .then(chord => {
-//             for (let i = 0; i < chord.length; i++) {
+const showAllChordsData = () => {
+    fetch('../php/chords/ChordEndpoints.php')
+        .then(response => response.json())
+        .then(chord => {
+            for (let i = 0; i < chord.length; i++) {
 
-//             const container = document.getElementById('chord-info');
+            const container = document.getElementById('chord-info');
 
-//             const chordInfoElement = document.createElement('div');
-//             chordInfoElement.setAttribute("id", "div"  + chord[i].id);
-//             chordInfoElement.innerHTML = `<span> Name: ${chord[i].name} </span>
-//                                         <span> Description: ${chord[i].description} </span>`;
+            const chordInfoElement = document.createElement('div');
+            chordInfoElement.setAttribute("id", "div"  + chord[i].id);
+            chordInfoElement.innerHTML = `<span> Name: ${chord[i].name} </span>
+                                        <span> Description: ${chord[i].description} </span>`;
 
-//             const chordPlayButton = document.createElement('button');
-//             chordPlayButton.setAttribute("id", "button-play"  + chord[i].id);
-//             chordPlayButton.innerHTML = 'Чуй акорда!';
+            const chordPlayButton = document.createElement('button');
+            chordPlayButton.setAttribute("id", "button-play"  + chord[i].id);
+            chordPlayButton.innerHTML = 'Чуй акорда!';
 
-//             const chordExportToCSVButton = document.createElement('button');
-//             chordExportToCSVButton.setAttribute("id", "button-csv"  + chord[i].id);
-//             chordExportToCSVButton.innerHTML = 'Експортирай до CSV!';
+            const chordExportToCSVButton = document.createElement('button');
+            chordExportToCSVButton.setAttribute("id", "button-csv"  + chord[i].id);
+            chordExportToCSVButton.innerHTML = 'Експортирай до CSV!';
 
-//             const chordExportToASCIIButton = document.createElement('button');
-//             chordExportToASCIIButton.setAttribute("id", "button-ascii"  + chord[i].id);
-//             chordExportToASCIIButton.innerHTML = 'Експортирай до ASCII!';
+            const chordExportToASCIIButton = document.createElement('button');
+            chordExportToASCIIButton.setAttribute("id", "button-ascii"  + chord[i].id);
+            chordExportToASCIIButton.innerHTML = 'Експортирай до ASCII!';
 
-//             container.appendChild(chordInfoElement);
-//             container.appendChild(chordPlayButton);
-//             container.appendChild(chordExportToCSVButton);
-//             container.appendChild(chordExportToASCIIButton);
+            container.appendChild(chordInfoElement);
+            container.appendChild(chordPlayButton);
+            container.appendChild(chordExportToCSVButton);
+            container.appendChild(chordExportToASCIIButton);
 
-//             playChords(chord[i]);
-//             exportChordToCSV(chord[i]);
-//             exportChordToASCII(chord[i]);
-//         }
-//     });
-// }
+            playChords(chord[i]);
+            exportChordToCSV(chord[i]);
+            exportChordToASCII(chord[i]);
+        }
+    });
+}
 
 // function playChords(chord) {
 
@@ -111,4 +111,4 @@
 //     });
 //  }
 
-// showAllChordsData();
+showAllChordsData();

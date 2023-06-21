@@ -1,8 +1,8 @@
 <?php
 
-include "UserValidator.php";
+include_once "UserValidator.php";
 
-class User extends UserValidator {
+class User extends UserValidator implements JsonSerializable  {
     private $username;
     private $first_name;
     private $last_name;
@@ -10,7 +10,7 @@ class User extends UserValidator {
     private $password;
     private $deleted;
 
-    public function __construct($username, $first_name, $last_name, $email, $password, $deleted) {
+    public function __construct($username, $first_name, $last_name, $email, $password) {
         $this->validateUsername($username);
         $this->validateFirstName($first_name);
         $this->validateLastName($last_name);
@@ -22,7 +22,7 @@ class User extends UserValidator {
         $this->last_name = $last_name;
         $this->email = $email;
         $this->password = $password;
-        $this->deleted = $deleted;
+        $this->deleted = 0;
     }
 
     public function getUsername() {
@@ -64,76 +64,6 @@ class User extends UserValidator {
     public function setEmail($email) {
         $this->email = $email;
     }
-
-    public function saveNewUser(): void {
-        require_once "../db/db_connection.php";
-
-        $db = new Db();
-
-        $conn = $db->getConnection();
-
-        // TODO do not define deleted here
-        $insertStatement = $conn->prepare(
-            "INSERT INTO `users` (username, first_name, last_name, email, password, deleted)
-             VALUES (:username, :first_name, :last_name, :email, :password, :deleted)"
-        );
-
-        $hashedPassword = password_hash($this->password, PASSWORD_DEFAULT);
-
-        $insertResult = $insertStatement->execute([
-            'username' => $this->username,
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'email' => $this->email,
-            'password' => $hashedPassword,
-            'deleted' => 0
-        ]);
-
-        if (!$insertResult) {
-            $errorInfo = $insertStatement->errorInfo();
-            $errorMessage = "There was error while saving the user! Please try again!";
-
-            if ($errorInfo[1] == 1062) {
-                $errorMessage = "The username is already taken";
-            } else {
-                $errorMessage = "Request failed, true again later";
-            }
-
-            throw new Exception($errorMessage);
-        }
-    }
-
-    public function login(): void {
-
-        require_once "../db/db_connection.php";
-
-        $db = new Db();
-
-        $conn = $db->getConnection();
-
-        $selectPasswordToEmailStatement = $conn->prepare("SELECT password FROM `users` WHERE email = :email");
-        $result = $selectPasswordToEmailStatement->execute(['email' => $this->email]);
-
-        $dbUser = $selectPasswordToEmailStatement->fetch();
-
-        if (!password_verify($this->password, $dbUser['password'])) {
-            throw new Exception("Email and password do not match");
-        }
-    }
-
-    public static function getAll(): iterable {
-
-        require_once "../src/Db.php";
-
-        $db = new Db();
-
-        $conn = $db->getConnection();
-
-        $selectStatement = $conn->prepare("SELECT username, first_name, last_name, email, password, deleted FROM `users`");
-        $result = $selectStatement->execute([]);
-
-        return $selectStatement->fetchAll();
-    }    
     
     public function jsonSerialize(): array {
         return [

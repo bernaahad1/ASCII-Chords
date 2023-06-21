@@ -1,7 +1,7 @@
 <?php
 include_once "FavouriteChordsValidator.php";
 
-class FavouriteChords extends FavouriteChordsValidator {
+class FavouriteChords extends FavouriteChordsValidator implements JsonSerializable {
     private $user_id;
     private $chord_id;
     private $deleted;

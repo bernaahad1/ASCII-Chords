@@ -38,6 +38,60 @@ class UserRequestHandler {
         throw new BadRequestException('This user cannot be accessed');
     }
 
+    public static function saveNewUser(): bool {
+        $userData = json_decode(file_get_contents('php://input'), true);
+
+        $db = new Db();
+
+        $conn = $db->getConnection();
+
+        // TODO do not define deleted here
+        $insertStatement = $conn->prepare(
+            "INSERT INTO `users` (username, first_name, last_name, email, password, deleted)
+             VALUES (:username, :first_name, :last_name, :email, :password, :deleted)"
+        );
+
+        $hashedPassword = password_hash($userData['password'], PASSWORD_DEFAULT);
+
+        $insertResult = $insertStatement->execute([
+            'username' => $userData['username'],
+            'first_name' => $userData['first_name'],
+            'last_name' => $userData['last_name'],
+            'email' => $userData['email'],
+            'password' => $hashedPassword,
+            'deleted' => 0
+        ]);
+
+        if (!$insertResult) {
+            $errorInfo = $insertStatement->errorInfo();
+            $errorMessage = "There was error while saving the user! Please try again!";
+
+            if ($errorInfo[1] == 1062) {
+                $errorMessage = "The username is already taken";
+            } else {
+                $errorMessage = "Request failed, true again later";
+            }
+
+            throw new Exception($errorMessage);
+        }
+
+        return true;
+    }
+
+    public static function login($email, $password): void {
+        $db = new Db();
+
+        $conn = $db->getConnection();
+
+        $selectPasswordToEmailStatement = $conn->prepare("SELECT password FROM `users` WHERE email = :email");
+        $result = $selectPasswordToEmailStatement->execute(['email' => $email]);
+
+        $dbUser = $selectPasswordToEmailStatement->fetch();
+
+        if (!password_verify($password, $dbUser['password'])) {
+            throw new Exception("Email and password do not match");
+        }
+    } 
 
     public static function updateUserById($userId)  {
         $userdata = json_decode(file_get_contents('php://input'), true);
