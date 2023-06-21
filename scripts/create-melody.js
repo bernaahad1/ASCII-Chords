@@ -336,13 +336,12 @@ class CreateMelody extends HTMLElement {
     for (let i = 0; i < this.melody.length; i++) {
       if (this.melody[i] != null) {
         const chord_notes = this.melody[i].description.split("-");
-
-        await this.delay(1100);
-
         for (let j = 0; j < chord_notes.length; j++) {
           chord_notes[j] = chord_notes[j].replace("#", "%23");
           AUDIOS[chord_notes[j]].play();
         }
+        await this.delay(1300);
+
       }
     }
   };
