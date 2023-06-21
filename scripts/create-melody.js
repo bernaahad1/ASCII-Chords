@@ -262,7 +262,7 @@ class CreateMelody extends HTMLElement {
           "href",
           "data:text/csv;charset=utf-8," + InfoForExport
         );
-        csvExportElement.setAttribute("download", "name");
+        csvExportElement.setAttribute("download", "melody");
 
         this.#_shadowRoot.appendChild(csvExportElement);
 
@@ -292,7 +292,7 @@ class CreateMelody extends HTMLElement {
           "href",
           "data:text/plain;charset=utf-8," + InfoForExport
         );
-        csvExportElement.setAttribute("download", "name");
+        csvExportElement.setAttribute("download", "melody");
 
         this.#_shadowRoot.appendChild(csvExportElement);
 
@@ -323,7 +323,7 @@ class CreateMelody extends HTMLElement {
           "href",
           "data:text/json;charset=utf-8," + InfoForExport
         );
-        csvExportElement.setAttribute("download", "name" + ".json");
+        csvExportElement.setAttribute("download", "melody" + ".json");
 
         this.#_shadowRoot.appendChild(csvExportElement);
 
@@ -379,10 +379,11 @@ class CreateMelody extends HTMLElement {
         .addEventListener("click", this.playMelody);
 
       this.addToMelody(chord);
-      this.exportMelodyToCsv();
-      this.exportMelodyToJson();
-      this.exportMelodyToAscii();
     }
+
+    this.exportMelodyToCsv();
+    this.exportMelodyToJson();
+    this.exportMelodyToAscii();
   }
 
   loadChords() {
