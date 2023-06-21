@@ -1,3 +1,5 @@
+import { red_heart, empty_heart } from "./icons.js";
+
 function createAudioPlaying(notes) {
   for (let key of Object.keys(notes)) {
     let note = new Audio();
@@ -35,6 +37,9 @@ export const AUDIOS = createAudioPlaying(notes);
 
 function createChordListTemplate() {
   const templateString = `
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+  
+
     <style>
     *,
     ::after,
@@ -174,7 +179,7 @@ class ChordList extends HTMLElement {
         <chord-image notes="${chord.description}"></chord-image>    
         <div class="left-icon-buttons">
         <button id="listen-${chord.id}" class="listen speaker-icon"><img src="../assets/images/speaker-icon.svg"/></button>
-        <button id="heart-button-${chord.id}" class="heart-button"><img src="../assets/images/heart-solid.svg"/></button>
+        <button id="heart-button-${chord.id}" class="heart-button">${empty_heart}</button>
         </div>
         <button id="export-csv-${chord.id}" class="export-csv">Export as CSV</button>
         <button id="export-ascii-${chord.id}" class="export-ascii">Export as ASCII</button>
@@ -263,10 +268,15 @@ class ChordList extends HTMLElement {
         event.preventDefault();
 
         if (this.chords.find((obj) => obj.id === chord.id)?.favorite) {
-          event.target.style.backgroundColor = "transparent";
+          this.#_shadowRoot.getElementById(
+            `heart-button-${chord.id}`
+          ).innerHTML = `${empty_heart}`;
           this.unfavoriteChord(chord.id);
         } else {
-          event.target.style.backgroundColor = "red";
+          this.#_shadowRoot.getElementById(
+            `heart-button-${chord.id}`
+          ).innerHTML = `${red_heart}`;
+
           this.favoriteChord(chord.id);
         }
       });
