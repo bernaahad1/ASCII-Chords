@@ -41,6 +41,7 @@ class UserRequestHandler extends UserValidator {
 
     public static function saveNewUser(): bool {
         $userData = json_decode(file_get_contents('php://input'), true);
+        self::validateUserData($userData);
 
         $db = new Db();
 
@@ -53,29 +54,34 @@ class UserRequestHandler extends UserValidator {
 
         $hashedPassword = password_hash($userData['password'], PASSWORD_DEFAULT);
 
-        $insertResult = $insertStatement->execute([
-            'username' => $userData['username'],
-            'first_name' => $userData['first_name'],
-            'last_name' => $userData['last_name'],
-            'email' => $userData['email'],
-            'password' => $hashedPassword,
-            'deleted' => 0
-        ]);
-
-        if (!$insertResult) {
-            $errorInfo = $insertStatement->errorInfo();
-            $errorMessage = "There was error while saving the user! Please try again!";
-
-            if ($errorInfo[1] == 1062) {
-                $errorMessage = "The username is already taken";
-            } else {
-                $errorMessage = "Request failed, true again later";
+        try {
+            $insertResult = $insertStatement->execute([
+                'username' => $userData['username'],
+                'first_name' => $userData['first_name'],
+                'last_name' => $userData['last_name'],
+                'email' => $userData['email'],
+                'password' => $hashedPassword,
+                'deleted' => 0
+            ]);
+    
+            if (!$insertResult) {
+                $errorInfo = $insertStatement->errorInfo();
+                $errorMessage = "There was error while saving the user! Please try again!";
+    
+                if ($errorInfo[1] == 1062) {
+                    $errorMessage = "The username is already taken";
+                } else {
+                    $errorMessage = "Request failed, true again later";
+                }
+    
+                throw new Exception($errorMessage);
             }
-
-            throw new Exception($errorMessage);
+    
+            return true;
+        } catch (Exception $e) {
+            throw new RuntimeException(message: "There was problem with saving the user because of ".$e->getMessage()."!");
         }
-
-        return true;
+        
     }
 
     public static function login($email, $password): void {
@@ -96,10 +102,14 @@ class UserRequestHandler extends UserValidator {
         }
     } 
 
-    public static function updateUserById($userId)  {
+    public static function updateUserById($userId) : bool {
         self::validateUserId($userId);
 
         $userdata = json_decode(file_get_contents('php://input'), true);
+        if($userdata == null || empty($userdata)) {
+            return true;
+        }
+
         $user = self::getUserById($userId);
         $updatedUser = self::updateUserFields($user, $userdata);
 
@@ -156,5 +166,13 @@ class UserRequestHandler extends UserValidator {
         }
 
         return $user;
+    }
+
+    private static function validateUserData($userData) {
+        self::validateUsername($userData['username']);
+        self::validateFirstName($userData['first_name']);
+        self::validateLastName($userData['last_name']);
+        self::validateEmail($userData['email']);
+        self::validatePassword($userData['password']);
     }
 }

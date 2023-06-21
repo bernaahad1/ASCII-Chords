@@ -37,6 +37,7 @@ class ChordRequestHandler extends ChordsValidator {
 
     public static function addNewChord(): bool {
         $chordData = json_decode(file_get_contents('php://input'), true);
+        self::validateChordData($chordData);
 
         $db = new Db();
 
@@ -47,38 +48,46 @@ class ChordRequestHandler extends ChordsValidator {
              VALUES (:name, :description, :deleted)"
         );
 
-        $insertResult = $insertStatement->execute([
-            "name" => $chordData['name'],
-            "description" => $chordData['description'],
-            "deleted" => 0,
-        ]);
-
-        if (!$insertResult) {
-            $errorInfo = $insertStatement->errorInfo();
-            $errorMessage =
-                "There was error while saving the chord! Please try again!";
-
-            if ($errorInfo[1] == 1062) {
-                $errorMessage = "Chord with this name already exists";
-            } else {
-                if ($errorInfo[2] == 1062) {
-                    $errorMessage =
-                        "Chord with this description already exists";
+        try {
+            $insertResult = $insertStatement->execute([
+                "name" => $chordData['name'],
+                "description" => $chordData['description'],
+                "deleted" => 0,
+            ]);
+    
+            if (!$insertResult) {
+                $errorInfo = $insertStatement->errorInfo();
+                $errorMessage =
+                    "There was error while saving the chord! Please try again!";
+    
+                if ($errorInfo[1] == 1062) {
+                    $errorMessage = "Chord with this name already exists";
                 } else {
-                    $errorMessage = "Request failed, true again later";
+                    if ($errorInfo[2] == 1062) {
+                        $errorMessage =
+                            "Chord with this description already exists";
+                    } else {
+                        $errorMessage = "Request failed, true again later";
+                    }
                 }
+    
+                throw new Exception($errorMessage);
             }
-
-            throw new Exception($errorMessage);
+    
+            return true;
+        } catch (Exception $e) {
+            throw new RuntimeException(message: "There was problem with saving the chord because of ".$e->getMessage()."!");
         }
-
-        return true;
     }
 
-    public static function updateChord($chordId)  {
+    public static function updateChord($chordId) : bool  {
         self::validateChordId($chordId);
 
         $chordData = json_decode(file_get_contents('php://input'), true);
+        if($chordData == null || empty($chordData)) {
+            return true;
+        }
+
         $chord = self::getSingleChord($chordId);
         $updatedChord = self::updateChordFields($chord, $chordData);
 
@@ -122,5 +131,10 @@ class ChordRequestHandler extends ChordsValidator {
         }
 
         return $chord;
+    }
+
+    private static function validateChordData($chordData) {
+        self::validateName($chordData['name']);
+        self::validateDescription($chordData['description']);
     }
 }

@@ -2,6 +2,7 @@
 include_once "../db/db_connection.php";
 include_once "FavouriteChords.php";
 include_once "../exceptions/BadRequestException.php";
+include_once "../exceptions/ConflictException.php";
 
 class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
     
@@ -56,6 +57,7 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
     public static function addFavouriteChord($userId, $chordId) : bool {
         self::validateUserId($userId);
         self::validateChordId($chordId);
+        self::validateForExsiting($userId, $chordId);
 
         $connection = (new Db())->getConnection();
         $insertStatement = $connection->prepare(
@@ -117,5 +119,11 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
         }
 
         throw new BadRequestException('This favourite chord cannot be accessed');
+    }
+
+    private static function validateForExsiting($userId, $chordId) {
+        if (self::getFavouriteChordByUserIdAndChordId($userId, $chordId) != null) {
+            throw new ConflictException("There is already such record!");
+        }
     }
 }
