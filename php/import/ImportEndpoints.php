@@ -1,6 +1,6 @@
 <?php
 
-require "./ImportRequestHandler.php";
+include_once "./ImportRequestHandler.php";
 
 $response = null;
 

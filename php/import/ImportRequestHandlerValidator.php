@@ -1,5 +1,5 @@
 <?php
-require "../../exceptions/ResourceNotFoundException.php";
+include_once "../exceptions/ResourceNotFoundException.php";
 
 abstract class ImportRequestHandlerValidator {
     protected static function validateFilePath($filePath) : void {

@@ -1,8 +1,8 @@
 <?php
-//include_once "../db/db_connection.php";
 include_once "User.php";
 include_once "../exceptions/BadRequestException.php";
 include_once "../favourite_chords/FavouriteChordsRequestHandler.php";
+include_once "../exceptions/ConflictException.php";
 
 class UserRequestHandler extends UserValidator {
     public static function getUserById($userId): User {
@@ -79,7 +79,7 @@ class UserRequestHandler extends UserValidator {
     
             return true;
         } catch (Exception $e) {
-            throw new RuntimeException(message: "There was problem with saving the user because of ".$e->getMessage()."!");
+            throw new ConflictException(message: "There was problem with saving the user because of ".$e->getMessage()."!");
         }
         
     }

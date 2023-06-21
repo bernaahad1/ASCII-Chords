@@ -1,7 +1,7 @@
 <?php
 
-require "ImportRequestHandlerValidator.php";
-require "../chords/Chord.php";
+include_once "ImportRequestHandlerValidator.php";
+include_once "../chords/ChordRequestHandler.php";
 
 class ImportRequestHandler extends ImportRequestHandlerValidator {
     public static function getAllDataFromCSV($filePath) {
@@ -10,19 +10,15 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
         $csv = array_map('str_getcsv', file($filePath));
         self::validateFileData($csv);
 
-        // validate name
-        // validate description
-
-
-        $chord = new Chord(null, $csv[0][0], $csv[0][1]);
-
         try {
-            $chord->addNewChord();
+            for ($i = 0; $i < count($csv); $i++) {
+                ChordRequestHandler::addNewChord($csv[$i][0], $csv[$i][1]);
+            }
             
-            return true;
+            // return true;
             echo json_encode(['success' => true]);
         } catch (Exception $e) {
-            return false;
+            // return false;
             echo json_encode([
                  'success' => false,
                  'message' => $e->getMessage(),

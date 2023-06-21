@@ -2,6 +2,7 @@
 include_once "../db/db_connection.php";
 include_once "Chord.php";
 include_once "../exceptions/BadRequestException.php";
+include_once "../exceptions/ConflictException.php";
 
 class ChordRequestHandler extends ChordsValidator {
     public static function getSingleChord($chordId): Chord {
@@ -35,9 +36,10 @@ class ChordRequestHandler extends ChordsValidator {
        return $chords;
     }
 
-    public static function addNewChord(): bool {
-        $chordData = json_decode(file_get_contents('php://input'), true);
-        self::validateChordData($chordData);
+    public static function addNewChord($name, $description): bool {
+        //$chordData = json_decode(file_get_contents('php://input'), true);
+        self::validateName($name);
+        self::validateDescription($description);
 
         $db = new Db();
 
@@ -50,8 +52,8 @@ class ChordRequestHandler extends ChordsValidator {
 
         try {
             $insertResult = $insertStatement->execute([
-                "name" => $chordData['name'],
-                "description" => $chordData['description'],
+                "name" => $name,
+                "description" => $description,
                 "deleted" => 0,
             ]);
     
@@ -76,7 +78,7 @@ class ChordRequestHandler extends ChordsValidator {
     
             return true;
         } catch (Exception $e) {
-            throw new RuntimeException(message: "There was problem with saving the chord because of ".$e->getMessage()."!");
+            throw new ConflictException(message: "There was problem with saving the chord because of ".$e->getMessage()."!");
         }
     }
 
@@ -131,10 +133,5 @@ class ChordRequestHandler extends ChordsValidator {
         }
 
         return $chord;
-    }
-
-    private static function validateChordData($chordData) {
-        self::validateName($chordData['name']);
-        self::validateDescription($chordData['description']);
     }
 }
