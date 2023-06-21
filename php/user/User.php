@@ -50,18 +50,26 @@ class User extends UserValidator implements JsonSerializable  {
     }
 
     public function setUsername($username) {
+        self::validateUsername($username);
+
         $this->username = $username;
     }
 
     public function setFirstName($first_name) {
+        self::validateFirstName($first_name);
+
         $this->first_name = $first_name;
     }
 
     public function setLastName($last_name) {
+        self::validateLastName($last_name);
+
         $this->last_name = $last_name;
     }
 
     public function setEmail($email) {
+        self::validateEmail($email);
+        
         $this->email = $email;
     }
     

@@ -3,12 +3,13 @@ include_once "../db/db_connection.php";
 include_once "Chord.php";
 include_once "../exceptions/BadRequestException.php";
 
-class ChordRequestHandler {
-    public static function getSingleChord(string $chordId): Chord {
-    
+class ChordRequestHandler extends ChordsValidator {
+    public static function getSingleChord($chordId): Chord {
+        self::validateChordId($chordId);
+
         $connection = (new Db())->getConnection();
 
-        $selectStatement = $connection->prepare("SELECT * FROM `chords` WHERE id = ?");
+        $selectStatement = $connection->prepare("SELECT * FROM `chords` WHERE id = ? AND deleted = 0");
         $selectStatement->execute([$chordId]);
 
         $chord = $selectStatement->fetch();
@@ -21,12 +22,9 @@ class ChordRequestHandler {
     }
 
     public static function getAllChordsIDs() {
-        require_once "../db/db_connection.php";
-        require_once "./Chord.php";
-
         $connection = (new Db())->getConnection();
 
-        $selectStatement = $connection->prepare("SELECT * FROM `chords`");
+        $selectStatement = $connection->prepare("SELECT * FROM `chords` WHERE deleted = 0");
         $selectStatement->execute();
 
         $chords = [];
@@ -78,11 +76,10 @@ class ChordRequestHandler {
     }
 
     public static function updateChord($chordId)  {
+        self::validateChordId($chordId);
+
         $chordData = json_decode(file_get_contents('php://input'), true);
-
         $chord = self::getSingleChord($chordId);
-        self::validateChordForDeleted($chord);
-
         $updatedChord = self::updateChordFields($chord, $chordData);
 
         $connection = (new Db())->getConnection();
@@ -98,26 +95,22 @@ class ChordRequestHandler {
         throw new BadRequestException('This chord cannot be accessed');
     }
 
-
     public static function deleteChord($chordId) {
-        $chord = self::getSingleChord($chordId);
-        self::validateChordForDeleted($chord);
+        self::validateChordId($chordId);
 
+        //$chord = self::getSingleChord($chordId);
         $connection = (new Db())->getConnection();
-
         $selectStatement = $connection->prepare("UPDATE chords
                                                 SET deleted = 1
                                                 WHERE id = ?");
 
 
         if ($selectStatement->execute([$chordId])) {
-            //FavouriteChordsRequestHandler::deleteAllFavouriteChordsByUserId($userId, $connection);
             return true;
         } 
 
         throw new BadRequestException('This chord cannot be accessed');
     }
-
 
     private static function updateChordFields($chord, $chordData) : Chord {
         if ($chordData["name"] != null) {
@@ -129,12 +122,5 @@ class ChordRequestHandler {
         }
 
         return $chord;
-    }
-
-
-    private static function validateChordForDeleted($chord) {
-        if ($chord->getDeleted() == 1) {
-            throw new ResourceNotFoundException("The chord has already been deleted!");
-        }
     }
 }

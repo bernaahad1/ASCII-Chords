@@ -4,29 +4,30 @@ include_once "User.php";
 include_once "../exceptions/BadRequestException.php";
 include_once "../favourite_chords/FavouriteChordsRequestHandler.php";
 
-class UserRequestHandler {
+class UserRequestHandler extends UserValidator {
     public static function getUserById($userId): User {
+        self::validateUserId($userId);
+
         $connection = (new Db())->getConnection();
 
-        $selectStatement = $connection->prepare("SELECT * FROM `users` WHERE id = ?");
+        $selectStatement = $connection->prepare("SELECT * FROM `users` WHERE id = ? AND deleted = 0");
         $selectStatement->execute([$userId]);
 
         $user = $selectStatement->fetch();
 
         if ($user) {
-            $userEntity = User::fromArray($user);
-            self::validateUserForDeleted($userEntity);
-
-            return $userEntity;
+            return User::fromArray($user);
         }
 
         throw new BadRequestException('This user cannot be accessed');
     }
 
     public static function getUserByEmail($userEmail) : int {
+        self::validateEmail($userEmail);
+
         $connection = (new Db())->getConnection();
 
-        $selectStatement = $connection->prepare("SELECT id FROM `users` WHERE email = ?");
+        $selectStatement = $connection->prepare("SELECT id FROM `users` WHERE email = ? AND deleted = 0");
         $selectStatement->execute([$userEmail]);
 
         $userId = $selectStatement->fetch();
@@ -45,7 +46,6 @@ class UserRequestHandler {
 
         $conn = $db->getConnection();
 
-        // TODO do not define deleted here
         $insertStatement = $conn->prepare(
             "INSERT INTO `users` (username, first_name, last_name, email, password, deleted)
              VALUES (:username, :first_name, :last_name, :email, :password, :deleted)"
@@ -79,6 +79,9 @@ class UserRequestHandler {
     }
 
     public static function login($email, $password): void {
+        self::validateEmail($email);
+        self::validatePassword($password);
+
         $db = new Db();
 
         $conn = $db->getConnection();
@@ -94,15 +97,14 @@ class UserRequestHandler {
     } 
 
     public static function updateUserById($userId)  {
+        self::validateUserId($userId);
+
         $userdata = json_decode(file_get_contents('php://input'), true);
-
         $user = self::getUserById($userId);
-        self::validateUserForDeleted($user);
-
         $updatedUser = self::updateUserFields($user, $userdata);
 
-        $connection = (new Db())->getConnection();
 
+        $connection = (new Db())->getConnection();
         $selectStatement = $connection->prepare("UPDATE users
                                                 SET username = ?, first_name = ?, last_name = ?, email = ?
                                                 WHERE id = ?");
@@ -117,8 +119,8 @@ class UserRequestHandler {
 
 
     public static function deleteUserById($userId) {
-        $user = self::getUserById($userId);
-        self::validateUserForDeleted($user);
+        self::validateUserId($userId);
+        //self::getUserById($userId);
 
         $connection = (new Db())->getConnection();
 
@@ -128,7 +130,7 @@ class UserRequestHandler {
 
 
         if ($selectStatement->execute([$userId])) {
-            //FavouriteChordsRequestHandler::deleteAllFavouriteChordsByUserId($userId, $connection);
+            FavouriteChordsRequestHandler::deleteAllFavouriteChordsByUserId($userId);
             return true;
         } 
 
@@ -154,12 +156,5 @@ class UserRequestHandler {
         }
 
         return $user;
-    }
-
-
-    private static function validateUserForDeleted($user) {
-        if ($user->getDeleted() == 1) {
-            throw new ResourceNotFoundException("The user has already been deleted!");
-        }
     }
 }

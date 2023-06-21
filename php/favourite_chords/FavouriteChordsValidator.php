@@ -1,14 +1,14 @@
 <?php
 abstract class FavouriteChordsValidator {
-    public function validateUserId($userId): void {
+    public static function validateUserId($userId): void {
         if ($userId <= 0) {
-            throw new InvalidArgumentException('The constructor accepts only positive values for user id!');
+            throw new InvalidArgumentException('User id cannot be null!');
         }
     }
 
-    public function validateChordId($chordId): void {
+    public static function validateChordId($chordId): void {
         if ($chordId <= 0) {
-            throw new InvalidArgumentException('The constructor accepts only positive values for chord id!');
+            throw new InvalidArgumentException('Chord id cannot be null!');
         }
     }
 }

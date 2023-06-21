@@ -1,14 +1,17 @@
 <?php
 include_once "../db/db_connection.php";
+include_once "ChordsValidator.php";
 
-class Chord implements JsonSerializable {
+class Chord extends ChordsValidator implements JsonSerializable {
     private $id;
     private $name;
     private $description;
     private $deleted;
 
-    public function __construct($id, $name, $description) {
-        $this->id = $id;
+    public function __construct($name, $description) {
+        $this->validateName($name);
+        $this->validateDescription($description);
+
         $this->name = $name;
         $this->description = $description;
         $this->deleted = 0;
@@ -27,10 +30,14 @@ class Chord implements JsonSerializable {
     }
 
     public function setName($name) {
+        self::validateName($name);
+
         $this->name = $name;
     }
     
     public function setDescription($description) {
+        self::validateDescription($description);
+
         $this->description = $description;
     }
 
