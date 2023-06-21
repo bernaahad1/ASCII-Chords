@@ -1,4 +1,4 @@
-import { red_heart, empty_heart } from "./icons.js";
+import { red_heart, empty_heart, search } from "./icons.js";
 
 function createAudioPlaying(notes) {
   for (let key of Object.keys(notes)) {
@@ -144,9 +144,41 @@ function createChordListTemplate() {
       text-align: center;
       margin-bottom: 10%;
     }
+
+    .search-container {
+      margin-bottom: 20px;
+      display: flex;
+    }
+
+    .search-container input {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    .search-container button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    .search-container button:hover {
+      background-color: #45a049;
+    }
     </style>
 
     <h1>Chords</h1>
+    <div class="search-container">
+    <input id="search-input" type="text" placeholder="Search chords...">
+    <button id="search-button" class="search-button">${search}</button>
+  </div>
     <button><a href="#createMelody">Start creating melody</a>
     </button>
     <section id="chord-list"></section>
@@ -172,6 +204,22 @@ class ChordList extends HTMLElement {
     this.#_shadowRoot = this.attachShadow({ mode: "closed" });
     this.#_shadowRoot.appendChild(chordListTemplate.content.cloneNode(true));
   }
+
+  searchChords = () => {
+    const searchInput = this.#_shadowRoot.getElementById("search-input");
+    const searchValue = searchInput.value.toLowerCase();
+    const filteredChords = this.chords.filter(
+      (chord) =>
+        chord.name.toLowerCase().includes(searchValue) ||
+        chord.description.toLowerCase().includes(searchValue)
+    );
+    this.renderChords(filteredChords);
+  };
+
+  addSearchButtonClickListener = () => {
+    const searchButton = this.#_shadowRoot.getElementById("search-button");
+    searchButton.addEventListener("click", this.searchChords);
+  };
 
   getChordElement = (chord) => {
     return `
@@ -314,6 +362,13 @@ class ChordList extends HTMLElement {
     const [chordList] = this.#_shadowRoot.querySelectorAll("#chord-list");
     chordList.innerHTML = "";
 
+    if (chords.length === 0) {
+      const noResultsMessage = document.createElement("p");
+      noResultsMessage.textContent = "No matching chords found.";
+      chordList.appendChild(noResultsMessage);
+      return;
+    }
+
     for (const chord of chords) {
       const chordElement = document.createElement("div");
       chordElement.setAttribute("id", `chord-${chord.id}`);
@@ -349,10 +404,21 @@ class ChordList extends HTMLElement {
         this.renderChords(chords);
       })
       .catch((err) => console.error(err));
+
+    // Search on enters
+    const searchInput = this.#_shadowRoot.querySelector("#search-input");
+    searchInput.addEventListener("keydown", (event) => {
+      if (event.keyCode === 13) {
+        // Enter key is pressed
+        const searchQuery = searchInput.value;
+        this.searchChords(searchQuery);
+      }
+    });
   }
 
   connectedCallback() {
     this.loadChords();
+    this.addSearchButtonClickListener();
   }
 }
 
