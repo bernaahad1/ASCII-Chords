@@ -6,7 +6,7 @@ include_once "../exceptions/ConflictException.php";
 
 class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
     
-    public static function getAllRecordsByUserId(string $userId): array {
+    public static function getAllRecordsByUserId($userId): array {
         self::validateUserId($userId);
 
         $connection = (new Db())->getConnection();
@@ -22,7 +22,7 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
         return $favourite_chords;
     }
 
-    public static function getAllRecordsByChordId(string $chordId): array {
+    public static function getAllRecordsByChordId($chordId): array {
         self::validateChordId($chordId);
 
         $connection = (new Db())->getConnection();
@@ -57,7 +57,7 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
     public static function addFavouriteChord($userId, $chordId) : bool {
         self::validateUserId($userId);
         self::validateChordId($chordId);
-        self::validateForExsiting($userId, $chordId);
+        //self::validateForExsiting($userId, $chordId);
 
         $connection = (new Db())->getConnection();
         $insertStatement = $connection->prepare(
