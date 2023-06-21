@@ -22,7 +22,7 @@ abstract class UserValidator {
     }
 
     public static function validatePasswordCharacters($password): void {
-        if (!(preg_match('/^.{8,}$/', $password) 
+        if (!(preg_match('/^.{6,}$/', $password) 
             && preg_match('/[A-Z]+/', $password) 
             && preg_match('/[a-z]+/', $password) 
             && preg_match('/[0-9]+/', $password))) {
