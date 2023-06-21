@@ -5,8 +5,8 @@ include_once "ChordRequestHandler.php";
 
 $response = null;
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'])) {
-    $response = ChordRequestHandler::getChordsFavouriteByUserId($_GET['user_id']);
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_SESSION['user_id'])) {
+    $response = ChordRequestHandler::getChordsFavouriteByUserId($_SESSION['user_id']);
 }
 elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])) {
     $response = ChordRequestHandler::getSingleChord($_GET['id'])->jsonSerialize();
