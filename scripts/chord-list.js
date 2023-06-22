@@ -412,11 +412,11 @@ class ChordList extends HTMLElement {
     // Search on enters
     const searchInput = this.#_shadowRoot.querySelector("#search-input");
     searchInput.addEventListener("keydown", (event) => {
-      if (event.keyCode === 13) {
-        // Enter key is pressed
-        const searchQuery = searchInput.value;
-        this.searchChords(searchQuery);
-      }
+      // if (event.keyCode === 13) {
+      // Enter key is pressed
+      const searchQuery = searchInput.value;
+      this.searchChords(searchQuery);
+      // }
     });
   }
 
