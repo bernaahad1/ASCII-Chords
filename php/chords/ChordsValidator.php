@@ -6,6 +6,12 @@ abstract class ChordsValidator {
         }
     }
 
+    public static function validateUserId($userId): void {
+        if ($userId <= 0) {
+            throw new InvalidArgumentException('User id cannot be null!');
+        }
+    }
+
     public static function validateName($name): void {
         self::validateStringValue($name, 'name');
     }

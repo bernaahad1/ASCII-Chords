@@ -6,7 +6,7 @@ include_once "FavouriteChordsRequestHandler.php";
 $response = null;
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_SESSION['user_id']) && isset($_SESSION['chord_id'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_SESSION['user_id']) && isset($_GET['chord_id'])) {
     $response = FavouriteChordsRequestHandler::getFavouriteChordByUserIdAndChordId($_SESSION['user_id'], $_GET['chord_id'])->jsonSerialize();
 } elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_SESSION['user_id'])) {
     $response = FavouriteChordsRequestHandler::getAllRecordsByUserId($_SESSION['user_id']);

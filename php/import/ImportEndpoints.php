@@ -11,7 +11,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['txt_file_path'])) {
     $response = ImportRequestHandler::getAllDataFromTXT($_GET['txt_file_path']);
 }
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['json_file_path'])) {
-    // $response = ImportRequestHandler::getAllDataFromJSON($_GET['json_file_path']);
+     $response = ImportRequestHandler::getAllDataFromJSON($_GET['json_file_path']);
 }
 
 if ($response == null) {

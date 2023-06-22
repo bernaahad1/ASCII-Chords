@@ -5,6 +5,34 @@ include_once "../exceptions/BadRequestException.php";
 include_once "../exceptions/ConflictException.php";
 
 class ChordRequestHandler extends ChordsValidator {
+    public static function getChordsFavouriteByUserId($userId) : array {
+        self::validateUserId($userId);
+
+        $connection = (new Db())->getConnection();
+
+        $selectStatement = $connection->prepare("SELECT DISTINCT c.id, c.name, c.description,
+        case f.user_id
+            when null then 0
+            when ? then 1 
+            else 0
+        end as is_favourite 
+    FROM `chords` c 
+    LEFT JOIN (SELECT * 
+               FROM `favourite_chords` f
+               WHERE f.deleted = 0) f 
+        ON c.id = f.chord_id
+        WHERE c.deleted = 0");
+        $selectStatement->execute([$userId]);
+
+        $chords = [];
+        foreach ($selectStatement->fetchAll() as $chord) {
+            $chords[] = $chord;
+        }
+
+       return $chords;
+
+    }
+
     public static function getSingleChord($chordId): Chord {
         self::validateChordId($chordId);
 
@@ -22,7 +50,7 @@ class ChordRequestHandler extends ChordsValidator {
         throw new BadRequestException('This chord cannot be accessed');
     }
 
-    public static function getAllChordsIDs() {
+    public static function getAllChordsIDs() : array {
         $connection = (new Db())->getConnection();
 
         $selectStatement = $connection->prepare("SELECT * FROM `chords` WHERE deleted = 0");
