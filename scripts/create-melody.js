@@ -110,6 +110,8 @@ function createCreateMelodyTemplate() {
     #melody-info{
       display: flex;
       flex-direction: row;
+      flex-wrap: wrap;
+
     }
 
     .div-chord{
