@@ -1,5 +1,5 @@
 import { AUDIOS } from "./chord-list.js";
-import { empty_heart, red_heart } from "./icons.js";
+import { empty_heart, red_heart, play_audio, delete_audio } from "./icons.js";
 
 function createCreateMelodyTemplate() {
   const templateString = `
@@ -60,12 +60,8 @@ function createCreateMelodyTemplate() {
       background-color: #45a049;
     }
     
-    .export-csv {
+    .melody-options {
       background-color: #2196f3;
-    }
-    
-    .export-ascii {
-      background-color: #ffc107;
     }
 
     .left-icon-buttons {
@@ -111,10 +107,10 @@ function createCreateMelodyTemplate() {
 
     <h1>Creating melody</h1>
     <div id="melody-info"></div>
-    <button type="button" id="play_melody">Play Melody</button>
-    <button type="button" id="export-melody-csv">Export to CSV!</button>
-    <button type="button" id="export-melody-json">Export to JSON!</button>
-    <button type="button" id="export-melody-ascii">Export to ASCII!</button>
+    <button type="button" id="play_melody" class="melody-options">Play Melody</button>
+    <button type="button" id="export-melody-csv" class="melody-options">Export to CSV!</button>
+    <button type="button" id="export-melody-json" class="melody-options">Export to JSON!</button>
+    <button type="button" id="export-melody-ascii" class="melody-options">Export to ASCII!</button>
     <section id="create-melody"></section>
    
     `;
@@ -152,17 +148,15 @@ class CreateMelody extends HTMLElement {
         `;
   };
 
-  playChords = (chord) => {
-    this.#_shadowRoot
-      .getElementById(`listen-${chord.id}`)
-      .addEventListener("click", () => {
-        const chord_notes = chord.description.split("-");
+  playChords = (chord, buttonID) => {
+    this.#_shadowRoot.getElementById(buttonID).addEventListener("click", () => {
+      const chord_notes = chord.description.split("-");
 
-        for (let i = 0; i < chord_notes.length; i++) {
-          chord_notes[i] = chord_notes[i].replace("#", "%23");
-          AUDIOS[chord_notes[i]].play();
-        }
-      });
+      for (let i = 0; i < chord_notes.length; i++) {
+        chord_notes[i] = chord_notes[i].replace("#", "%23");
+        AUDIOS[chord_notes[i]].play();
+      }
+    });
   };
 
   favoriteChord = (id) => {
@@ -214,37 +208,38 @@ class CreateMelody extends HTMLElement {
 
         const container = this.#_shadowRoot.getElementById("melody-info");
 
-        const chordExportToASCIIButton = document.createElement("button");
+        //new:
+        const chordInMelodyDiv = document.createElement("div");
         const number = this.melody.length - 1;
+        chordInMelodyDiv.setAttribute("id", "div-chord-" + number);
+        chordInMelodyDiv.innerHTML = this.melody[this.melody.length - 1].name;
+        chordInMelodyDiv.style.border = "thick solid #0000FF";
+        container.appendChild(chordInMelodyDiv);
 
-        chordExportToASCIIButton.setAttribute("id", "button-chord-" + number);
-        chordExportToASCIIButton.innerHTML =
-          this.melody[this.melody.length - 1].name + " -";
-        container.appendChild(chordExportToASCIIButton);
+        const playChordInMelody = document.createElement("button");
+        playChordInMelody.setAttribute("id", "button-play-chord-" + number);
+        chordInMelodyDiv.appendChild(playChordInMelody);
+        playChordInMelody.innerHTML = `${play_audio}`;
 
-        this.removeChordFromMelody(this.melody.length - 1);
+        this.playChords(chord, "button-play-chord-" + number);
+
+        const deleteChordFromMelody = document.createElement("button");
+        deleteChordFromMelody.setAttribute(
+          "id",
+          "button-delete-chord-" + number
+        );
+        chordInMelodyDiv.appendChild(deleteChordFromMelody);
+        deleteChordFromMelody.innerHTML = `${delete_audio}`;
+
+        deleteChordFromMelody.addEventListener("click", () => {
+          chordInMelodyDiv.remove();
+          this.melody[number] = null;
+        });
       });
   };
 
   delay = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
-  };
-
-  removeChordFromMelody = (index) => {
-    const chordButton = this.#_shadowRoot.getElementById(
-      "button-chord-" + index
-    );
-
-    if (!chordButton) {
-      return;
-    }
-
-    chordButton.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.target.remove();
-
-      this.melody[index] = null;
-    });
   };
 
   exportMelodyToCsv = () => {
@@ -347,7 +342,6 @@ class CreateMelody extends HTMLElement {
           AUDIOS[chord_notes[j]].play();
         }
         await this.delay(1300);
-
       }
     }
   };
@@ -376,7 +370,7 @@ class CreateMelody extends HTMLElement {
         ? "red"
         : "transparent";
 
-      this.playChords(chord);
+      this.playChords(chord, `listen-${chord.id}`);
 
       this.addFavoriteClickListener(chord);
 
