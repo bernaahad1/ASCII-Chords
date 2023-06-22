@@ -64,12 +64,9 @@ function createCreateMelodyTemplate() {
       background-color: #2196f3;
     }
 
-    .left-icon-buttons {
+    .right-icon-buttons {
       padding: 0;
       background-color: transparent;
-      position: absolute;
-      top: 0;
-      right: 0;
       z-index: 30;
       margin: 10px;
       display: flex;
@@ -78,7 +75,7 @@ function createCreateMelodyTemplate() {
       justify-content: flex-start;
     }
 
-    .left-icon-buttons button{
+    .right-icon-buttons button{
       background-color: transparent;
       width: 50px;
       padding: 0;
@@ -86,7 +83,7 @@ function createCreateMelodyTemplate() {
       margin: 0;
     }
 
-    .left-icon-buttons button img {
+    .right-icon-buttons button img {
       width: 100%;
     }
 
@@ -102,6 +99,44 @@ function createCreateMelodyTemplate() {
       font-size: 50px;
       text-align: center;
       margin-bottom: 10%;
+    }
+
+    .header-part{
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    #melody-info{
+      display: flex;
+      flex-direction: row;
+    }
+
+    .div-chord{
+      border: 2px solid #ccc;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    /* align-content: center; */
+    align-items: center;
+    justify-content: space-between;
+    }
+
+    #right-melody-chord-buttons{
+      display: flex;
+      justify-content: flex-end;
+      flex-direction: row;
+      margin-left: 10px;
+    }
+
+    #right-melody-chord-buttons button{
+      padding: 0;
+      margin-right: 0;
+      margin-left: 10px;
+      background-color: transparent;
     }
     </style>
 
@@ -138,11 +173,15 @@ class CreateMelody extends HTMLElement {
 
   getChordElement = (chord) => {
     return `
+        <div class="header-part">
+        <div class="left-icon-buttons">
           <h2 class="chord-name">${chord.name} - ${chord.description}</h2>
         <chord-image notes="${chord.description}"></chord-image>    
-        <div class="left-icon-buttons">
+        </div>
+        <div class="right-icon-buttons">
         <button id="listen-${chord.id}" class="listen speaker-icon"><img src="../assets/images/speaker-icon.svg"/></button>
         <button id="heart-button-${chord.id}" class="heart-button">${empty_heart}</button>
+        </div>
         </div>
         <button id="button-to-melody-${chord.id}" class="heart-button">Add to melody</button>
         `;
@@ -212,29 +251,26 @@ class CreateMelody extends HTMLElement {
         const chordInMelodyDiv = document.createElement("div");
         const number = this.melody.length - 1;
         chordInMelodyDiv.setAttribute("id", "div-chord-" + number);
-        chordInMelodyDiv.innerHTML = this.melody[this.melody.length - 1].name;
-        chordInMelodyDiv.style.border = "thick solid #0000FF";
-        container.appendChild(chordInMelodyDiv);
+        chordInMelodyDiv.setAttribute("class", "div-chord");
 
-        const playChordInMelody = document.createElement("button");
-        playChordInMelody.setAttribute("id", "button-play-chord-" + number);
-        chordInMelodyDiv.appendChild(playChordInMelody);
-        playChordInMelody.innerHTML = `${play_audio}`;
+        chordInMelodyDiv.innerHTML = `<p>${
+          this.melody[this.melody.length - 1].name
+        }</p>
+        <div id="right-melody-chord-buttons">
+        <button id="button-play-chord-${number}">${play_audio}</button>
+        <button id="button-delete-chord-${number}">${delete_audio}</button>
+        </div>`;
+
+        container.appendChild(chordInMelodyDiv);
 
         this.playChords(chord, "button-play-chord-" + number);
 
-        const deleteChordFromMelody = document.createElement("button");
-        deleteChordFromMelody.setAttribute(
-          "id",
-          "button-delete-chord-" + number
-        );
-        chordInMelodyDiv.appendChild(deleteChordFromMelody);
-        deleteChordFromMelody.innerHTML = `${delete_audio}`;
-
-        deleteChordFromMelody.addEventListener("click", () => {
-          chordInMelodyDiv.remove();
-          this.melody[number] = null;
-        });
+        this.#_shadowRoot
+          .querySelector(`#button-delete-chord-${number}`)
+          .addEventListener("click", () => {
+            chordInMelodyDiv.remove();
+            this.melody[number] = null;
+          });
       });
   };
 

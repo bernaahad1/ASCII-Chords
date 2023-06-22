@@ -109,7 +109,7 @@ function createChordListTemplate() {
       background-color: #ffc107;
     }
 
-    .left-icon-buttons {
+    .right-icon-buttons {
       padding: 0;
       background-color: transparent;
       position: absolute;
@@ -123,7 +123,7 @@ function createChordListTemplate() {
       justify-content: flex-start;
     }
 
-    .left-icon-buttons button{
+    .right-icon-buttons button{
       background-color: transparent;
       width: 50px;
       padding: 0;
@@ -131,7 +131,7 @@ function createChordListTemplate() {
       margin: 0;
     }
 
-    .left-icon-buttons button img {
+    .right-icon-buttons button img {
       width: 100%;
     }
 
@@ -229,7 +229,7 @@ class ChordList extends HTMLElement {
     return `
           <h2 class="chord-name">${chord.name} - ${chord.description}</h2>
         <chord-image notes="${chord.description}"></chord-image>    
-        <div class="left-icon-buttons">
+        <div class="right-icon-buttons">
         <button id="listen-${chord.id}" class="listen speaker-icon"><img src="../assets/images/speaker-icon.svg"/></button>
         <button id="heart-button-${chord.id}" class="heart-button">${empty_heart}</button>
         </div>
