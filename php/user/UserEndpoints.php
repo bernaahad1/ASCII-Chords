@@ -2,6 +2,7 @@
 session_start();
 
 include_once "UserRequestHandler.php";
+include_once "../exceptions/NoContentException.php";
 
 $response = null;
 
@@ -22,7 +23,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE' && isset($_SESSION['user_id'])) {
 }
 
 if ($response == null) {
-    $response = "There is no data to display!";
+    throw new NoContentException("There is no content!");
 }
 
 echo json_encode($response, JSON_UNESCAPED_UNICODE);

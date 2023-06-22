@@ -2,6 +2,7 @@
 session_start();
 
 include_once "ChordRequestHandler.php";
+include_once "../exceptions/NoContentException.php";
 
 $response = null;
 
@@ -25,7 +26,7 @@ elseif($_SERVER['REQUEST_METHOD'] == 'DELETE' && isset($_GET['id'])) {
 }
 
 if ($response == null) {
-    $response = "There is no data to display!";
+    throw new NoContentException("There is no content!");
 }
 
 echo json_encode($response, JSON_UNESCAPED_UNICODE);
