@@ -1,6 +1,7 @@
 <?php
 include_once "../db/db_connection.php";
 include_once "FavouriteChords.php";
+include_once "../chords/ChordRequestHandler.php";
 include_once "../exceptions/BadRequestException.php";
 include_once "../exceptions/ConflictException.php";
 
@@ -16,7 +17,7 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
 
         $favourite_chords = [];
         foreach ($selectStatement->fetchAll() as $favourite_chord) {
-            $favourite_chords[] = FavouriteChords::fromArray($favourite_chord)->jsonSerialize();
+            $favourite_chords[] = ChordRequestHandler::getSingleChord(FavouriteChords::fromArray($favourite_chord)->getChordId())->jsonSerialize();
         }
 
         return $favourite_chords;
@@ -37,7 +38,7 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
         return $favourite_chords;
     }
 
-    public static function getFavouriteChordByUserIdAndChordId($userId, $chordId): FavouriteChords {
+    public static function getFavouriteChordByUserIdAndChordId($userId, $chordId) : Chord {
         self::validateUserId($userId);
         self::validateChordId($chordId);
 
@@ -48,7 +49,7 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
         $favouriteChordFromDB = $selectStatement->fetch();
         
         if ($favouriteChordFromDB) {
-            return FavouriteChords::fromArray($favouriteChordFromDB);
+            return ChordRequestHandler::getSingleChord(FavouriteChords::fromArray($favouriteChordFromDB)->getChordId());
         }
 
         throw new BadRequestException('This chord cannot be accessed');

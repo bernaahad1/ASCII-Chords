@@ -8,10 +8,11 @@ class Chord extends ChordsValidator implements JsonSerializable {
     private $description;
     private $deleted;
 
-    public function __construct($name, $description) {
+    public function __construct($id, $name, $description) {
         $this->validateName($name);
         $this->validateDescription($description);
 
+        $this->id = $id;
         $this->name = $name;
         $this->description = $description;
         $this->deleted = 0;
@@ -53,7 +54,7 @@ class Chord extends ChordsValidator implements JsonSerializable {
         ];
     }
 
-    public static function fromArray(array $chordData): Chord {
+    public static function fromArray($chordData): Chord {
         return new Chord($chordData['id'], $chordData['name'], $chordData['description']);
     }
 }
