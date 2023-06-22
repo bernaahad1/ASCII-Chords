@@ -2,8 +2,6 @@
 include_once "../db/db_connection.php";
 include_once "FavouriteChords.php";
 include_once "../chords/ChordRequestHandler.php";
-include_once "../exceptions/BadRequestException.php";
-include_once "../exceptions/ConflictException.php";
 
 class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
     
@@ -34,8 +32,12 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
         foreach ($selectStatement->fetchAll() as $favourite_chord) {
             $favourite_chords[] = FavouriteChords::fromArray($favourite_chord)->jsonSerialize();
         }
-
-        return $favourite_chords;
+        
+        if ($favourite_chords) {
+            return $favourite_chords;
+        }
+             
+        ExceptionObject::setResponseCode(400, 'This favourite chords cannot be accessed');
     }
 
     public static function getFavouriteChordByUserIdAndChordId($userId, $chordId) {
@@ -53,7 +55,6 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
         } 
 
         return null;
-        // throw new BadRequestException('This chord cannot be accessed');
     }
 
     public static function addFavouriteChord($userId, $chordId) : bool {
@@ -82,8 +83,8 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
             } else {
                 $errorMessage = "Request failed, true again later";
             }
-
-            throw new Exception($errorMessage);
+                 
+            ExceptionObject::setResponseCode(400, $errorMessage);
         }
 
         return true;
@@ -101,8 +102,8 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
         if ($selectStatement->execute([$userId])) {
             return true;
         }
-
-        throw new BadRequestException('This user cannot be accessed');
+             
+        ExceptionObject::setResponseCode(400, 'This favourite chord cannot be accessed');
     }
 
     public static function deleteFavouriteChord($userId, $chordId) {
@@ -119,13 +120,13 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
         if ($selectStatement->execute([$favouriteChord->getUserId(), $favouriteChord->getChordId(), $userId, $chordId])) {
             return true;
         }
-
-        throw new BadRequestException('This favourite chord cannot be accessed');
+             
+        ExceptionObject::setResponseCode(400, 'This favourite chord cannot be accessed');
     }
 
     private static function validateForExsiting($userId, $chordId) {
         if (self::getFavouriteChordByUserIdAndChordId($userId, $chordId) != null) {
-            throw new ConflictException("There is already such record!");
+            ExceptionObject::setResponseCode(409, "There is already such record!");
         }
     }
 }

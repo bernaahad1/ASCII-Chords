@@ -1,4 +1,7 @@
 <?php
+
+include_once "../exceptions/ExceptionObject.php";
+
 abstract class UserValidator {
     public static function validateUsername($username): void {
         self::validateStringValue($username, 'username');
@@ -22,13 +25,13 @@ abstract class UserValidator {
 
     public static function validateUserId($userId): void {
         if ($userId <= 0) {
-            throw new InvalidArgumentException('The user id must be positive!');
+            ExceptionObject::setResponseCode(400, 'The user id must be positive!');
         }
     }
 
     public static function validateStringValue($value, $text) : void {
         if ($value == null || empty($value)) {
-            throw new InvalidArgumentException('The '.$text.' cannot be null, empty or blank!');
+            ExceptionObject::setResponseCode(400, 'The '.$text.' cannot be null, empty or blank!');
         }
     }
 }

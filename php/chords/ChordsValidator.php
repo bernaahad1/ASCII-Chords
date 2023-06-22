@@ -1,14 +1,16 @@
 <?php
+include_once "../exceptions/ExceptionObject.php";
+
 abstract class ChordsValidator {
     public static function validateChordId($chordId): void {
         if ($chordId <= 0) {
-            throw new InvalidArgumentException('Chord id cannot be null!');
+            ExceptionObject::setResponseCode(400, 'Chord id cannot be null!');
         }
     }
 
     public static function validateUserId($userId): void {
         if ($userId <= 0) {
-            throw new InvalidArgumentException('User id cannot be null!');
+            ExceptionObject::setResponseCode(400, 'User id cannot be null!');
         }
     }
 
@@ -22,7 +24,7 @@ abstract class ChordsValidator {
 
     public static function validateStringValue($value, $text) : void {
         if ($value == null || empty($value)) {
-            throw new InvalidArgumentException('The '.$text.' cannot be null, empty or blank!');
+            ExceptionObject::setResponseCode(400, 'The '.$text.' cannot be null, empty or blank!');
         }
     }
 }

@@ -2,7 +2,6 @@
 include_once "User.php";
 include_once "../exceptions/BadRequestException.php";
 include_once "../favourite_chords/FavouriteChordsRequestHandler.php";
-include_once "../exceptions/ConflictException.php";
 
 class UserRequestHandler extends UserValidator {
     public static function getUserById($userId): User {
@@ -19,7 +18,7 @@ class UserRequestHandler extends UserValidator {
             return User::fromArray($user);
         }
 
-        throw new BadRequestException('This user cannot be accessed');
+        ExceptionObject::setResponseCode(400, 'This user cannot be accessed');
     }
 
     public static function getUserByEmail($userEmail) : int {
@@ -36,7 +35,7 @@ class UserRequestHandler extends UserValidator {
             return $userId['id'];
         }
 
-        throw new BadRequestException('This user cannot be accessed');
+        ExceptionObject::setResponseCode(400, 'This user cannot be accessed');
     }
 
     public static function saveNewUser(): bool {
@@ -74,12 +73,12 @@ class UserRequestHandler extends UserValidator {
                     $errorMessage = "Request failed, true again later";
                 }
     
-                throw new Exception($errorMessage);
+                ExceptionObject::setResponseCode(400, $errorMessage);
             }
     
             return true;
         } catch (Exception $e) {
-            throw new ConflictException(message: "There was problem with saving the user because of ".$e->getMessage()."!");
+            ExceptionObject::setResponseCode(409, 'This user cannot be accessed');
         }
         
     }
@@ -98,7 +97,7 @@ class UserRequestHandler extends UserValidator {
         $dbUser = $selectPasswordToEmailStatement->fetch();
 
         if (!password_verify($password, $dbUser['password'])) {
-            throw new Exception("Email and password do not match");
+            ExceptionObject::setResponseCode(401, "Email and password do not match");
         }
     } 
 
@@ -124,7 +123,7 @@ class UserRequestHandler extends UserValidator {
             return true;
         }
 
-        throw new BadRequestException('This user cannot be accessed');
+        ExceptionObject::setResponseCode(400, 'This user cannot be accessed');
     }
 
 
@@ -144,7 +143,7 @@ class UserRequestHandler extends UserValidator {
             return true;
         } 
 
-        throw new BadRequestException('This user cannot be accessed');
+        ExceptionObject::setResponseCode(400, 'This user cannot be accessed');
     }
 
 

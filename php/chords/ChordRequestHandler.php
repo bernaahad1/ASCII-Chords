@@ -1,8 +1,7 @@
 <?php
 include_once "../db/db_connection.php";
 include_once "Chord.php";
-include_once "../exceptions/BadRequestException.php";
-include_once "../exceptions/ConflictException.php";
+include_once "../exceptions/ExceptionObject.php";
 
 class ChordRequestHandler extends ChordsValidator {
     public static function getChordsFavouriteByUserId($userId) : array {
@@ -47,7 +46,7 @@ class ChordRequestHandler extends ChordsValidator {
             return Chord::fromArray($chord);
         }
 
-        throw new BadRequestException('This chord cannot be accessed');
+        ExceptionObject::setResponseCode(400, 'This chord cannot be accessed');
     }
 
     public static function getAllChordsIDs() : array {
@@ -101,12 +100,12 @@ class ChordRequestHandler extends ChordsValidator {
                     }
                 }
     
-                throw new Exception($errorMessage);
+                ExceptionObject::setResponseCode(400, $errorMessage);
             }
     
             return true;
         } catch (Exception $e) {
-            throw new ConflictException(message: "There was problem with saving the chord because of ".$e->getMessage()."!");
+            ExceptionObject::setResponseCode(409, "There was problem with saving the chord because of ".$e->getMessage()."!");
         }
     }
 
@@ -131,7 +130,7 @@ class ChordRequestHandler extends ChordsValidator {
             return true;
         }
 
-        throw new BadRequestException('This chord cannot be accessed');
+        ExceptionObject::setResponseCode(400, 'This chord cannot be accessed');
     }
 
     public static function deleteChord($chordId) {
@@ -148,7 +147,7 @@ class ChordRequestHandler extends ChordsValidator {
             return true;
         } 
 
-        throw new BadRequestException('This chord cannot be accessed');
+        ExceptionObject::setResponseCode(400, 'This chord cannot be accessed');
     }
 
     private static function updateChordFields($chord, $chordData) : Chord {

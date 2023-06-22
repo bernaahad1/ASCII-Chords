@@ -9,6 +9,7 @@ class Chord extends ChordsValidator implements JsonSerializable {
     private $deleted;
 
     public function __construct($id, $name, $description) {
+        $this->validateChordId($id);
         $this->validateName($name);
         $this->validateDescription($description);
 
