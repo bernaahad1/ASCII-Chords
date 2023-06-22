@@ -1,4 +1,5 @@
 import { AUDIOS } from "./chord-list.js";
+import { empty_heart, red_heart } from "./icons.js";
 
 function createCreateMelodyTemplate() {
   const templateString = `
@@ -145,7 +146,7 @@ class CreateMelody extends HTMLElement {
         <chord-image notes="${chord.description}"></chord-image>    
         <div class="left-icon-buttons">
         <button id="listen-${chord.id}" class="listen speaker-icon"><img src="../assets/images/speaker-icon.svg"/></button>
-        <button id="heart-button-${chord.id}" class="heart-button"><img src="../assets/images/heart-solid.svg"/></button>
+        <button id="heart-button-${chord.id}" class="heart-button">${empty_heart}</button>
         </div>
         <button id="button-to-melody-${chord.id}" class="heart-button">Add to melody</button>
         `;
@@ -191,10 +192,15 @@ class CreateMelody extends HTMLElement {
         event.preventDefault();
 
         if (this.chords.find((obj) => obj.id === chord.id)?.favorite) {
-          event.target.style.backgroundColor = "transparent";
+          this.#_shadowRoot.getElementById(
+            `heart-button-${chord.id}`
+          ).innerHTML = `${empty_heart}`;
           this.unfavoriteChord(chord.id);
         } else {
-          event.target.style.backgroundColor = "red";
+          this.#_shadowRoot.getElementById(
+            `heart-button-${chord.id}`
+          ).innerHTML = `${red_heart}`;
+
           this.favoriteChord(chord.id);
         }
       });
