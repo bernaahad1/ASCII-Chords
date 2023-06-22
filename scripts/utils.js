@@ -1,6 +1,5 @@
 export function onLogIn() {
   document.getElementById("authentication-nav").style.display = "none";
-  location.hash = "#chords";
   document.getElementById("logout-nav").style.display = "block";
 }
 
@@ -14,7 +13,7 @@ export function checkSession() {
     .then((response) => response.json())
     .then((response) => {
       if (response.logged) {
-        console.log("chords", response.logged);
+        console.log("Has session", response.logged);
         onLogIn();
 
         if (!location.hash) {

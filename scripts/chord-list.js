@@ -226,13 +226,15 @@ class ChordList extends HTMLElement {
 
     chord.favorite = true;
 
-    fetch("../php/favourite_chords/FavouriteChordsEndpoints.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ chord_id: id })
-    })
+    fetch(
+      `../php/favourite_chords/FavouriteChordsEndpoints.php?chord_id=${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    )
       .then((res) => {
         if (res.status === 200) {
           return res.json();
