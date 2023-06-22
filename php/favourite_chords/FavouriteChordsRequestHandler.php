@@ -38,7 +38,7 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
         return $favourite_chords;
     }
 
-    public static function getFavouriteChordByUserIdAndChordId($userId, $chordId) : Chord {
+    public static function getFavouriteChordByUserIdAndChordId($userId, $chordId) {
         self::validateUserId($userId);
         self::validateChordId($chordId);
 
@@ -49,16 +49,17 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
         $favouriteChordFromDB = $selectStatement->fetch();
         
         if ($favouriteChordFromDB) {
-            return ChordRequestHandler::getSingleChord(FavouriteChords::fromArray($favouriteChordFromDB)->getChordId());
-        }
+            return FavouriteChords::fromArray($favouriteChordFromDB);
+        } 
 
-        throw new BadRequestException('This chord cannot be accessed');
+        return null;
+        // throw new BadRequestException('This chord cannot be accessed');
     }
 
     public static function addFavouriteChord($userId, $chordId) : bool {
         self::validateUserId($userId);
         self::validateChordId($chordId);
-        //self::validateForExsiting($userId, $chordId);
+        self::validateForExsiting($userId, $chordId);
 
         $connection = (new Db())->getConnection();
         $insertStatement = $connection->prepare(
