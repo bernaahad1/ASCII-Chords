@@ -4,13 +4,11 @@ include_once "ImportRequestHandlerValidator.php";
 include_once "../chords/ChordRequestHandler.php";
 
 class ImportRequestHandler extends ImportRequestHandlerValidator {
-    public static function getAllDataFromCSV($filePath) {
-        self::validateFilePath($filePath);
-
+    public static function getAllDataFromCSV($file_content) {
         try {
-            self::loadDataFromCsv($filePath);
-            
+            self::loadDataFromCsv($file_content);
             return ['success' => true];
+
         } catch (Exception $e) {
             return [
                  'success' => false,
@@ -19,13 +17,11 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
         }
     }
 
-    public static function getAllDataFromTXT($filePath) {
-        self::validateFilePath($filePath);
-
+    public static function getAllDataFromTXT($file_content) {
         try {
-            self::loadDataFromTxt($filePath);
-            
+            self::loadDataFromTxt($file_content);
             return ['success' => true];
+
         } catch (Exception $e) {
             return [
                  'success' => false,
@@ -34,13 +30,11 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
         }
     }
 
-    public static function getAllDataFromJSON($filePath) {
-        self::validateFilePath($filePath);
-
+    public static function getAllDataFromJSON($file_content) {
         try {
-            self::loadDataFromJson($filePath);
-            
+            self::loadDataFromJson($file_content);           
             return ['success' => true];
+
         } catch (Exception $e) {
             return [
                  'success' => false,
@@ -49,32 +43,38 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
         }
     }
 
-    private static function loadDataFromCsv($filePath) {
-        $csv = array_map('str_getcsv', file($filePath));
-            self::validateFileData($csv);
+    private static function loadDataFromCsv($file_content) : void {
+        echo($file_content);
+        
+        $file_content =  explode(',', $file_content);
+        echo(11);
+        echo($file_content);
 
-            for ($i = 0; $i < count($csv); $i++) {
-                self::saveChord($csv[$i][0], $csv[$i][1]);
-            }
+        foreach ($file_content as $line) {
+            echo($line."\n");
+            // $line = self::prepareDataCSV($line);
+            self::saveChord($line[0], $line[1]);
+        }
     }
+    //     $csv = array_map('str_getcsv', file($filePath));
+    //         self::validateFileData($csv);
 
-    private static function loadDataFromTxt($filePath) : void {
-        $handle = fopen($filePath, "r");
-        if ($handle) {
-            $i=0;
-            while (($line = fgets($handle)) !== false) {
-                $data = self::prepareData($line);
-                self::saveChord($data[0], $data[1]);
+    //         for ($i = 0; $i < count($csv); $i++) {
+    //             self::saveChord($csv[$i][0], $csv[$i][1]);
+    //         }
+    // }
 
-                $i++;
-            }
-            fclose($handle);
-        } else {
-            throw new RuntimeException("There was problem in opening the file!");
+    private static function loadDataFromTxt($file_content) : void {
+        $file_content =  explode(',', $file_content);
+
+        foreach ($file_content as $line) {
+            echo($line."\n");
+            $line = self::prepareData($line);
+            self::saveChord($line[0], $line[1]);
         }
     }
 
-    private static function loadDataFromJson($filePath) {
+    private static function loadDataFromJson($filePath) : void {
         $jsonFile = file_get_contents($filePath);
 
         $jsonData = json_decode($jsonFile, true);
@@ -89,7 +89,12 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
         return explode('|', $line);
     }
 
+    private static function prepareDataCSV($line) : array {
+        $line = trim($line);
+        return explode(',', $line);
+    }
+
     private static function saveChord($name, $description) : void {
-        ChordRequestHandler::addNewChord($name, $description);
+        ChordRequestHandler::addNewChord(trim($name), trim($description));
     }
 }
