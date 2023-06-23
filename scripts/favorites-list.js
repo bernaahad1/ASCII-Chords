@@ -1,4 +1,6 @@
 import { FavChordsTemp } from "./chord-list.js";
+import { mainButton, mainButtonHover } from "./colors.js";
+import { red_heart } from "./icons.js";
 
 function createFavoritesListTemplate() {
   const templateString = `
@@ -47,7 +49,7 @@ function createFavoritesListTemplate() {
     button {
       padding: 10px 20px;
       font-size: 16px;
-      background-color: #4caf50;
+      background-color: ${mainButton};
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -56,7 +58,7 @@ function createFavoritesListTemplate() {
     }
     
     button:hover {
-      background-color: #45a049;
+      background-color: ${mainButtonHover};
     }
     
     .export-csv {
@@ -135,7 +137,7 @@ class FavoritesList extends HTMLElement {
         <chord-image notes="${chord.description}"></chord-image>    
         <div class="right-icon-buttons">
         <button id="listen-${chord.id}" class="listen speaker-icon"><img src="../assets/images/speaker-icon.svg"/></button>
-        <button id="heart-button-${chord.id}" class="heart-button"><img src="../assets/images/heart-solid.svg"/></button>
+        <button id="heart-button-${chord.id}" class="heart-button">${red_heart}</button>
         </div>
         <button id="export-csv-${chord.id}" class="export-csv">Export as CSV</button>
         <button id="export-ascii-${chord.id}" class="export-ascii">Export as ASCII</button>`;
@@ -251,13 +253,6 @@ class FavoritesList extends HTMLElement {
       chordElement.innerHTML = this.getChordElement(chord);
 
       chordList.appendChild(chordElement);
-
-      this.#_shadowRoot.getElementById(
-        `heart-button-${chord.id}`
-      ).style.backgroundColor = this.chords.find((obj) => obj.id === chord.id)
-        ?.favorite
-        ? "red"
-        : "transparent";
 
       this.playChords(chord);
       this.exportChordToCSV(chord);

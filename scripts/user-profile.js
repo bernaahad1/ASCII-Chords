@@ -1,3 +1,5 @@
+import { mainButton, mainButtonHover } from "./colors.js";
+
 function createUserProfileTemplate() {
   const templateString = `
       <style>
@@ -68,7 +70,7 @@ function createUserProfileTemplate() {
               font-size: 16px;
               border: none;
               border-radius: 4px;
-              background-color: #4CAF50;
+              background-color: ${mainButton};
               color: #fff;
               cursor: pointer;
               transition: background-color 0.3s;
@@ -76,7 +78,7 @@ function createUserProfileTemplate() {
 
             .edit-button:hover,
             .save-button:hover {
-              background-color: #45a049;
+              background-color: ${mainButtonHover};
             }
 
             .edit-button[disabled],

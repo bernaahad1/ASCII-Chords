@@ -1,5 +1,6 @@
 import { AUDIOS } from "./chord-list.js";
 import { empty_heart, red_heart, play_audio, delete_audio } from "./icons.js";
+import { mainButton,mainButtonHover } from "./colors.js";
 
 function createCreateMelodyTemplate() {
   const templateString = `
@@ -48,7 +49,7 @@ function createCreateMelodyTemplate() {
     button {
       padding: 10px 20px;
       font-size: 16px;
-      background-color: #4caf50;
+      background-color: ${mainButton};
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -57,7 +58,7 @@ function createCreateMelodyTemplate() {
     }
     
     button:hover {
-      background-color: #45a049;
+      background-color: ${mainButtonHover};
     }
     
     .melody-options {

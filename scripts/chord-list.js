@@ -1,4 +1,5 @@
 import { red_heart, empty_heart, search } from "./icons.js";
+import { mainButton, mainButtonHover } from "./colors.js";
 
 function createAudioPlaying(notes) {
   for (let key of Object.keys(notes)) {
@@ -69,8 +70,9 @@ function createChordListTemplate() {
       border: 2px solid #ccc;
       padding: 20px;
       border-radius: 5px;
-      margin-bottom: 30px;
+      margin: 0 10px 30px 10px;
       position: relative;
+      flex-grow: 1;
     }
     
     .chord-buttons {
@@ -89,7 +91,7 @@ function createChordListTemplate() {
     button {
       padding: 10px 20px;
       font-size: 16px;
-      background-color: #4caf50;
+      background-color: ${mainButton};
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -98,7 +100,7 @@ function createChordListTemplate() {
     }
     
     button:hover {
-      background-color: #45a049;
+      background-color: ${mainButtonHover};
     }
     
     .export-csv {
@@ -129,6 +131,11 @@ function createChordListTemplate() {
       padding: 0;
       z-index: 30;
       margin: 0;
+    }
+
+    a {
+      color: #fff;
+      text-decoration: none;
     }
 
     .right-icon-buttons button img {
@@ -165,7 +172,7 @@ function createChordListTemplate() {
     .search-container button {
       padding: 10px 20px;
       font-size: 16px;
-      background-color: #4caf50;
+      background-color: ${mainButton};
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -174,7 +181,7 @@ function createChordListTemplate() {
     }
 
     .search-container button:hover {
-      background-color: #45a049;
+      background-color: ${mainButtonHover};
     }
     </style>
 
