@@ -7,9 +7,6 @@ export function onLogIn() {
 
 export function onRegistration() {
   location.hash = "#login";
-  document.getElementById("logout-nav").style.display =
-    document.getElementById("authentication-nav").style.display;
-  document.getElementById("authentication-nav").style.display = "none";
 }
 
 export function onLogOut() {

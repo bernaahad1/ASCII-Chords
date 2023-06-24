@@ -186,7 +186,6 @@ class LoginForm extends HTMLElement {
           loginForm.reset();
 
           onLogIn();
-          location.hash = "#chords";
         }
       })
       .catch((err) => {

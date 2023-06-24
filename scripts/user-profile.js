@@ -132,23 +132,19 @@ class UserProfile extends HTMLElement {
   }
 
   enableEditMode() {
-    // TODO which field is not editable
     const firstNameInput = this.#_shadowRoot.querySelector(".first-name");
     const lastNameInput = this.#_shadowRoot.querySelector(".last-name");
-    // const emailInput = this.#_shadowRoot.querySelector(".email");
     const usernameInput = this.#_shadowRoot.querySelector(".username");
     const saveButton = this.#_shadowRoot.querySelector(".save-button");
 
     firstNameInput.disabled = false;
     lastNameInput.disabled = false;
-    // emailInput.disabled = false;
     usernameInput.disabled = false;
 
     saveButton.style.display = "block";
   }
 
   fetchUserInformation() {
-    // TODO Replace this with fetch users
     fetch("../php/user/UserEndpoints.php", {
       method: "GET",
       headers: {
@@ -214,18 +210,6 @@ class UserProfile extends HTMLElement {
       .then((response) => response.json())
       .then((user) => {
         this.user = user;
-        // this.user.lastName = updatedLastName;
-        // this.user.email = updatedEmail;
-        // this.user.username = updatedUsername;
-        // this.user.firstName = updatedFirstName;
-        // this.user.lastName = updatedLastName;
-        // this.user.email = updatedEmail;
-        // this.user.username = updatedUsername;
-
-        firstNameInput.disabled = true;
-        lastNameInput.disabled = true;
-        emailInput.disabled = true;
-        usernameInput.disabled = true;
         saveButton.style.display = "none";
         editButton.disabled = false;
         errorMessage.textContent = "";
@@ -242,7 +226,6 @@ class UserProfile extends HTMLElement {
         // Re-enable the input fields and the save button
         firstNameInput.disabled = false;
         lastNameInput.disabled = false;
-        emailInput.disabled = false;
         usernameInput.disabled = false;
         saveButton.disabled = false;
         editButton.disabled = false;
