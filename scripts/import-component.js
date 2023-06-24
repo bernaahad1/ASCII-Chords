@@ -1,4 +1,5 @@
 import { colors } from "./colors.js";
+import { handleException, renderModalAlert } from "./utils.js";
 
 function createImportTemplate() {
   const templateString = `
@@ -48,8 +49,10 @@ function createImportTemplate() {
 
     <h1>Chords</h1>
     <div class="import">
+    <form>
       <input type="file" id="fileInput" accept=".csv, .json, .txt*" >
       <button type="button" id="import">Import</button>
+    </form>
     </div>
   `;
 
@@ -67,6 +70,136 @@ class ImportComponent extends HTMLElement {
     super();
     this.#_shadowRoot = this.attachShadow({ mode: "closed" });
     this.#_shadowRoot.appendChild(importTemplate.content.cloneNode(true));
+  }
+
+  handleFileSelect = async (event) => {
+    let file = event.target.files[0];
+    console.log("selected", file);
+
+    let fileReader = new FileReader();
+
+    if (!file) {
+      return;
+    }
+
+    fileReader.readAsText(file);
+
+    fileReader.onload = (event) => {
+      let fileAsText = event.target.result;
+
+      fileAsText = fileAsText.replaceAll("#", "%23");
+
+      let fileExtension = file.name.split(".").pop();
+
+      if (fileExtension.toLowerCase() === "txt") {
+        this.importTXT(fileAsText);
+        return;
+      }
+
+      if (fileExtension.toLowerCase() === "csv") {
+        this.importCSV(fileAsText);
+        return;
+      }
+
+      if (fileExtension.toLowerCase() === "json") {
+        this.importJSON(fileAsText);
+        return;
+      }
+    };
+  };
+
+  importTXT = (fileAsText) => {
+    let fileLines = fileAsText.split(/[\r\n]+/g);
+
+    const postFunction = () => {
+      this.postFile(
+        "../php/import/ImportEndpoints.php?txt_file_path=" + fileLines
+      );
+    };
+
+    this.#_shadowRoot
+      .getElementById("import")
+      .addEventListener("click", postFunction);
+  };
+
+  importCSV = (fileAsText) => {
+    const string_after_splitting = fileAsText.split(",");
+    const fileAsText1 = string_after_splitting.join(";");
+    let fileLines = fileAsText1.split(/[\r\n]+/g);
+
+    const postFunction = () => {
+      this.postFile(
+        "../php/import/ImportEndpoints.php?csv_file_path=" + fileLines
+      );
+    };
+
+    this.#_shadowRoot
+      .getElementById("import")
+      .addEventListener("click", postFunction);
+  };
+
+  importJSON = (fileAsText) => {
+    let temp = "";
+    let jsonAsArray = [];
+    for (let i = 0; i < fileAsText.length; i++) {
+      temp += fileAsText[i];
+      if (fileAsText[i] == "}") {
+        jsonAsArray.push(JSON.parse(temp));
+        temp = "";
+      }
+    }
+
+    const postFunction = () => {
+      this.postFile(
+        "../php/import/ImportEndpoints.php?json_file_path=" +
+          JSON.stringify(jsonAsArray)
+      );
+    };
+    this.#_shadowRoot
+      .getElementById("import")
+      .addEventListener("click", postFunction);
+  };
+
+  postFile = (url) => {
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-type": "text/plain charset=UTF-8"
+      }
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          this.#_shadowRoot.querySelector("form").reset();
+          this.#_shadowRoot.querySelector("input").value = "";
+
+          return;
+        }
+
+        if (res.ok) {
+          return;
+        }
+
+        throw res;
+      })
+      .then(() => {
+        this.#_shadowRoot.getElementById(
+          `heart-button-${chord.id}`
+        ).innerHTML = `${red_heart}`;
+      })
+      .catch((message) => {
+        handleException(message);
+      });
+  };
+
+  onLoad = (event) => {
+    this.#_shadowRoot
+      .getElementById("fileInput")
+      .addEventListener("change", this.handleFileSelect, false);
+  };
+
+  connectedCallback() {
+    console.log("import-form component");
+    this.onLoad();
   }
 }
 

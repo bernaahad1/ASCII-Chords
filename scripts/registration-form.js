@@ -201,9 +201,8 @@ class RegistrationForm extends HTMLElement {
         throw res;
       })
       .then((res) => {
-        if (response.success) {
+        if (res.success) {
           registrationForm.reset();
-          console.log("loggeeed");
           location.hash = "#login";
           checkSession();
         }
