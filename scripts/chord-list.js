@@ -434,9 +434,16 @@ class ChordList extends HTMLElement {
 
   loadChords() {
     fetch("../php/chords/ChordEndpoints.php")
-      .then((res) =>
-        res.ok ? res.json() : Promise.reject(new Error("Error loading chords"))
-      )
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+
+        if (res.ok) {
+          return;
+        }
+        throw res;
+      })
       .then((chords) => {
         this.chords = chords;
         this.renderChords(chords);
