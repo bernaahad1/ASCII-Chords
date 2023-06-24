@@ -9,22 +9,28 @@ async function handleFileSelect(event) {
 
     fileReader.onload = (event) => {
     let fileAsText = event.target.result;
-    let fileLines = fileAsText.split(/[\r\n]+/g);     
 
-        console.log(fileAsText);
+    // fileAsText = fileAsText.replace(',', ';');
+    const string_after_splitting = fileAsText.split(',');
+    const fileAsText1 = string_after_splitting.join(';')
+
+    let fileLines = fileAsText1.split(/[\r\n]+/g);     
+
+
+        console.log(fileAsText1);
         console.log(fileLines);
 
     let fileExtension = file.name.split('.').pop();
-    
+
     if (fileExtension.toLowerCase() === 'txt') {
         const importTxt = () => {
-            postTXTFile('../php/import/ImportEndpoints.php?txt_file_path=' + fileLines);
+            postFile('../php/import/ImportEndpoints.php?txt_file_path=' + fileLines);
         }
         document.getElementById("import").addEventListener('click', importTxt);
     } else
         if (fileExtension.toLowerCase() === 'csv') {
             const importCSV = () => {
-                postCSVFile('../php/import/ImportEndpoints.php?csv_file_path=' + fileLines);
+                postFile('../php/import/ImportEndpoints.php?csv_file_path=' + fileLines);
             }
             document.getElementById("import").addEventListener('click', importCSV); 
         } else {
@@ -38,7 +44,7 @@ async function handleFileSelect(event) {
 };
 
 
-const postTXTFile = async (url) => {
+const postFile = async (url) => {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -46,16 +52,4 @@ const postTXTFile = async (url) => {
         }
     })
 }
-
-const postCSVFile = async (url) => {
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-type': 'text/csv charset=UTF-8',
-        }
-    })
-}
-
-
-
 

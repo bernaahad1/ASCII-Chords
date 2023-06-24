@@ -45,30 +45,19 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
 
     private static function loadDataFromCsv($file_content) : void {
         echo($file_content);
-        
-        $file_content =  explode(',', $file_content);
         echo(11);
         echo($file_content);
 
         foreach ($file_content as $line) {
-            echo($line."\n");
-            // $line = self::prepareDataCSV($line);
+            $line = self::prepareDataCSV($line);
             self::saveChord($line[0], $line[1]);
         }
     }
-    //     $csv = array_map('str_getcsv', file($filePath));
-    //         self::validateFileData($csv);
-
-    //         for ($i = 0; $i < count($csv); $i++) {
-    //             self::saveChord($csv[$i][0], $csv[$i][1]);
-    //         }
-    // }
 
     private static function loadDataFromTxt($file_content) : void {
         $file_content =  explode(',', $file_content);
 
         foreach ($file_content as $line) {
-            echo($line."\n");
             $line = self::prepareData($line);
             self::saveChord($line[0], $line[1]);
         }
@@ -91,7 +80,7 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
 
     private static function prepareDataCSV($line) : array {
         $line = trim($line);
-        return explode(',', $line);
+        return explode(';', $line);
     }
 
     private static function saveChord($name, $description) : void {
