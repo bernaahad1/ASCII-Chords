@@ -29,7 +29,7 @@ abstract class UserValidator {
             && preg_match('/[A-Z]+/', $password) 
             && preg_match('/[a-z]+/', $password) 
             && preg_match('/[0-9]+/', $password))) {
-                throw new InvalidArgumentException('Password should contain one small letter, one capital letter, one digit and at least 6 characters in total!');
+                ExceptionObject::setResponseCode(400, 'Password should contain one small letter, one capital letter, one digit and at least 6 characters in total!');
             }
     }
 
@@ -41,7 +41,7 @@ abstract class UserValidator {
 
     public static function validateStringValue($value, $text) : void {
         if ($value == null || empty($value)) {
-            ExceptionObject::setResponseCode(400, 'The '.$text.' cannot be null, empty or blank!');
+            ExceptionObject::setResponseCode(400, 'The ' . $text . ' cannot be null, empty or blank!');
         }
     }
 }

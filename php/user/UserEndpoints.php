@@ -23,7 +23,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE' && isset($_SESSION['user_id'])) {
 }
 
 if ($response == null) {
-    throw new NoContentException("There is no content!");
+    ExceptionObject::setResponseCode(401, "You are not authorised!");
 }
 
 echo json_encode($response, JSON_UNESCAPED_UNICODE);

@@ -21,7 +21,7 @@ abstract class ChordsValidator {
 
     public static function validateNameCharacters($name): void {
         if (!(preg_match('/^[A-G](#|b)? (major|minor|diminished|augmented)$/', $name))) {
-            throw new InvalidArgumentException('Name should contain a note and a type of chord');
+            ExceptionObject::setResponseCode(400, 'Name should contain a note and a type of chord');
         }
     }
 
@@ -32,13 +32,13 @@ abstract class ChordsValidator {
 
     public static function validateDescriptionCharacters($description): void {
         if (!(preg_match('/^([A-G](#|b)?\-){2}[A-G](#|b)?$/', $description))) {
-            throw new InvalidArgumentException('Description should contain note-note-note');
+            ExceptionObject::setResponseCode(400, 'Description should contain note-note-note');
         }
     }
 
     public static function validateStringValue($value, $text) : void {
         if ($value == null || empty($value)) {
-            ExceptionObject::setResponseCode(400, 'The '.$text.' cannot be null, empty or blank!');
+            ExceptionObject::setResponseCode(400, 'The ' . $text . ' cannot be null, empty or blank!');
         }
     }
 }
