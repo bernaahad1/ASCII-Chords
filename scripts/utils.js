@@ -128,6 +128,9 @@ export const handleException = (error) => {
 
       message = error.statusText;
     }
+    default: {
+      message = error.statusText;
+    }
   }
 
   renderModalAlert(message, buttonText, callBack);
