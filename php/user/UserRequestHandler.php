@@ -20,7 +20,7 @@ class UserRequestHandler extends UserValidator {
 
         ExceptionObject::setResponseCode(400, 'This user cannot be accessed');
     }
-    public static function getUserByUsername($username) : int {
+    public static function getUserByUsername($username) {
         self::validateUsername($username);
 
         $connection = (new Db())->getConnection();
@@ -34,10 +34,10 @@ class UserRequestHandler extends UserValidator {
             return $userId['id'];
         }
 
-        ExceptionObject::setResponseCode(400, 'This user cannot be accessed');
+        return null;
     }
 
-    public static function getUserByEmail($userEmail) : int {
+    public static function getUserByEmail($userEmail) {
         self::validateEmail($userEmail);
 
         $connection = (new Db())->getConnection();
@@ -51,7 +51,7 @@ class UserRequestHandler extends UserValidator {
             return $userId['id'];
         }
 
-        ExceptionObject::setResponseCode(400, 'This user cannot be accessed');
+        return null;
     }
 
     public static function saveNewUser(): bool {
@@ -144,7 +144,6 @@ class UserRequestHandler extends UserValidator {
 
     public static function deleteUserById($userId) {
         self::validateUserId($userId);
-        //self::getUserById($userId);
 
         $connection = (new Db())->getConnection();
 
@@ -163,7 +162,7 @@ class UserRequestHandler extends UserValidator {
 
 
     private static function updateUserFields($user, $userdata) : User {
-        if ($userdata["username"] != null) {
+        if ($userdata["username"] != null && $user->getUsername() != $userdata["username"]) {
             if (self::getUserByUsername($userdata["username"]) == null) {
                 $user->setUsername($userdata["username"]);
             } else {
@@ -172,15 +171,15 @@ class UserRequestHandler extends UserValidator {
             
         }
 
-        if ($userdata["first_name"] != null) {
+        if ($userdata["first_name"] != null && $user->getFirstName() != $userdata["first_name"]) {
             $user->setFirstName($userdata["first_name"]);
         }
 
-        if ($userdata["last_name"] != null) {
+        if ($userdata["last_name"] != null && $user->getLastName() != $userdata["last_name"]) {
             $user->setLastName($userdata["last_name"]);
         }
 
-        if ($userdata["email"] != null) {
+        if ($userdata["email"] != null && $user->getEmail() != $userdata["email"]) {
             if (self::getUserByEmail($userdata["email"]) == null) {
                 $user->setEmail($userdata["email"]);
             } else {

@@ -135,7 +135,6 @@ class ChordRequestHandler extends ChordsValidator {
     public static function deleteChord($chordId) {
         self::validateChordId($chordId);
 
-        //$chord = self::getSingleChord($chordId);
         $connection = (new Db())->getConnection();
         $selectStatement = $connection->prepare("UPDATE chords
                                                 SET deleted = 1
