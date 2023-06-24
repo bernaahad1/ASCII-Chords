@@ -1,5 +1,6 @@
 import { checkSession } from "./utils.js";
 import { colors } from "./colors.js";
+import { handleException } from "./utils.js";
 
 function createRegistrationTemplate() {
   const templateString = `
@@ -182,27 +183,34 @@ class RegistrationForm extends HTMLElement {
       password: form[4].value
     };
 
-    try {
-      fetch("../php/register/register.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(loginFormInput)
+    fetch("../php/register/register.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(loginFormInput)
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+
+        if (res.ok) {
+          return;
+        }
+        throw res;
       })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.success) {
-            registrationForm.reset();
-            console.log("loggeeed");
-            location.hash = "#login";
-            checkSession();
-          } else {
-            console.log("error");
-            location.hash = "#home";
-          }
-        });
-    } catch {}
+      .then((res) => {
+        if (response.success) {
+          registrationForm.reset();
+          console.log("loggeeed");
+          location.hash = "#login";
+          checkSession();
+        }
+      })
+      .catch((err) => {
+        handleException(err);
+      });
   };
 
   connectedCallback() {
