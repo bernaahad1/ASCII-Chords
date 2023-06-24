@@ -5,7 +5,7 @@ function getContent(fragmentId, callback) {
     home: "<home-container></home-container>",
     chords: "<chord-list-component></chord-list-component>",
     createMelody: "<create-melody-component></create-melody-component>",
-    import: "Imports go here",
+    import: "<import-component></import-component>",
     favorites: "<favorites-list-component></favorites-list-component>",
     login: `<login-form-component></login-form-component>`,
     signup: `<registration-form-component></registration-form-component>`,

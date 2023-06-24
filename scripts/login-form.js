@@ -1,5 +1,6 @@
 import { colors } from "./colors.js";
 import { onLogIn } from "./utils.js";
+import { handleException } from "./utils.js";
 
 function createLoginTemplate() {
   const templateString = `
@@ -170,19 +171,26 @@ class LoginForm extends HTMLElement {
       },
       body: JSON.stringify(loginFormInput)
     })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.success) {
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+
+        if (res.ok) {
+          return;
+        }
+        throw res;
+      })
+      .then((res) => {
+        if (res.success) {
           loginForm.reset();
 
           onLogIn();
           location.hash = "#chords";
-        } else {
-          console.log("error");
         }
       })
       .catch((err) => {
-        console.log(err);
+        handleException(err);
       });
   };
 
