@@ -144,7 +144,6 @@ class UserRequestHandler extends UserValidator {
 
     public static function deleteUserById($userId) {
         self::validateUserId($userId);
-        //self::getUserById($userId);
 
         $connection = (new Db())->getConnection();
 
