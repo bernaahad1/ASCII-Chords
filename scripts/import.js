@@ -9,11 +9,10 @@ async function handleFileSelect(event) {
 
     fileReader.onload = (event) => {
     let fileAsText = event.target.result;
-    console.log(fileAsText);
+
+    fileAsText = fileAsText.replaceAll("#", "%23");
 
     let fileExtension = file.name.split('.').pop();
-
-
 
     if (fileExtension.toLowerCase() === 'txt') {
         let fileLines = fileAsText.split(/[\r\n]+/g);     
@@ -23,6 +22,7 @@ async function handleFileSelect(event) {
         }
         document.getElementById("import").addEventListener('click', importTxt);
     } else
+
         if (fileExtension.toLowerCase() === 'csv') {
             const string_after_splitting = fileAsText.split(',');
             const fileAsText1 = string_after_splitting.join(';');
@@ -45,11 +45,7 @@ async function handleFileSelect(event) {
                     temp = "";
                 }
             }
-        
-            console.log(jsonAsArray);
-            console.log(11);
-    
-            
+
             const importJSON = () => {
                 postFile('../php/import/ImportEndpoints.php?json_file_path=' + JSON.stringify(jsonAsArray));
             }
