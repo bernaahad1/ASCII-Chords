@@ -222,9 +222,33 @@ class FavoritesList extends HTMLElement {
   };
 
   unfavoriteChord = (id) => {
-    // TODO here also add the delete from favs endpoint
-    const chord = this.#_shadowRoot.querySelector(`#chord-${id}`);
-    this.#_shadowRoot.getElementById(`favorites-list`).removeChild(chord);
+    fetch(
+      `../php/favourite_chords/FavouriteChordsEndpoints.php?chord_id=${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    )
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+
+        if (res.ok) {
+          return;
+        }
+
+        throw res;
+      })
+      .then(() => {
+        const chord = this.#_shadowRoot.querySelector(`#chord-${id}`);
+        this.#_shadowRoot.getElementById(`favorites-list`).removeChild(chord);
+      })
+      .catch((message) => {
+        handleException(message);
+      });
   };
 
   addFavoriteClickListener = (chord) => {
@@ -233,9 +257,7 @@ class FavoritesList extends HTMLElement {
       .addEventListener("click", (event) => {
         event.preventDefault();
 
-        if (this.chords.find((obj) => obj.id === chord.id)?.favorite) {
-          this.unfavoriteChord(chord.id);
-        }
+        this.unfavoriteChord(chord.id);
       });
   };
 
