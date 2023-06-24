@@ -150,13 +150,11 @@ function createChordListTemplate() {
 
     <h1>Chords</h1>
     <div class="search-container">
-    <input id="search-input" type="text" placeholder="Search chords...">
-    <button id="search-button" class="search-button">${search}</button>
-  </div>
-    <button><a href="#createMelody">Start creating melody</a>
-    </button>
+      <input id="search-input" type="text" placeholder="Search chords...">
+      <button id="search-button" class="search-button">${search}</button>
+    </div>
+    <button><a href="#createMelody">Start creating melody</a></button>
     <section id="chord-list"></section>
-    
     `;
 
   const templateElement = document.createElement("template");
@@ -172,6 +170,7 @@ export let FavChordsTemp = [];
 class ChordList extends HTMLElement {
   #_shadowRoot = null;
   chords = null;
+  searchQuery = null;
 
   constructor() {
     super();
@@ -179,20 +178,37 @@ class ChordList extends HTMLElement {
     this.#_shadowRoot.appendChild(chordListTemplate.content.cloneNode(true));
   }
 
-  searchChords = () => {
+  searchChords = (searchQuery) => {
     const searchInput = this.#_shadowRoot.getElementById("search-input");
-    const searchValue = searchInput.value.toLowerCase();
-    const filteredChords = this.chords.filter(
-      (chord) =>
+    let searchValue = searchInput.value.toLowerCase().trim();
+
+    if (searchQuery.toLowerCase().trim() === this.searchQuery) {
+      return;
+    }
+
+    if (searchQuery) {
+      searchValue = searchQuery.toLowerCase().trim();
+    }
+
+    this.searchQuery = searchValue;
+
+    const filteredChords = this.chords.filter((chord) => {
+      return (
         chord.name.toLowerCase().includes(searchValue) ||
         chord.description.toLowerCase().includes(searchValue)
-    );
+      );
+    });
+
     this.renderChords(filteredChords);
   };
 
   addSearchButtonClickListener = () => {
-    const searchButton = this.#_shadowRoot.getElementById("search-button");
-    searchButton.addEventListener("click", this.searchChords);
+    const searchInput = this.#_shadowRoot.querySelector("#search-input");
+
+    searchInput.addEventListener("keyup", () => {
+      const searchQuery = searchInput.value;
+      this.searchChords(searchQuery);
+    });
   };
 
   getChordElement = (chord) => {
@@ -378,16 +394,6 @@ class ChordList extends HTMLElement {
         this.renderChords(chords);
       })
       .catch((err) => console.error(err));
-
-    // Search on enters
-    const searchInput = this.#_shadowRoot.querySelector("#search-input");
-    searchInput.addEventListener("keydown", (event) => {
-      // if (event.keyCode === 13) {
-      // Enter key is pressed
-      const searchQuery = searchInput.value;
-      this.searchChords(searchQuery);
-      // }
-    });
   }
 
   connectedCallback() {
