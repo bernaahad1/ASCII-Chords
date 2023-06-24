@@ -68,26 +68,30 @@ class FavouriteChordsRequestHandler extends FavouriteChordsValidator {
              VALUES (:user_id, :chord_id, :deleted)"
         );
 
-        $insertResult = $insertStatement->execute([
-            'user_id' => $userId, 
-            'chord_id' => $chordId, 
-            'deleted'=> 0,
-        ]);
+        try {
+            $insertResult = $insertStatement->execute([
+                'user_id' => $userId, 
+                'chord_id' => $chordId, 
+                'deleted'=> 0,
+            ]);
 
-        if (!$insertResult) {
-            $errorInfo = $insertStatement->errorInfo();
-            $errorMessage = "There was error while saving the favourite chord! Please try again!";
+            if (!$insertResult) {
+                $errorInfo = $insertStatement->errorInfo();
+                $errorMessage = "There was error while saving the favourite chord! Please try again!";
 
-            if ($errorInfo[1] == 1062) {
-                $errorMessage = "There is such favourite chord saved!";
-            } else {
-                $errorMessage = "Request failed, true again later";
+                if ($errorInfo[1] == 1062) {
+                    $errorMessage = "There is such favourite chord saved!";
+                } else {
+                    $errorMessage = "Request failed, true again later";
+                }
+                    
+                ExceptionObject::setResponseCode(400, $errorMessage);
             }
-                 
-            ExceptionObject::setResponseCode(400, $errorMessage);
-        }
 
-        return true;
+            return true;
+        } catch (Exception $e) {
+            ExceptionObject::setResponseCode(409, "Favourite chord already exists!");
+        }
     }
 
     public static function deleteAllFavouriteChordsByUserId($userId) {

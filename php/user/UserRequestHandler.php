@@ -78,7 +78,7 @@ class UserRequestHandler extends UserValidator {
     
             return true;
         } catch (Exception $e) {
-            ExceptionObject::setResponseCode(409, 'This user cannot be accessed');
+            ExceptionObject::setResponseCode(409, "User already exists!");
         }
         
     }
