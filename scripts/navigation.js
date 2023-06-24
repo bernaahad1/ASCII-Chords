@@ -1,18 +1,10 @@
 import { onLogIn, onLogOut, checkSession } from "./utils.js";
 
-const toggleTabs = (event) => {
-  event.preventDefault();
-  console.log("aloo");
-  var tabs = document.querySelector(".navbar .tabs");
-  tabs.classList.toggle("show");
-};
-
-document.querySelector(".navbar .icon").addEventListener("click", toggleTabs);
-
 function getContent(fragmentId, callback) {
   let pages = {
-    home: "This is the Home page. Welcome to my site.",
+    home: "Home",
     chords: "<chord-list-component></chord-list-component>",
+    createMelody: "<create-melody-component></create-melody-component>",
     import: "Imports go here",
     favorites: "<favorites-list-component></favorites-list-component>",
     login: `<login-form-component></login-form-component>`,
@@ -80,3 +72,17 @@ window.onscroll = () => {
     requestAnimationFrame(handleScroll);
   }
 };
+
+const navMenu = document.querySelector(".menu");
+const checkBox = document.querySelector("#checkbox_toggle");
+
+navMenu.addEventListener("mouseleave", function (event) {
+  const { y } = event;
+  const { top, height } = navMenu.getBoundingClientRect();
+  const bottom = top + height;
+
+  if (y > bottom) {
+    checkBox.checked = false;
+    checkBox.checked = false;
+  }
+});

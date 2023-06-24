@@ -1,5 +1,50 @@
+import { red_heart, empty_heart, search } from "./icons.js";
+import { mainButton, mainButtonHover } from "./colors.js";
+
+function createAudioPlaying(notes) {
+  for (let key of Object.keys(notes)) {
+    let note = new Audio();
+    let src = document.createElement("source");
+    src.type = "audio/mpeg";
+    src.src = "../assets/" + key + ".mp3";
+    note.appendChild(src);
+    notes[key] = note;
+  }
+
+  return notes;
+}
+
+const notes = {
+  A: undefined,
+  "A%23": undefined,
+  Ab: undefined,
+  B: undefined,
+  "B%23": undefined,
+  Bb: undefined,
+  C: undefined,
+  "C%23": undefined,
+  Cb: undefined,
+  D: undefined,
+  "D%23": undefined,
+  Db: undefined,
+  E: undefined,
+  "E%23": undefined,
+  Eb: undefined,
+  F: undefined,
+  "F%23": undefined,
+  Fb: undefined,
+  G: undefined,
+  "G%23": undefined,
+  Gb: undefined
+};
+
+export const AUDIOS = createAudioPlaying(notes);
+
 function createChordListTemplate() {
   const templateString = `
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+  
+
     <style>
     *,
     ::after,
@@ -25,8 +70,9 @@ function createChordListTemplate() {
       border: 2px solid #ccc;
       padding: 20px;
       border-radius: 5px;
-      margin-bottom: 30px;
+      margin: 0 10px 30px 10px;
       position: relative;
+      flex-grow: 1;
     }
     
     .chord-buttons {
@@ -45,7 +91,7 @@ function createChordListTemplate() {
     button {
       padding: 10px 20px;
       font-size: 16px;
-      background-color: #4caf50;
+      background-color: ${mainButton};
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -54,7 +100,7 @@ function createChordListTemplate() {
     }
     
     button:hover {
-      background-color: #45a049;
+      background-color: ${mainButtonHover};
     }
     
     .export-csv {
@@ -65,7 +111,7 @@ function createChordListTemplate() {
       background-color: #ffc107;
     }
 
-    .left-icon-buttons {
+    .right-icon-buttons {
       padding: 0;
       background-color: transparent;
       position: absolute;
@@ -79,7 +125,7 @@ function createChordListTemplate() {
       justify-content: flex-start;
     }
 
-    .left-icon-buttons button{
+    .right-icon-buttons button{
       background-color: transparent;
       width: 50px;
       padding: 0;
@@ -87,7 +133,12 @@ function createChordListTemplate() {
       margin: 0;
     }
 
-    .left-icon-buttons button img {
+    a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .right-icon-buttons button img {
       width: 100%;
     }
 
@@ -104,10 +155,45 @@ function createChordListTemplate() {
       text-align: center;
       margin-bottom: 10%;
     }
+
+    .search-container {
+      margin-bottom: 20px;
+      display: flex;
+    }
+
+    .search-container input {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    .search-container button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: ${mainButton};
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    .search-container button:hover {
+      background-color: ${mainButtonHover};
+    }
     </style>
 
     <h1>Chords</h1>
-    <section id="chord-list"><section>
+    <div class="search-container">
+    <input id="search-input" type="text" placeholder="Search chords...">
+    <button id="search-button" class="search-button">${search}</button>
+  </div>
+    <button><a href="#createMelody">Start creating melody</a>
+    </button>
+    <section id="chord-list"></section>
+    
     `;
 
   const templateElement = document.createElement("template");
@@ -130,16 +216,33 @@ class ChordList extends HTMLElement {
     this.#_shadowRoot.appendChild(chordListTemplate.content.cloneNode(true));
   }
 
+  searchChords = () => {
+    const searchInput = this.#_shadowRoot.getElementById("search-input");
+    const searchValue = searchInput.value.toLowerCase();
+    const filteredChords = this.chords.filter(
+      (chord) =>
+        chord.name.toLowerCase().includes(searchValue) ||
+        chord.description.toLowerCase().includes(searchValue)
+    );
+    this.renderChords(filteredChords);
+  };
+
+  addSearchButtonClickListener = () => {
+    const searchButton = this.#_shadowRoot.getElementById("search-button");
+    searchButton.addEventListener("click", this.searchChords);
+  };
+
   getChordElement = (chord) => {
     return `
           <h2 class="chord-name">${chord.name} - ${chord.description}</h2>
         <chord-image notes="${chord.description}"></chord-image>    
-        <div class="left-icon-buttons">
+        <div class="right-icon-buttons">
         <button id="listen-${chord.id}" class="listen speaker-icon"><img src="../assets/images/speaker-icon.svg"/></button>
-        <button id="heart-button-${chord.id}" class="heart-button"><img src="../assets/images/heart-solid.svg"/></button>
+        <button id="heart-button-${chord.id}" class="heart-button">${empty_heart}</button>
         </div>
         <button id="export-csv-${chord.id}" class="export-csv">Export as CSV</button>
-        <button id="export-ascii-${chord.id}" class="export-ascii">Export as ASCII</button>`;
+        <button id="export-ascii-${chord.id}" class="export-ascii">Export as ASCII</button>
+        <button id="button-json-${chord.id}" class="export-json">Export as JSON</button>`;
   };
 
   playChords = (chord) => {
@@ -150,29 +253,8 @@ class ChordList extends HTMLElement {
 
         for (let i = 0; i < chord_notes.length; i++) {
           chord_notes[i] = chord_notes[i].replace("#", "%23");
+          AUDIOS[chord_notes[i]].play();
         }
-
-        var snd1 = new Audio();
-        var src1 = document.createElement("source");
-        src1.type = "audio/mpeg";
-        src1.src = "../assets/" + chord_notes[0] + ".mp3";
-        snd1.appendChild(src1);
-
-        var snd2 = new Audio();
-        var src2 = document.createElement("source");
-        src2.type = "audio/mpeg";
-        src2.src = "../assets/" + chord_notes[1] + ".mp3";
-        snd2.appendChild(src2);
-
-        var snd3 = new Audio();
-        var src3 = document.createElement("source");
-        src3.type = "audio/mpeg";
-        src3.src = "../assets/" + chord_notes[2] + ".mp3";
-        snd3.appendChild(src3);
-
-        snd1.play();
-        snd2.play();
-        snd3.play();
       });
   };
 
@@ -291,12 +373,41 @@ class ChordList extends HTMLElement {
         event.preventDefault();
 
         if (this.chords.find((obj) => obj.id === chord.id)?.favorite) {
-          event.target.style.backgroundColor = "transparent";
+          this.#_shadowRoot.getElementById(
+            `heart-button-${chord.id}`
+          ).innerHTML = `${empty_heart}`;
           this.unfavoriteChord(chord.id);
         } else {
-          event.target.style.backgroundColor = "red";
+          this.#_shadowRoot.getElementById(
+            `heart-button-${chord.id}`
+          ).innerHTML = `${red_heart}`;
+
           this.favoriteChord(chord.id);
         }
+      });
+  };
+
+  exportChordToJSON = (chord) => {
+    this.#_shadowRoot
+      .getElementById("button-json-" + chord.id)
+      .addEventListener("click", () => {
+        let JSONExportElement = document.createElement("a");
+        JSONExportElement.setAttribute(
+          "href",
+          "data:text/json;charset=utf-8," +
+            encodeURIComponent(
+              JSON.stringify({
+                name: chord.name,
+                description: chord.description
+              })
+            )
+        );
+        JSONExportElement.setAttribute("download", chord.name + ".json");
+
+        this.#_shadowRoot.appendChild(JSONExportElement);
+
+        JSONExportElement.click();
+        this.#_shadowRoot.removeChild(JSONExportElement);
       });
   };
 
@@ -307,6 +418,13 @@ class ChordList extends HTMLElement {
 
     const [chordList] = this.#_shadowRoot.querySelectorAll("#chord-list");
     chordList.innerHTML = "";
+
+    if (chords.length === 0) {
+      const noResultsMessage = document.createElement("p");
+      noResultsMessage.textContent = "No matching chords found.";
+      chordList.appendChild(noResultsMessage);
+      return;
+    }
 
     for (const chord of chords) {
       const chordElement = document.createElement("div");
@@ -327,6 +445,8 @@ class ChordList extends HTMLElement {
       this.playChords(chord);
       this.exportChordToCSV(chord);
       this.exportChordToASCII(chord);
+      this.exportChordToJSON(chord);
+
       this.addFavoriteClickListener(chord);
     }
   }
@@ -341,10 +461,21 @@ class ChordList extends HTMLElement {
         this.renderChords(chords);
       })
       .catch((err) => console.error(err));
+
+    // Search on enters
+    const searchInput = this.#_shadowRoot.querySelector("#search-input");
+    searchInput.addEventListener("keydown", (event) => {
+      // if (event.keyCode === 13) {
+      // Enter key is pressed
+      const searchQuery = searchInput.value;
+      this.searchChords(searchQuery);
+      // }
+    });
   }
 
   connectedCallback() {
     this.loadChords();
+    this.addSearchButtonClickListener();
   }
 }
 
