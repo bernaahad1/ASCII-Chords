@@ -1,7 +1,7 @@
-import { onLogIn, onLogOut, checkSession } from "./utils.js";
+import { onLogOut, checkSession } from "./utils.js";
 
 function getContent(fragmentId, callback) {
-  let pages = {
+  const pages = {
     home: "<home-container></home-container>",
     chords: "<chord-list-component></chord-list-component>",
     createMelody: "<create-melody-component></create-melody-component>",
@@ -20,7 +20,6 @@ function loadContent() {
   const contentDiv = document.getElementById("app");
   const fragmentId = location.hash.split("#")[1] || "home";
 
-  // TODO fix logout
   if (fragmentId == "logout") {
     fetch("../php/authentication/logout.php", { method: "GET" })
       .then((response) => response.json())
@@ -48,28 +47,6 @@ checkSession();
 loadContent();
 
 window.addEventListener("hashchange", loadContent);
-
-// Refactor maybe
-const $nav = document.querySelector(".navbar");
-const threshold = $nav.getBoundingClientRect();
-const fixedClass = "nav--fixed";
-
-// reference for update request
-let updating = false;
-const handleScroll = () => {
-  if (window.scrollY >= threshold.top || window.pageYOffset >= threshold.top)
-    $nav.classList.add(fixedClass);
-  else $nav.classList.remove(fixedClass);
-  updating = false;
-};
-// on scroll, if an update opportunity is available, update
-window.onscroll = () => {
-  if (updating) return;
-  else {
-    updating = true;
-    requestAnimationFrame(handleScroll);
-  }
-};
 
 const navMenu = document.querySelector(".menu");
 const checkBox = document.querySelector("#checkbox_toggle");

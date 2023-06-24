@@ -57,7 +57,7 @@ function createModalTemplate() {
 
 const modalTemplate = createModalTemplate();
 
-class ModalAlert extends HTMLElement {
+class Modal extends HTMLElement {
   #_shadowRoot = null;
 
   constructor() {
@@ -67,4 +67,4 @@ class ModalAlert extends HTMLElement {
   }
 }
 
-customElements.define("modal-alert", ModalAlert);
+customElements.define("modal-component", Modal);

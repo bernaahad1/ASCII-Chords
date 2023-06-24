@@ -126,7 +126,7 @@ function createHomeTemplate() {
       }
     </style>
   
-          <div id="main-component">
+      <div id="main-component">
         <div class="background-container">
           <img src="../assets/images/music-notes.png" />
           <h1 class="header-text">ASCII Chords</h1>

@@ -15,7 +15,7 @@ export function validateUsername(usernameInput, shadowRoot) {
 
 export function validateName(nameInput, shadowRoot) {
   if (nameInput.length === 0) {
-    displayError("Name is required", "name");
+    displayError("Name is required", "name", shadowRoot);
     return false;
   }
 

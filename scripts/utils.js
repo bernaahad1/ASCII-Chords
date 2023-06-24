@@ -79,7 +79,7 @@ export function checkSession() {
 }
 
 export function renderModalAlert(message, buttonText, onButtonPress) {
-  const modalElement = document.createElement("modal-alert");
+  const modalElement = document.createElement("modal-component");
   modalElement.innerHTML = `
   <style>
   p {

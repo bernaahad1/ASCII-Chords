@@ -154,10 +154,6 @@ class LoginForm extends HTMLElement {
 
     const loginForm = this.#_shadowRoot.getElementById("login-form");
     const form = this.#_shadowRoot.getElementById("login-form").elements;
-    let formData = new FormData();
-
-    formData.append("email", form[0].value);
-    formData.append("password", form[1].value);
 
     const loginFormInput = {
       email: form[0].value,
