@@ -4,13 +4,12 @@ include_once "ImportRequestHandlerValidator.php";
 include_once "../chords/ChordRequestHandler.php";
 
 class ImportRequestHandler extends ImportRequestHandlerValidator {
-    public static function getAllDataFromCSV($filePath) {
-        self::validateFilePath($filePath);
-
+    public static function getAllDataFromCSV($file_content) {
+        self::validateFileContent($file_content);
         try {
-            self::loadDataFromCsv($filePath);
-            
+            self::loadDataFromCsv($file_content);
             return ['success' => true];
+
         } catch (Exception $e) {
             return [
                  'success' => false,
@@ -19,13 +18,12 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
         }
     }
 
-    public static function getAllDataFromTXT($filePath) {
-        self::validateFilePath($filePath);
-
+    public static function getAllDataFromTXT($file_content) {
+        self::validateFileContent($file_content);
         try {
-            self::loadDataFromTxt($filePath);
-            
+            self::loadDataFromTxt($file_content);
             return ['success' => true];
+
         } catch (Exception $e) {
             return [
                  'success' => false,
@@ -34,13 +32,12 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
         }
     }
 
-    public static function getAllDataFromJSON($filePath) {
-        self::validateFilePath($filePath);
-
+    public static function getAllDataFromJSON($file_content) {
+        self::validateFileContent($file_content);
         try {
-            self::loadDataFromJson($filePath);
-            
+            self::loadDataFromJson($file_content);           
             return ['success' => true];
+
         } catch (Exception $e) {
             return [
                  'success' => false,
@@ -49,38 +46,36 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
         }
     }
 
-    private static function loadDataFromCsv($filePath) {
-        $csv = array_map('str_getcsv', file($filePath));
-            self::validateFileData($csv);
-
-            for ($i = 0; $i < count($csv); $i++) {
-                self::saveChord($csv[$i][0], $csv[$i][1]);
-            }
-    }
-
-    private static function loadDataFromTxt($filePath) : void {
-        $handle = fopen($filePath, "r");
-        if ($handle) {
-            $i=0;
-            while (($line = fgets($handle)) !== false) {
-                $data = self::prepareData($line);
-                self::saveChord($data[0], $data[1]);
-
-                $i++;
-            }
-            fclose($handle);
-        } else {
-            throw new RuntimeException("There was problem in opening the file!");
+    private static function loadDataFromTxt($file_content) : void {
+        $file_content = str_replace('%23', '#', $file_content);
+        echo($file_content);
+        $file_content =  explode(',', $file_content);
+        echo($file_content);
+        foreach ($file_content as $line) {
+            echo($line);
+            $line = self::prepareData($line);
+            self::saveChord($line[0], $line[1]);
         }
     }
 
-    private static function loadDataFromJson($filePath) {
-        $jsonFile = file_get_contents($filePath);
+    private static function loadDataFromCsv($file_content) : void {
+        $file_content = str_replace('%23', '#', $file_content);
+        $file_content = trim($file_content, ',');
+        echo($file_content);    
+        $file_content =  explode(',', $file_content);
+        foreach ($file_content as $line) {
+            echo($line);
+            $line = self::prepareDataCSV($line);
+            self::saveChord($line[0], $line[1]);
+        }
+    }
 
-        $jsonData = json_decode($jsonFile, true);
-        
-        for ($i = 0; $i < count($jsonData['chords']); $i++) {
-            self::saveChord($jsonData['chords'][$i]['name'], $jsonData['chords'][$i]['description']);
+    private static function loadDataFromJson($file_content) : void {
+        $file_content = str_replace('%23', '#', $file_content);
+        $jsonData = json_decode($file_content, true);
+
+        foreach ($jsonData as $line) {
+            self::saveChord($line['name'], $line['description']);
         }
     }
 
@@ -89,7 +84,12 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
         return explode('|', $line);
     }
 
+    private static function prepareDataCSV($line) : array {
+        $line = trim($line);
+        return explode(';', $line);
+    }
+
     private static function saveChord($name, $description) : void {
-        ChordRequestHandler::addNewChord($name, $description);
+        ChordRequestHandler::addNewChord(trim($name), trim($description));
     }
 }

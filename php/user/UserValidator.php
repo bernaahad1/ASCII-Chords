@@ -21,6 +21,16 @@ abstract class UserValidator {
 
     public static function validatePassword($password): void {
         self::validateStringValue($password, 'password');
+        self::validatePasswordCharacters($password);
+    }
+
+    public static function validatePasswordCharacters($password): void {
+        if (!(preg_match('/^.{6,}$/', $password) 
+            && preg_match('/[A-Z]+/', $password) 
+            && preg_match('/[a-z]+/', $password) 
+            && preg_match('/[0-9]+/', $password))) {
+                throw new InvalidArgumentException('Password should contain one small letter, one capital letter, one digit and at least 6 characters in total!');
+            }
     }
 
     public static function validateUserId($userId): void {
@@ -35,3 +45,6 @@ abstract class UserValidator {
         }
     }
 }
+
+// Test validatePassword method
+// echo UserValidator::validatePassword("12Aaaaa3") ? 'true' : 'false';
