@@ -20,7 +20,7 @@ class UserRequestHandler extends UserValidator {
 
         ExceptionObject::setResponseCode(400, 'This user cannot be accessed');
     }
-    public static function getUserByUsername($username) : int {
+    public static function getUserByUsername($username) {
         self::validateUsername($username);
 
         $connection = (new Db())->getConnection();
@@ -34,10 +34,10 @@ class UserRequestHandler extends UserValidator {
             return $userId['id'];
         }
 
-        ExceptionObject::setResponseCode(400, 'This user cannot be accessed');
+        return null;
     }
 
-    public static function getUserByEmail($userEmail) : int {
+    public static function getUserByEmail($userEmail) {
         self::validateEmail($userEmail);
 
         $connection = (new Db())->getConnection();
@@ -51,7 +51,7 @@ class UserRequestHandler extends UserValidator {
             return $userId['id'];
         }
 
-        ExceptionObject::setResponseCode(400, 'This user cannot be accessed');
+        return null;
     }
 
     public static function saveNewUser(): bool {
