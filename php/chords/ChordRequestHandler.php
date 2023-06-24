@@ -64,7 +64,6 @@ class ChordRequestHandler extends ChordsValidator {
     }
 
     public static function addNewChord($name, $description): bool {
-        //$chordData = json_decode(file_get_contents('php://input'), true);
         self::validateName($name);
         self::validateDescription($description);
 

@@ -20,6 +20,22 @@ class UserRequestHandler extends UserValidator {
 
         ExceptionObject::setResponseCode(400, 'This user cannot be accessed');
     }
+    public static function getUserByUsername($username) : int {
+        self::validateUsername($username);
+
+        $connection = (new Db())->getConnection();
+
+        $selectStatement = $connection->prepare("SELECT id FROM `users` WHERE username = ? AND deleted = 0");
+        $selectStatement->execute([$username]);
+
+        $userId = $selectStatement->fetch();
+
+        if ($userId) {
+            return $userId['id'];
+        }
+
+        ExceptionObject::setResponseCode(400, 'This user cannot be accessed');
+    }
 
     public static function getUserByEmail($userEmail) : int {
         self::validateEmail($userEmail);
@@ -148,7 +164,7 @@ class UserRequestHandler extends UserValidator {
 
     private static function updateUserFields($user, $userdata) : User {
         if ($userdata["username"] != null) {
-            if (self::getUserById($userdata["username"]) == null) {
+            if (self::getUserByUsername($userdata["username"]) == null) {
                 $user->setUsername($userdata["username"]);
             } else {
                 ExceptionObject::setResponseCode(409, "This username is already taken!");
@@ -165,7 +181,7 @@ class UserRequestHandler extends UserValidator {
         }
 
         if ($userdata["email"] != null) {
-            if (self::getUserById($userdata["email"]) == null) {
+            if (self::getUserByEmail($userdata["email"]) == null) {
                 $user->setEmail($userdata["email"]);
             } else {
                 ExceptionObject::setResponseCode(409, "This email is already taken!");
