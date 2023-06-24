@@ -283,7 +283,7 @@ class ChordList extends HTMLElement {
           "href",
           "data:text/plain;charset=utf-8," +
             encodeURIComponent(chord.name) +
-            " " +
+            "|" +
             encodeURIComponent(chord.description)
         );
         asciiExportElement.setAttribute("download", chord.name);
