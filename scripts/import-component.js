@@ -109,7 +109,6 @@ class ImportComponent extends HTMLElement {
 
   handleFileSelect = async (event) => {
     let file = event.target.files[0];
-    console.log("selected", file);
 
     let fileReader = new FileReader();
 
@@ -121,31 +120,32 @@ class ImportComponent extends HTMLElement {
 
     fileReader.onload = (event) => {
       let fileAsText = event.target.result;
-      console.log("try");
+
       fileAsText = fileAsText.replaceAll("#", "%23");
 
       let fileExtension = file.name.split(".").pop();
 
       if (fileExtension.toLowerCase() === "txt") {
         if (!fileAsText) {
-          console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+          return;
         }
-        
+
         this.importTXT(fileAsText);
         return;
       }
 
       if (fileExtension.toLowerCase() === "csv") {
         if (!fileAsText) {
-          console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+          return;
         }
-        
+
         this.importCSV(fileAsText);
         return;
       }
 
       if (fileExtension.toLowerCase() === "json") {
         if (!fileAsText) {
+          return;
         }
 
         this.importJSON(fileAsText);
@@ -171,8 +171,6 @@ class ImportComponent extends HTMLElement {
 
     const importButton = this.#_shadowRoot.getElementById("import");
     this.recreateButton(importButton);
-
-    // importButton.replaceWith(importButton.clone());
 
     this.#_shadowRoot
       .getElementById("import")
@@ -234,7 +232,6 @@ class ImportComponent extends HTMLElement {
       }
     })
       .then((res) => {
-        console.log("res", res);
         if (res.status === 200) {
           this.#_shadowRoot.querySelector("form").reset();
           this.#_shadowRoot.querySelector("input").value = "";
@@ -257,7 +254,6 @@ class ImportComponent extends HTMLElement {
         ).innerHTML = `${red_heart}`;
       })
       .catch((message) => {
-        console.log("aloo");
         handleException(message);
       });
   };
@@ -269,7 +265,6 @@ class ImportComponent extends HTMLElement {
   };
 
   connectedCallback() {
-    console.log("import-form component");
     this.onLoad();
   }
 }
