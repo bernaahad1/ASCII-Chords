@@ -1,6 +1,6 @@
-import { AUDIOS } from "./chord-list.js";
+import { AUDIOS } from "./utils.js";
 import { empty_heart, red_heart, play_audio, delete_audio } from "./icons.js";
-import { mainButton,mainButtonHover } from "./colors.js";
+import { colors } from "./colors.js";
 
 function createCreateMelodyTemplate() {
   const templateString = `
@@ -21,6 +21,15 @@ function createCreateMelodyTemplate() {
       flex-wrap: wrap;
       justify-content: space-between;
       align-content: stretch;
+    }
+
+    #create-melody {
+      display: flex;
+      align-items: stretch;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-content: stretch;
       padding: 20px;
     }
     
@@ -29,8 +38,9 @@ function createCreateMelodyTemplate() {
       border: 2px solid #ccc;
       padding: 20px;
       border-radius: 5px;
-      margin-bottom: 30px;
+      margin: 0 10px 30px 10px;
       position: relative;
+      flex-grow: 1;
     }
     
     .chord-buttons {
@@ -49,7 +59,7 @@ function createCreateMelodyTemplate() {
     button {
       padding: 10px 20px;
       font-size: 16px;
-      background-color: ${mainButton};
+      background-color: ${colors.mainButton};
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -58,11 +68,18 @@ function createCreateMelodyTemplate() {
     }
     
     button:hover {
-      background-color: ${mainButtonHover};
+      background-color: ${colors.mainButtonHover};
+    }
+
+    button.melody-options:hover{
+      color: black
     }
     
     .melody-options {
-      background-color: #2196f3;
+      background-color: ${colors.white};
+      margin: 10px;
+      border: 2px solid ${colors.mainButton};
+      color: teal;
     }
 
     .right-icon-buttons {
@@ -100,6 +117,8 @@ function createCreateMelodyTemplate() {
       font-size: 50px;
       text-align: center;
       margin-bottom: 10%;
+      margin-top: 10%;
+
     }
 
     .header-part{
@@ -117,15 +136,14 @@ function createCreateMelodyTemplate() {
 
     .div-chord{
       border: 2px solid #ccc;
-    padding: 10px;
-    margin: 5px;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    /* align-content: center; */
-    align-items: center;
-    justify-content: space-between;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
     }
 
     #right-melody-chord-buttons{
@@ -141,14 +159,24 @@ function createCreateMelodyTemplate() {
       margin-left: 10px;
       background-color: transparent;
     }
+
+    #melody-buttons{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-content: center;
+    }
     </style>
 
     <h1>Creating melody</h1>
     <div id="melody-info"></div>
+    <div id="melody-buttons">
     <button type="button" id="play_melody" class="melody-options">Play Melody</button>
     <button type="button" id="export-melody-csv" class="melody-options">Export to CSV!</button>
     <button type="button" id="export-melody-json" class="melody-options">Export to JSON!</button>
     <button type="button" id="export-melody-ascii" class="melody-options">Export to ASCII!</button>
+    </div>
     <section id="create-melody"></section>
    
     `;

@@ -1,5 +1,5 @@
 import { FavChordsTemp } from "./chord-list.js";
-import { mainButton, mainButtonHover } from "./colors.js";
+import { colors } from "./colors.js";
 import { red_heart } from "./icons.js";
 
 function createFavoritesListTemplate() {
@@ -49,7 +49,7 @@ function createFavoritesListTemplate() {
     button {
       padding: 10px 20px;
       font-size: 16px;
-      background-color: ${mainButton};
+      background-color: ${colors.mainButton};
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -58,7 +58,7 @@ function createFavoritesListTemplate() {
     }
     
     button:hover {
-      background-color: ${mainButtonHover};
+      background-color: ${colors.mainButtonHover};
     }
     
     .export-csv {
@@ -107,6 +107,7 @@ function createFavoritesListTemplate() {
       font-size: 50px;
       text-align: center;
       margin-bottom: 10%;
+      margin-top: 10%;
     }
     </style>
 

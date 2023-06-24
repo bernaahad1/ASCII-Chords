@@ -1,4 +1,4 @@
-import { mainButton, mainButtonHover } from "./colors.js";
+import { colors } from "./colors.js";
 
 function createUserProfileTemplate() {
   const templateString = `
@@ -17,6 +17,15 @@ function createUserProfileTemplate() {
               font-family: Arial, sans-serif;
               max-width: 400px;
               margin: 0 auto;
+            }
+            h1 {
+              font-size: 34px;
+              align-self: center;
+              margin-bottom: 10%;
+              margin-top: 10%;
+              font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+                "Lucida Sans", Arial, sans-serif;
+              font-weight: 200;
             }
             h2 {
               text-align: center;
@@ -37,10 +46,6 @@ function createUserProfileTemplate() {
             }
             .edit-button {
               display: block;
-              margin: 10px auto;
-            }
-            .save-button {
-              display: none;
               margin: 10px auto;
             }
             .error-message {
@@ -70,15 +75,24 @@ function createUserProfileTemplate() {
               font-size: 16px;
               border: none;
               border-radius: 4px;
-              background-color: ${mainButton};
+              background-color: ${colors.mainButton};
               color: #fff;
               cursor: pointer;
               transition: background-color 0.3s;
             }
 
-            .edit-button:hover,
+            .save-button {
+              display: none;
+              margin: 10px auto;
+              background-color: ${colors.highlight}
+            }
+
+            .edit-button:hover{
+              background-color: ${colors.mainButtonHover};
+            }
+
             .save-button:hover {
-              background-color: ${mainButtonHover};
+              background-color: ${colors.highlightHover}
             }
 
             .edit-button[disabled],

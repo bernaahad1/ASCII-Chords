@@ -73,3 +73,42 @@ export function renderModalAlert(message, buttonText, onButtonPress) {
     modalElement.remove();
   });
 }
+
+function createAudioPlaying(notes) {
+  for (let key of Object.keys(notes)) {
+    let note = new Audio();
+    let src = document.createElement("source");
+    src.type = "audio/mpeg";
+    src.src = "../assets/" + key + ".mp3";
+    note.appendChild(src);
+    notes[key] = note;
+  }
+
+  return notes;
+}
+
+const notes = {
+  A: undefined,
+  "A%23": undefined,
+  Ab: undefined,
+  B: undefined,
+  "B%23": undefined,
+  Bb: undefined,
+  C: undefined,
+  "C%23": undefined,
+  Cb: undefined,
+  D: undefined,
+  "D%23": undefined,
+  Db: undefined,
+  E: undefined,
+  "E%23": undefined,
+  Eb: undefined,
+  F: undefined,
+  "F%23": undefined,
+  Fb: undefined,
+  G: undefined,
+  "G%23": undefined,
+  Gb: undefined
+};
+
+export const AUDIOS = createAudioPlaying(notes);

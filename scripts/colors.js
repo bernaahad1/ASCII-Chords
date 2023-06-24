@@ -1,5 +1,8 @@
-export const mainButton = "teal";
-export const mainButtonHover = "#4c9e9e";
-
-export const secondaryButton = "white";
-export const white = "#fff";
+export const colors = {
+  mainButton: "teal",
+  mainButtonHover: "#4c9e9e",
+  secondaryButton: "white",
+  white: "#fff",
+  highlight: "#E51C5A",
+  highlightHover: "#e51c5abd"
+};

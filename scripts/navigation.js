@@ -2,7 +2,7 @@ import { onLogIn, onLogOut, checkSession } from "./utils.js";
 
 function getContent(fragmentId, callback) {
   let pages = {
-    home: "Home",
+    home: "<home-container></home-container>",
     chords: "<chord-list-component></chord-list-component>",
     createMelody: "<create-melody-component></create-melody-component>",
     import: "Imports go here",

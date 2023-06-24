@@ -1,44 +1,6 @@
 import { red_heart, empty_heart, search } from "./icons.js";
-import { mainButton, mainButtonHover } from "./colors.js";
-
-function createAudioPlaying(notes) {
-  for (let key of Object.keys(notes)) {
-    let note = new Audio();
-    let src = document.createElement("source");
-    src.type = "audio/mpeg";
-    src.src = "../assets/" + key + ".mp3";
-    note.appendChild(src);
-    notes[key] = note;
-  }
-
-  return notes;
-}
-
-const notes = {
-  A: undefined,
-  "A%23": undefined,
-  Ab: undefined,
-  B: undefined,
-  "B%23": undefined,
-  Bb: undefined,
-  C: undefined,
-  "C%23": undefined,
-  Cb: undefined,
-  D: undefined,
-  "D%23": undefined,
-  Db: undefined,
-  E: undefined,
-  "E%23": undefined,
-  Eb: undefined,
-  F: undefined,
-  "F%23": undefined,
-  Fb: undefined,
-  G: undefined,
-  "G%23": undefined,
-  Gb: undefined
-};
-
-export const AUDIOS = createAudioPlaying(notes);
+import { colors } from "./colors.js";
+import { AUDIOS } from "./utils.js";
 
 function createChordListTemplate() {
   const templateString = `
@@ -91,7 +53,7 @@ function createChordListTemplate() {
     button {
       padding: 10px 20px;
       font-size: 16px;
-      background-color: ${mainButton};
+      background-color: ${colors.mainButton};
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -100,7 +62,7 @@ function createChordListTemplate() {
     }
     
     button:hover {
-      background-color: ${mainButtonHover};
+      background-color: ${colors.mainButtonHover};
     }
     
     .export-csv {
@@ -154,6 +116,7 @@ function createChordListTemplate() {
       font-size: 50px;
       text-align: center;
       margin-bottom: 10%;
+      margin-top: 10%;
     }
 
     .search-container {
@@ -172,7 +135,7 @@ function createChordListTemplate() {
     .search-container button {
       padding: 10px 20px;
       font-size: 16px;
-      background-color: ${mainButton};
+      background-color: ${colors.mainButton};
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -181,7 +144,7 @@ function createChordListTemplate() {
     }
 
     .search-container button:hover {
-      background-color: ${mainButtonHover};
+      background-color: ${colors.mainButtonHover};
     }
     </style>
 

@@ -1,4 +1,5 @@
 import { checkSession } from "./utils.js";
+import { colors } from "./colors.js";
 
 function createRegistrationTemplate() {
   const templateString = `
@@ -54,7 +55,8 @@ function createRegistrationTemplate() {
     h1 {
       font-size: 34px;
       align-self: center;
-      padding-bottom: 10px;
+      margin-bottom: 10%;
+      margin-top: 10%;
       font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
         "Lucida Sans", Arial, sans-serif;
       font-weight: 200;
@@ -76,25 +78,21 @@ function createRegistrationTemplate() {
     }
 
     #register-btn {
-      width: 100%;
-      padding: 10px 5px;
-      background: #82aed4;
-      border: none;
-      margin-top: 20px;
-      border-radius: 10px;
-      font-size: 26px;
-      color: white;
+    width: 100%; 
+    margin-top: 20px;
+    font-size: 26px;
+    padding: 10px 20px;
+    background-color: ${colors.mainButton};
+    color: ${colors.white};
+    border: none;
+    border-radius: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+
     }
 
-    #register-btn {
-      width: 100%;
-      padding: 10px 5px;
-      background: #82aed4;
-      border: none;
-      margin-top: 20px;
-      border-radius: 10px;
-      font-size: 26px;
-      color: white;
+    #register-btn:hover {
+      background-color: ${colors.mainButtonHover};
     }
 
     #register-btn:active {
