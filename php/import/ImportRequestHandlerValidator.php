@@ -7,5 +7,4 @@ abstract class ImportRequestHandlerValidator {
             ExceptionObject::setResponseCode(400, 'The file content cannot be null, empty or blank!');
         }
     }
-
 }

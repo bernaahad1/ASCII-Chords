@@ -1,5 +1,5 @@
 import { colors } from "./colors.js";
-import { handleException, renderModalAlert } from "./utils.js";
+import { handleException } from "./utils.js";
 
 function createImportTemplate() {
   const templateString = `
@@ -86,7 +86,7 @@ class ImportComponent extends HTMLElement {
 
     fileReader.onload = (event) => {
       let fileAsText = event.target.result;
-
+      console.log("try");
       fileAsText = fileAsText.replaceAll("#", "%23");
 
       let fileExtension = file.name.split(".").pop();
@@ -102,11 +102,21 @@ class ImportComponent extends HTMLElement {
       }
 
       if (fileExtension.toLowerCase() === "json") {
+        if (!fileAsText) {
+            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        }
+        
         this.importJSON(fileAsText);
         return;
       }
     };
   };
+
+  recreateButton(el) {
+    var newEl = el.cloneNode(false);
+    while (el.hasChildNodes()) newEl.appendChild(el.firstChild);
+    el.parentNode.replaceChild(newEl, el);
+  }
 
   importTXT = (fileAsText) => {
     let fileLines = fileAsText.split(/[\r\n]+/g);
@@ -116,6 +126,11 @@ class ImportComponent extends HTMLElement {
         "../php/import/ImportEndpoints.php?txt_file_path=" + fileLines
       );
     };
+
+    const importButton = this.#_shadowRoot.getElementById("import");
+    this.recreateButton(importButton);
+
+    // importButton.replaceWith(importButton.clone());
 
     this.#_shadowRoot
       .getElementById("import")
@@ -132,6 +147,10 @@ class ImportComponent extends HTMLElement {
         "../php/import/ImportEndpoints.php?csv_file_path=" + fileLines
       );
     };
+
+    const importButton = this.#_shadowRoot.getElementById("import");
+
+    this.recreateButton(importButton);
 
     this.#_shadowRoot
       .getElementById("import")
@@ -155,6 +174,11 @@ class ImportComponent extends HTMLElement {
           JSON.stringify(jsonAsArray)
       );
     };
+
+    const importButton = this.#_shadowRoot.getElementById("import");
+
+    this.recreateButton(importButton);
+
     this.#_shadowRoot
       .getElementById("import")
       .addEventListener("click", postFunction);
@@ -168,9 +192,13 @@ class ImportComponent extends HTMLElement {
       }
     })
       .then((res) => {
+        console.log("res", res);
         if (res.status === 200) {
           this.#_shadowRoot.querySelector("form").reset();
           this.#_shadowRoot.querySelector("input").value = "";
+          const importButton = this.#_shadowRoot.getElementById("import");
+
+          this.recreateButton(importButton);
 
           return;
         }
@@ -187,6 +215,7 @@ class ImportComponent extends HTMLElement {
         ).innerHTML = `${red_heart}`;
       })
       .catch((message) => {
+        console.log("aloo");
         handleException(message);
       });
   };
