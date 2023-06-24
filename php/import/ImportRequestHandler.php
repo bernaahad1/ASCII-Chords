@@ -48,11 +48,8 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
 
     private static function loadDataFromTxt($file_content) : void {
         $file_content = str_replace('%23', '#', $file_content);
-        echo($file_content);
         $file_content =  explode(',', $file_content);
-        echo($file_content);
         foreach ($file_content as $line) {
-            echo($line);
             $line = self::prepareData($line);
             self::saveChord($line[0], $line[1]);
         }
@@ -60,11 +57,9 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
 
     private static function loadDataFromCsv($file_content) : void {
         $file_content = str_replace('%23', '#', $file_content);
-        $file_content = trim($file_content, ',');
-        echo($file_content);    
+        $file_content = trim($file_content, ','); 
         $file_content =  explode(',', $file_content);
         foreach ($file_content as $line) {
-            echo($line);
             $line = self::prepareDataCSV($line);
             self::saveChord($line[0], $line[1]);
         }
