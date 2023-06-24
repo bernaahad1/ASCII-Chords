@@ -102,6 +102,10 @@ class ImportComponent extends HTMLElement {
       }
 
       if (fileExtension.toLowerCase() === "json") {
+        if (!fileAsText) {
+            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        }
+        
         this.importJSON(fileAsText);
         return;
       }
