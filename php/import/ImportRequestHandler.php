@@ -63,13 +63,11 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
         }
     }
 
-    private static function loadDataFromJson($filePath) : void {
-        $jsonFile = file_get_contents($filePath);
+    private static function loadDataFromJson($file_content) : void {
+        $jsonData = json_decode($file_content, true);
 
-        $jsonData = json_decode($jsonFile, true);
-        
-        for ($i = 0; $i < count($jsonData['chords']); $i++) {
-            self::saveChord($jsonData['chords'][$i]['name'], $jsonData['chords'][$i]['description']);
+        foreach ($jsonData as $line) {
+            self::saveChord($line['name'], $line['description']);
         }
     }
 

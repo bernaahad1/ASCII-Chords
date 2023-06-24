@@ -9,33 +9,49 @@ async function handleFileSelect(event) {
 
     fileReader.onload = (event) => {
     let fileAsText = event.target.result;
-
-    // fileAsText = fileAsText.replace(',', ';');
-    const string_after_splitting = fileAsText.split(',');
-    const fileAsText1 = string_after_splitting.join(';')
-
-    let fileLines = fileAsText1.split(/[\r\n]+/g);     
-
-
-        console.log(fileAsText1);
-        console.log(fileLines);
+    console.log(fileAsText);
 
     let fileExtension = file.name.split('.').pop();
 
+
+
     if (fileExtension.toLowerCase() === 'txt') {
+        let fileLines = fileAsText.split(/[\r\n]+/g);     
+
         const importTxt = () => {
             postFile('../php/import/ImportEndpoints.php?txt_file_path=' + fileLines);
         }
         document.getElementById("import").addEventListener('click', importTxt);
     } else
         if (fileExtension.toLowerCase() === 'csv') {
+            const string_after_splitting = fileAsText.split(',');
+            const fileAsText1 = string_after_splitting.join(';');
+            let fileLines = fileAsText1.split(/[\r\n]+/g);     
+            
             const importCSV = () => {
                 postFile('../php/import/ImportEndpoints.php?csv_file_path=' + fileLines);
             }
             document.getElementById("import").addEventListener('click', importCSV); 
         } else {
+
+            let temp = "";
+            let jsonAsArray = [];
+            for (let i = 0; i < fileAsText.length; i++)
+            {
+                temp += fileAsText[i];
+                if (fileAsText[i] == "}")
+                {
+                    jsonAsArray.push(JSON.parse(temp));
+                    temp = "";
+                }
+            }
+        
+            console.log(jsonAsArray);
+            console.log(11);
+    
+            
             const importJSON = () => {
-                postFile('../php/import/ImportEndpoints.php?json_file_path=' + fileLines);
+                postFile('../php/import/ImportEndpoints.php?json_file_path=' + JSON.stringify(jsonAsArray));
             }
             document.getElementById("import").addEventListener('click', importJSON);
         }
