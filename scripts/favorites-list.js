@@ -29,8 +29,9 @@ function createFavoritesListTemplate() {
       border: 2px solid #ccc;
       padding: 20px;
       border-radius: 5px;
-      margin-bottom: 30px;
+      margin: 0 10px 30px 10px;
       position: relative;
+      flex-grow: 1;
     }
     
     .chord-buttons {
