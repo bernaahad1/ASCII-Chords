@@ -6,9 +6,11 @@ class ExceptionObject {
     
         if (version_compare(phpversion(), '5.4', '>') && is_null($reason)) {
             http_response_code($code);
+            exit();
         }
         else {
             header(trim("HTTP/1.0 $code $reason"));
+            exit();
         }   
     }
 }
