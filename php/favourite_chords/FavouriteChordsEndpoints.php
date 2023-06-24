@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_SESSION['user_id']) && isset(
 }
 
 if ($response == null) {
-    ExceptionObject::setResponseCode(401, "There aren't any favourite chords!");
+    ExceptionObject::setResponseCode(204, "There aren't any favourite chords!");
 }
 
 echo json_encode($response, JSON_UNESCAPED_UNICODE);
