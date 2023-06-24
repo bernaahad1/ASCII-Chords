@@ -112,3 +112,23 @@ const notes = {
 };
 
 export const AUDIOS = createAudioPlaying(notes);
+
+export const handleException = (error) => {
+  let message = "";
+  let callBack = () => {};
+  let buttonText = "OK";
+
+  console.log(error);
+
+  switch (error.status) {
+    case 401: {
+      callBack = () => {
+        location.hash = "#login";
+      };
+
+      message = error.statusText;
+    }
+  }
+
+  renderModalAlert(message, buttonText, callBack);
+};

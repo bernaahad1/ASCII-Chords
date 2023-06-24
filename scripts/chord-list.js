@@ -1,6 +1,7 @@
 import { red_heart, empty_heart, search } from "./icons.js";
 import { colors } from "./colors.js";
 import { AUDIOS } from "./utils.js";
+import { handleException } from "./utils.js";
 
 function createChordListTemplate() {
   const templateString = `
@@ -305,12 +306,16 @@ class ChordList extends HTMLElement {
           return;
         }
 
-        throw new Error("Error while fetching chords");
+        throw res;
       })
       .then(() => {
-        FavChordsTemp = this.chords;
+        this.#_shadowRoot.getElementById(
+          `heart-button-${chord.id}`
+        ).innerHTML = `${red_heart}`;
       })
-      .catch((err) => console.log(err));
+      .catch((message) => {
+        handleException(message);
+      });
   };
 
   unfavoriteChord = (id) => {
@@ -337,12 +342,16 @@ class ChordList extends HTMLElement {
           return;
         }
 
-        throw new Error("Error while fetching chords");
+        throw res;
       })
       .then(() => {
-        FavChordsTemp = this.chords;
+        this.#_shadowRoot.getElementById(
+          `heart-button-${chord.id}`
+        ).innerHTML = `${empty_heart}`;
       })
-      .catch((err) => console.log(err));
+      .catch((message) => {
+        handleException(message);
+      });
   };
 
   addFavoriteClickListener = (chord) => {
@@ -352,15 +361,8 @@ class ChordList extends HTMLElement {
         event.preventDefault();
 
         if (this.chords.find((obj) => obj.id === chord.id)?.favorite) {
-          this.#_shadowRoot.getElementById(
-            `heart-button-${chord.id}`
-          ).innerHTML = `${empty_heart}`;
           this.unfavoriteChord(chord.id);
         } else {
-          this.#_shadowRoot.getElementById(
-            `heart-button-${chord.id}`
-          ).innerHTML = `${red_heart}`;
-
           this.favoriteChord(chord.id);
         }
       });

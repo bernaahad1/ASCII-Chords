@@ -1,6 +1,6 @@
-import { FavChordsTemp } from "./chord-list.js";
 import { colors } from "./colors.js";
 import { red_heart } from "./icons.js";
+import { handleException } from "./utils.js";
 
 function createFavoritesListTemplate() {
   const templateString = `
@@ -278,8 +278,7 @@ class FavoritesList extends HTMLElement {
         if (res.ok) {
           return;
         }
-
-        throw new Error("Error while fetching chords");
+        throw res;
       })
       .then((chords) => {
         if (chords) {
@@ -287,7 +286,9 @@ class FavoritesList extends HTMLElement {
           this.renderChords(chords);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((message) => {
+        handleException(message);
+      });
   }
 
   connectedCallback() {
