@@ -1,6 +1,8 @@
 <?php
-
 session_start();
+
+include_once "../user/UserRequestHandler.php";
+include_once "../user/User.php";
 
 $loginInput = json_decode(file_get_contents('php://input'), true);
 
@@ -13,12 +15,13 @@ if (isset($_SESSION['email'])) {
     $email = $loginInput['email'];
     $password = $loginInput['password'];
 
-    require_once "../user/User.php";
 
-    $user = new User(null, null, null, $loginInput['email'], $loginInput['password']);
+
+    // $user = new User(null, null, null, $loginInput['email'], $loginInput['password']);
     try {
-        $user->login();
+        UserRequestHandler::login($loginInput['email'], $loginInput['password']);
 
+        $_SESSION['user_id'] = UserRequestHandler::getUserByEmail($loginInput['email']);
         $_SESSION['email'] = $loginInput['email'];
 
         echo json_encode([

@@ -130,8 +130,6 @@ function createRegistrationTemplate() {
       <input
         type="password"
         id="password"
-        minlength="6"
-        maxlength="10"
         required
       />
       <span class="error" id="password-error"></span>

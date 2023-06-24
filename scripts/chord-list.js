@@ -281,22 +281,68 @@ class ChordList extends HTMLElement {
 
   favoriteChord = (id) => {
     const chord = this.chords.find((obj) => obj.id === id);
-    if (chord) {
-      chord.favorite = true;
+    if (!chord) {
+      return;
     }
-    // this.chords[id] = { ...this.chords[id], favorite: true };
-    // TODO here also add the fetch to the correct api when ready
-    FavChordsTemp = this.chords;
+
+    chord.favorite = true;
+
+    fetch(
+      `../php/favourite_chords/FavouriteChordsEndpoints.php?chord_id=${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    )
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+
+        if (res.ok) {
+          return;
+        }
+
+        throw new Error("Error while fetching chords");
+      })
+      .then(() => {
+        FavChordsTemp = this.chords;
+      })
+      .catch((err) => console.log(err));
   };
 
   unfavoriteChord = (id) => {
     const chord = this.chords.find((obj) => obj.id === id);
-    if (chord) {
-      chord.favorite = false;
+    if (!chord) {
+      return;
     }
-    // this.chords[id] = { ...this.chords[id], favourite: false };
-    // TODO here also add the fetch to the correct api when ready
-    FavChordsTemp = this.chords;
+
+    chord.favorite = false;
+
+    fetch("../php/favourite_chords/FavouriteChordsEndpoints.php", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ chord_id: id })
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+
+        if (res.ok) {
+          return;
+        }
+
+        throw new Error("Error while fetching chords");
+      })
+      .then(() => {
+        FavChordsTemp = this.chords;
+      })
+      .catch((err) => console.log(err));
   };
 
   addFavoriteClickListener = (chord) => {
@@ -385,7 +431,7 @@ class ChordList extends HTMLElement {
   }
 
   loadChords() {
-    fetch("../php/chords/chord_endpoints_helper.php")
+    fetch("../php/chords/ChordEndpoints.php")
       .then((res) =>
         res.ok ? res.json() : Promise.reject(new Error("Error loading chords"))
       )

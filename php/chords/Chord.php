@@ -1,60 +1,50 @@
 <?php
+include_once "../db/db_connection.php";
+include_once "ChordsValidator.php";
 
-class Chord implements JsonSerializable
-{
+class Chord extends ChordsValidator implements JsonSerializable {
     private $id;
     private $name;
     private $description;
+    private $deleted;
 
-    public function __construct($id, $name, $description)
-    {
+    public function __construct($id, $name, $description) {
+        $this->validateChordId($id);
+        $this->validateName($name);
+        $this->validateDescription($description);
+
         $this->id = $id;
         $this->name = $name;
         $this->description = $description;
+        $this->deleted = 0;
     }
 
-    public function addNewChord(): void
-    {
-        require_once "../db/db_connection.php";
+    public function getName() {
+        return $this->name;
+    }
 
-        $db = new Db();
+    public function getDescription() {
+        return $this->description;
+    }
 
-        $conn = $db->getConnection();
+    public function getDeleted() {
+        return $this->deleted;
+    }
 
-        if ($conn->$connect_error) {
-            die("Connection failed: " . $conn->$connect_error);
-        }
+    public function setName($name) {
+        self::validateName($name);
 
-        // TODO do not define deleted here
-        $insertStatement = $conn->prepare(
-            "INSERT INTO `chords` (name, description, deleted)
-             VALUES (:name, :description, :deleted)"
-        );
+        $this->name = $name;
+    }
+    
+    public function setDescription($description) {
+        self::validateDescription($description);
 
-        $insertResult = $insertStatement->execute([
-            "name" => $this->name,
-            "description" => $this->description,
-            "deleted" => 0,
-        ]);
+        $this->description = $description;
+    }
 
-        if (!$insertResult) {
-            $errorInfo = $insertStatement->errorInfo();
-            $errorMessage =
-                "There was error while saving the chord! Please try again!";
-
-            if ($errorInfo[1] == 1062) {
-                $errorMessage = "Chord with this name already exists";
-            } else {
-                if ($errorInfo[2] == 1062) {
-                    $errorMessage =
-                        "Chord with this description already exists";
-                } else {
-                    $errorMessage = "Request failed, true again later";
-                }
-            }
-
-            throw new Exception($errorMessage);
-        }
+    public function setDeleted($deleted) {
+        $this->deleted = $deleted;
     }
 
     public function jsonSerialize(): array {
@@ -65,8 +55,7 @@ class Chord implements JsonSerializable
         ];
     }
 
-    public static function fromArray(array $chordData): Chord {
+    public static function fromArray($chordData): Chord {
         return new Chord($chordData['id'], $chordData['name'], $chordData['description']);
     }
-
 }

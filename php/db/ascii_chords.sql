@@ -117,7 +117,8 @@ ALTER TABLE `favourite_chords`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`,`email`);
+  ADD UNIQUE KEY (`username`),
+  ADD UNIQUE KEY (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables

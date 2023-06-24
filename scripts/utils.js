@@ -16,7 +16,7 @@ export function checkSession() {
     .then((response) => response.json())
     .then((response) => {
       if (response.logged) {
-        console.log("chords", response.logged);
+        console.log("Has session", response.logged);
         onLogIn();
 
         if (!location.hash) {

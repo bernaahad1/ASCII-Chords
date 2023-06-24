@@ -264,19 +264,30 @@ class FavoritesList extends HTMLElement {
   }
 
   loadChords() {
-    // TODO here change it with the favorites endpoint
-    // fetch("../php/chords/chord_endpoints_helper.php")
-    //   .then((res) =>
-    //     res.ok ? res.json() : Promise.reject(new Error("Error loading chords"))
-    //   )
-    //   .then((chords) => {
-    //     this.chords = chords;
-    //     this.renderChords(chords);
-    //   })
-    //   .catch((err) => console.error(err));
-    const filtered = FavChordsTemp.filter((chord) => chord?.favorite === true);
-    this.chords = filtered;
-    this.renderChords(filtered);
+    fetch("../php/favourite_chords/FavouriteChordsEndpoints.php", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+
+        if (res.ok) {
+          return;
+        }
+
+        throw new Error("Error while fetching chords");
+      })
+      .then((chords) => {
+        if (chords) {
+          this.chords = chords;
+          this.renderChords(chords);
+        }
+      })
+      .catch((err) => console.log(err));
   }
 
   connectedCallback() {

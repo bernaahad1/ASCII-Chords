@@ -149,23 +149,23 @@ class UserProfile extends HTMLElement {
 
   fetchUserInformation() {
     // TODO Replace this with fetch users
-    const fakeFetch = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          firstName: "John",
-          lastName: "Doe",
-          email: "johndoe@example.com",
-          username: "johndoe"
-        });
-      }, 2000);
-    });
-
-    fakeFetch.then((user) => {
-      this.user = user;
-      this.removeInitialLoader();
-      this.renderUser();
-      this.setupEditButton();
-    });
+    fetch("../php/user/UserEndpoints.php", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then((response) => response.json())
+      .then((user) => {
+        console.log(user);
+        this.user = user;
+        this.removeInitialLoader();
+        this.renderUser();
+        this.setupEditButton();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   removeInitialLoader() {
@@ -197,25 +197,30 @@ class UserProfile extends HTMLElement {
 
     loader.classList.remove("hidden");
 
-    // TODO Replace this with edit user method fetch
-    const fakeFetch = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const errorOccurred = Math.random() < 0.5; // Simulate an error with a 50% chance
+    const editedInfo = {
+      username: updatedUsername,
+      first_name: updatedFirstName,
+      last_name: updatedLastName,
+      email: updatedEmail
+    };
 
-        if (errorOccurred) {
-          reject("Error occurred while saving user information.");
-        } else {
-          resolve();
-        }
-      }, 2000);
-    });
-
-    fakeFetch
-      .then(() => {
-        this.user.firstName = updatedFirstName;
-        this.user.lastName = updatedLastName;
-        this.user.email = updatedEmail;
-        this.user.username = updatedUsername;
+    fetch("../php/user/UserEndpoints.php", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(editedInfo)
+    })
+      .then((response) => response.json())
+      .then((user) => {
+        this.user = user;
+        // this.user.lastName = updatedLastName;
+        // this.user.email = updatedEmail;
+        // this.user.username = updatedUsername;
+        // this.user.firstName = updatedFirstName;
+        // this.user.lastName = updatedLastName;
+        // this.user.email = updatedEmail;
+        // this.user.username = updatedUsername;
 
         firstNameInput.disabled = true;
         lastNameInput.disabled = true;
@@ -245,18 +250,18 @@ class UserProfile extends HTMLElement {
   }
 
   renderUser() {
-    const { firstName, lastName, email, username } = this.user || {};
+    const { first_name, last_name, email, username } = this.user || {};
 
     this.#_shadowRoot.innerHTML += `
     <div class="profile-container">
       <h1>Profile</h1>
       <div class="field">
         <label>First Name:</label>
-        <input type="text" class="first-name" value="${firstName}" disabled>
+        <input type="text" class="first-name" value="${first_name}" disabled>
       </div>
       <div class="field">
         <label>Last Name:</label>
-        <input type="text" class="last-name" value="${lastName}" disabled>
+        <input type="text" class="last-name" value="${last_name}" disabled>
       </div>
       <div class="field">
         <label>Email:</label>
