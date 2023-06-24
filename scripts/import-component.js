@@ -85,7 +85,7 @@ function createImportTemplate() {
       <ol>
     </div>
     <form>
-      <input type="file" id="fileInput" accept=".csv, .json, .txt*" >
+      <input type="file" id="fileInput" accept=".csv, .json, .txt" >
       <button type="button" id="import">Import</button>
     </form>
     </div>
@@ -108,6 +108,8 @@ class ImportComponent extends HTMLElement {
   }
 
   handleFileSelect = async (event) => {
+    event.preventDefault();
+
     let file = event.target.files[0];
 
     let fileReader = new FileReader();
@@ -254,6 +256,7 @@ class ImportComponent extends HTMLElement {
         ).innerHTML = `${red_heart}`;
       })
       .catch((message) => {
+        console.log("catch");
         handleException(message);
       });
   };
