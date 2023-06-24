@@ -19,6 +19,7 @@ function createModalTemplate() {
         justify-content: center;
         align-items: center;
         background-color: rgba(0, 0, 0, 0.5);
+        z-index: 345;
       }
 
       .modal-content {

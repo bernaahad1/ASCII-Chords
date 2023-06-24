@@ -1,4 +1,4 @@
-import { checkSession } from "./utils.js";
+import { onRegistration } from "./utils.js";
 import { colors } from "./colors.js";
 import { handleException } from "./utils.js";
 
@@ -203,8 +203,7 @@ class RegistrationForm extends HTMLElement {
       .then((res) => {
         if (res.success) {
           registrationForm.reset();
-          location.hash = "#login";
-          checkSession();
+          onRegistration();
         }
       })
       .catch((err) => {
