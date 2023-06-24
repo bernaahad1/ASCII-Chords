@@ -26,7 +26,7 @@ function createImportTemplate() {
       h1{
         font-size: 50px;
         text-align: center;
-        margin-bottom: 10%;
+        margin-bottom: 2%;
         margin-top: 10%;
       }
 
@@ -45,10 +45,45 @@ function createImportTemplate() {
         background-color: ${colors.mainButtonHover};
       }
 
+      #info {
+        text-align: left;
+        margin-bottom: 30px;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0px 0px 2px 0px black;
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+      }
+
+      li {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
     </style>
 
-    <h1>Chords</h1>
+    <h1>Import</h1>
     <div class="import">
+    <div id="info">
+      <p> You have three options for import: </p>
+      <ol>
+        <li> <b> CSV file with one or more lines where each line should have the following structure: </b>
+          <p> [name], [description] </p>
+          <p> For example: C major, C-E-G </p> 
+        </li>
+        <li> <b> ASCII file with extension .txt with one or more lines where each line should have the following structure: </b>
+          <p> [name] | [description] </p> 
+          <p> For example: C major | C-E-G </p>
+        </li>
+        <li> <b> JSON file file with one or more records where each record should have the following structure: </b>
+          <p> {“name”: “[name]”, “description”: “[description]”}. </p>  
+          <p> For example: {“name”: “C major”, “description”: “C-E-G"} </p>
+        </li>
+      <ol>
+    </div>
     <form>
       <input type="file" id="fileInput" accept=".csv, .json, .txt*" >
       <button type="button" id="import">Import</button>

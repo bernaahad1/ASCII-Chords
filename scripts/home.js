@@ -140,8 +140,8 @@ function createHomeTemplate() {
             />
             <h2>Learn Chords</h2>
             <p>
-              Explore a wide variety of chords and their finger positions in
-              ASCII representation.
+              Explore a wide variety of chords and learn their representation
+              on the staff.
             </p>
           </div>
 

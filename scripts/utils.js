@@ -5,6 +5,13 @@ export function onLogIn() {
   document.getElementById("authentication-nav").style.display = "none";
 }
 
+export function onRegistration() {
+  location.hash = "#login";
+  document.getElementById("logout-nav").style.display =
+    document.getElementById("authentication-nav").style.display;
+  document.getElementById("authentication-nav").style.display = "none";
+}
+
 export function onLogOut() {
   document.getElementById("authentication-nav").style.display =
     document.getElementById("logout-nav").style.display;
