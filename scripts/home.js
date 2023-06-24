@@ -87,7 +87,7 @@ function createHomeTemplate() {
         max-width: 300px;
         margin-bottom: 30px;
         background-color: #fff;
-        padding: 0 20px;
+        padding: 20px;
         box-shadow: 0px 0px 2px 0px black;
         display: flex;
         flex-direction: column;
