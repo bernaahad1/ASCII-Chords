@@ -1,5 +1,5 @@
 import { colors } from "./colors.js";
-import { handleException } from "./utils.js";
+import { handleException, renderModalAlert } from "./utils.js";
 
 function createImportTemplate() {
   const templateString = `
@@ -129,6 +129,7 @@ class ImportComponent extends HTMLElement {
 
       if (fileExtension.toLowerCase() === "txt") {
         if (!fileAsText) {
+          renderModalAlert("Empty file!", "Continue", () => {});
           return;
         }
 
@@ -138,6 +139,7 @@ class ImportComponent extends HTMLElement {
 
       if (fileExtension.toLowerCase() === "csv") {
         if (!fileAsText) {
+          renderModalAlert("Empty file!", "Continue", () => {});
           return;
         }
 
@@ -147,6 +149,7 @@ class ImportComponent extends HTMLElement {
 
       if (fileExtension.toLowerCase() === "json") {
         if (!fileAsText) {
+          renderModalAlert("Empty file!", "Continue", () => {});
           return;
         }
 
@@ -235,12 +238,6 @@ class ImportComponent extends HTMLElement {
     })
       .then((res) => {
         if (res.status === 200) {
-          this.#_shadowRoot.querySelector("form").reset();
-          this.#_shadowRoot.querySelector("input").value = "";
-          const importButton = this.#_shadowRoot.getElementById("import");
-
-          this.recreateButton(importButton);
-
           return;
         }
 
@@ -249,11 +246,6 @@ class ImportComponent extends HTMLElement {
         }
 
         throw res;
-      })
-      .then(() => {
-        this.#_shadowRoot.getElementById(
-          `heart-button-${chord.id}`
-        ).innerHTML = `${red_heart}`;
       })
       .catch((message) => {
         console.log("catch");
