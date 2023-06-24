@@ -211,7 +211,6 @@ class CreateMelody extends HTMLElement {
         </div>
         <div class="right-icon-buttons">
         <button id="listen-${chord.id}" class="listen speaker-icon"><img src="../assets/images/speaker-icon.svg"/></button>
-        <button id="heart-button-${chord.id}" class="heart-button">${empty_heart}</button>
         </div>
         </div>
         <button id="button-to-melody-${chord.id}" class="heart-button">Add to melody</button>
@@ -227,47 +226,6 @@ class CreateMelody extends HTMLElement {
         AUDIOS[chord_notes[i]].play();
       }
     });
-  };
-
-  favoriteChord = (id) => {
-    const chord = this.chords.find((obj) => obj.id === id);
-    if (chord) {
-      chord.favorite = true;
-    }
-    // this.chords[id] = { ...this.chords[id], favorite: true };
-    // TODO here also add the fetch to the correct api when ready
-    FavChordsTemp = this.chords;
-  };
-
-  unfavoriteChord = (id) => {
-    const chord = this.chords.find((obj) => obj.id === id);
-    if (chord) {
-      chord.favorite = false;
-    }
-    // this.chords[id] = { ...this.chords[id], favourite: false };
-    // TODO here also add the fetch to the correct api when ready
-    FavChordsTemp = this.chords;
-  };
-
-  addFavoriteClickListener = (chord) => {
-    this.#_shadowRoot
-      .getElementById(`heart-button-${chord.id}`)
-      .addEventListener("click", (event) => {
-        event.preventDefault();
-
-        if (this.chords.find((obj) => obj.id === chord.id)?.favorite) {
-          this.#_shadowRoot.getElementById(
-            `heart-button-${chord.id}`
-          ).innerHTML = `${empty_heart}`;
-          this.unfavoriteChord(chord.id);
-        } else {
-          this.#_shadowRoot.getElementById(
-            `heart-button-${chord.id}`
-          ).innerHTML = `${red_heart}`;
-
-          this.favoriteChord(chord.id);
-        }
-      });
   };
 
   addToMelody = (chord) => {
@@ -313,12 +271,18 @@ class CreateMelody extends HTMLElement {
     this.#_shadowRoot
       .getElementById("export-melody-csv")
       .addEventListener("click", () => {
-
-        if (this.melody.length == 0 || this.melody.every(element => element === null)) {
-          renderModalAlert("Please include chords in the melody!","Continue",()=>{})
+        if (
+          this.melody.length == 0 ||
+          this.melody.every((element) => element === null)
+        ) {
+          renderModalAlert(
+            "Please include chords in the melody!",
+            "Continue",
+            () => {}
+          );
           return;
         }
-        
+
         let csvExportElement = document.createElement("a");
 
         let InfoForExport = "";
@@ -349,9 +313,15 @@ class CreateMelody extends HTMLElement {
     this.#_shadowRoot
       .getElementById("export-melody-ascii")
       .addEventListener("click", () => {
-        
-        if (this.melody.length == 0 || this.melody.every(element => element === null)) {
-          renderModalAlert("Please include chords in the melody!","Continue",()=>{})
+        if (
+          this.melody.length == 0 ||
+          this.melody.every((element) => element === null)
+        ) {
+          renderModalAlert(
+            "Please include chords in the melody!",
+            "Continue",
+            () => {}
+          );
           return;
         }
 
@@ -385,9 +355,15 @@ class CreateMelody extends HTMLElement {
     this.#_shadowRoot
       .getElementById("export-melody-json")
       .addEventListener("click", () => {
-
-        if (this.melody.length == 0 || this.melody.every(element => element === null)) {
-          renderModalAlert("Please include chords in the melody!","Continue",()=>{})
+        if (
+          this.melody.length == 0 ||
+          this.melody.every((element) => element === null)
+        ) {
+          renderModalAlert(
+            "Please include chords in the melody!",
+            "Continue",
+            () => {}
+          );
           return;
         }
 
@@ -448,16 +424,7 @@ class CreateMelody extends HTMLElement {
 
       createMelody.appendChild(chordElement);
 
-      this.#_shadowRoot.getElementById(
-        `heart-button-${chord.id}`
-      ).style.backgroundColor = this.chords.find((obj) => obj.id === chord.id)
-        ?.favorite
-        ? "red"
-        : "transparent";
-
       this.playChords(chord, `listen-${chord.id}`);
-
-      this.addFavoriteClickListener(chord);
 
       this.#_shadowRoot
         .getElementById("play_melody")

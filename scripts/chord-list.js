@@ -217,12 +217,22 @@ class ChordList extends HTMLElement {
           <h2 class="chord-name">${chord.name} - ${chord.description}</h2>
         <chord-image notes="${chord.description}"></chord-image>    
         <div class="right-icon-buttons">
-        <button id="listen-${chord.id}" class="listen speaker-icon"><img src="../assets/images/speaker-icon.svg"/></button>
-        <button id="heart-button-${chord.id}" class="heart-button">${empty_heart}</button>
+        <button id="listen-${
+          chord.id
+        }" class="listen speaker-icon"><img src="../assets/images/speaker-icon.svg"/></button>
+        <button id="heart-button-${chord.id}" class="heart-button">${
+      chord.is_favourite ? red_heart : empty_heart
+    }</button>
         </div>
-        <button id="export-csv-${chord.id}" class="export-csv">Export as CSV</button>
-        <button id="export-ascii-${chord.id}" class="export-ascii">Export as ASCII</button>
-        <button id="button-json-${chord.id}" class="export-json">Export as JSON</button>`;
+        <button id="export-csv-${
+          chord.id
+        }" class="export-csv">Export as CSV</button>
+        <button id="export-ascii-${
+          chord.id
+        }" class="export-ascii">Export as ASCII</button>
+        <button id="button-json-${
+          chord.id
+        }" class="export-json">Export as JSON</button>`;
   };
 
   playChords = (chord) => {
@@ -286,7 +296,7 @@ class ChordList extends HTMLElement {
       return;
     }
 
-    chord.favorite = true;
+    chord.is_favourite = true;
 
     fetch(
       `../php/favourite_chords/FavouriteChordsEndpoints.php?chord_id=${id}`,
@@ -324,15 +334,17 @@ class ChordList extends HTMLElement {
       return;
     }
 
-    chord.favorite = false;
+    chord.is_favourite = false;
 
-    fetch("../php/favourite_chords/FavouriteChordsEndpoints.php", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ chord_id: id })
-    })
+    fetch(
+      `../php/favourite_chords/FavouriteChordsEndpoints.php?chord_id=${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    )
       .then((res) => {
         if (res.status === 200) {
           return res.json();
@@ -360,7 +372,7 @@ class ChordList extends HTMLElement {
       .addEventListener("click", (event) => {
         event.preventDefault();
 
-        if (this.chords.find((obj) => obj.id === chord.id)?.favorite) {
+        if (this.chords.find((obj) => obj.id === chord.id)?.is_favourite) {
           this.unfavoriteChord(chord.id);
         } else {
           this.favoriteChord(chord.id);
@@ -415,13 +427,6 @@ class ChordList extends HTMLElement {
       chordElement.innerHTML = this.getChordElement(chord);
 
       chordList.appendChild(chordElement);
-
-      this.#_shadowRoot.getElementById(
-        `heart-button-${chord.id}`
-      ).style.backgroundColor = this.chords.find((obj) => obj.id === chord.id)
-        ?.favorite
-        ? "red"
-        : "transparent";
 
       this.playChords(chord);
       this.exportChordToCSV(chord);
