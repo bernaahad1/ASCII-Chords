@@ -5,6 +5,7 @@ include_once "../chords/ChordRequestHandler.php";
 
 class ImportRequestHandler extends ImportRequestHandlerValidator {
     public static function getAllDataFromCSV($file_content) {
+        self::validateFileContent($file_content);
         try {
             self::loadDataFromCsv($file_content);
             return ['success' => true];
@@ -18,6 +19,7 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
     }
 
     public static function getAllDataFromTXT($file_content) {
+        self::validateFileContent($file_content);
         try {
             self::loadDataFromTxt($file_content);
             return ['success' => true];
@@ -31,6 +33,7 @@ class ImportRequestHandler extends ImportRequestHandlerValidator {
     }
 
     public static function getAllDataFromJSON($file_content) {
+        self::validateFileContent($file_content);
         try {
             self::loadDataFromJson($file_content);           
             return ['success' => true];
