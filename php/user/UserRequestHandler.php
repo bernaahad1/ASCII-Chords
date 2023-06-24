@@ -85,7 +85,6 @@ class UserRequestHandler extends UserValidator {
 
     public static function login($email, $password): void {
         self::validateEmail($email);
-        self::validatePassword($password);
 
         $db = new Db();
 
