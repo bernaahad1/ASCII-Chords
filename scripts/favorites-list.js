@@ -58,10 +58,6 @@ function createFavoritesListTemplate() {
       cursor: pointer;
     }
     
-    button:hover {
-      background-color: ${colors.mainButtonHover};
-    }
-    
     .export-csv {
       background-color: #2196f3;
     }
@@ -110,6 +106,14 @@ function createFavoritesListTemplate() {
       margin-bottom: 10%;
       margin-top: 10%;
     }
+
+    .chord button{
+      margin: 5px;
+    }
+
+    .chord button:hover{
+      opacity: 0.8;
+    }
     </style>
 
     <h1>Favorite Chords</h1>
@@ -142,7 +146,8 @@ class FavoritesList extends HTMLElement {
         <button id="heart-button-${chord.id}" class="heart-button">${red_heart}</button>
         </div>
         <button id="export-csv-${chord.id}" class="export-csv">Export as CSV</button>
-        <button id="export-ascii-${chord.id}" class="export-ascii">Export as ASCII</button>`;
+        <button id="export-ascii-${chord.id}" class="export-ascii">Export as ASCII</button>
+        <button id="button-json-${chord.id}" class="export-json">Export as JSON</button>`;
   };
 
   playChords = (chord) => {
@@ -176,6 +181,30 @@ class FavoritesList extends HTMLElement {
         snd1.play();
         snd2.play();
         snd3.play();
+      });
+  };
+
+  exportChordToJSON = (chord) => {
+    this.#_shadowRoot
+      .getElementById("button-json-" + chord.id)
+      .addEventListener("click", () => {
+        let JSONExportElement = document.createElement("a");
+        JSONExportElement.setAttribute(
+          "href",
+          "data:text/json;charset=utf-8," +
+            encodeURIComponent(
+              JSON.stringify({
+                name: chord.name,
+                description: chord.description
+              })
+            )
+        );
+        JSONExportElement.setAttribute("download", chord.name + ".json");
+
+        this.#_shadowRoot.appendChild(JSONExportElement);
+
+        JSONExportElement.click();
+        this.#_shadowRoot.removeChild(JSONExportElement);
       });
   };
 
@@ -281,6 +310,8 @@ class FavoritesList extends HTMLElement {
       this.playChords(chord);
       this.exportChordToCSV(chord);
       this.exportChordToASCII(chord);
+      this.exportChordToJSON(chord);
+
       this.addFavoriteClickListener(chord);
     }
   }

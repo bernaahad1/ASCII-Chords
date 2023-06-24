@@ -207,7 +207,16 @@ class UserProfile extends HTMLElement {
       },
       body: JSON.stringify(editedInfo)
     })
-      .then((response) => response.json())
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+
+        if (res.ok) {
+          return;
+        }
+        throw res.statusText;
+      })
       .then((user) => {
         this.user = user;
         saveButton.style.display = "none";

@@ -62,9 +62,6 @@ function createChordListTemplate() {
       cursor: pointer;
     }
     
-    button:hover {
-      background-color: ${colors.mainButtonHover};
-    }
     
     .export-csv {
       background-color: #2196f3;
@@ -144,8 +141,16 @@ function createChordListTemplate() {
       cursor: pointer;
     }
 
-    .search-container button:hover {
+    .export-json:hover {
       background-color: ${colors.mainButtonHover};
+    }
+
+    .chord button{
+      margin: 5px;
+    }
+
+    .chord button:hover{
+      opacity: 0.8;
     }
     </style>
 
