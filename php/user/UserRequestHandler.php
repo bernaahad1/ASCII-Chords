@@ -1,6 +1,6 @@
 <?php
 include_once "User.php";
-include_once "../exceptions/BadRequestException.php";
+include_once "../exceptions/ExceptionObject.php";
 include_once "../favourite_chords/FavouriteChordsRequestHandler.php";
 
 class UserRequestHandler extends UserValidator {

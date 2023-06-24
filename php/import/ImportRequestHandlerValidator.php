@@ -1,5 +1,5 @@
 <?php
-include_once "../exceptions/ResourceNotFoundException.php";
+include_once "../exceptions/ExceptionObject.php";
 
 abstract class ImportRequestHandlerValidator {
     protected static function validateFileContent($file_content) : void {
