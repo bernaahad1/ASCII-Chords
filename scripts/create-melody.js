@@ -1,4 +1,4 @@
-import { AUDIOS } from "./utils.js";
+import { AUDIOS, renderModalAlert } from "./utils.js";
 import { empty_heart, red_heart, play_audio, delete_audio } from "./icons.js";
 import { colors } from "./colors.js";
 
@@ -313,6 +313,12 @@ class CreateMelody extends HTMLElement {
     this.#_shadowRoot
       .getElementById("export-melody-csv")
       .addEventListener("click", () => {
+
+        if (this.melody.length == 0 || this.melody.every(element => element === null)) {
+          renderModalAlert("Please include chords in the melody!","Continue",()=>{})
+          return;
+        }
+        
         let csvExportElement = document.createElement("a");
 
         let InfoForExport = "";
@@ -343,6 +349,12 @@ class CreateMelody extends HTMLElement {
     this.#_shadowRoot
       .getElementById("export-melody-ascii")
       .addEventListener("click", () => {
+        
+        if (this.melody.length == 0 || this.melody.every(element => element === null)) {
+          renderModalAlert("Please include chords in the melody!","Continue",()=>{})
+          return;
+        }
+
         let csvExportElement = document.createElement("a");
 
         let InfoForExport = "";
@@ -373,6 +385,12 @@ class CreateMelody extends HTMLElement {
     this.#_shadowRoot
       .getElementById("export-melody-json")
       .addEventListener("click", () => {
+
+        if (this.melody.length == 0 || this.melody.every(element => element === null)) {
+          renderModalAlert("Please include chords in the melody!","Continue",()=>{})
+          return;
+        }
+
         let csvExportElement = document.createElement("a");
 
         let InfoForExport = "";
