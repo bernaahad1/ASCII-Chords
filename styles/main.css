@@ -37,7 +37,8 @@ chord-list-component,
 login-form-component,
 registration-form-component,
 favorites-list-component,
-user-profile {
+user-profile,
+import-component {
   padding: 0 10%;
   width: 100%;
 }
@@ -48,7 +49,8 @@ user-profile {
   login-form-component,
   registration-form-component,
   favorites-list-component,
-  user-profile {
+  user-profile,
+  import-component {
     padding: 0 5%;
   }
 }
