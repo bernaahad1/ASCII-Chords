@@ -118,8 +118,6 @@ export const handleException = (error) => {
   let callBack = () => {};
   let buttonText = "OK";
 
-  console.log(error);
-
   switch (error.status) {
     case 401: {
       callBack = () => {

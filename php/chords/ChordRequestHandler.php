@@ -105,7 +105,7 @@ class ChordRequestHandler extends ChordsValidator {
     
             return true;
         } catch (Exception $e) {
-            ExceptionObject::setResponseCode(409, "There was problem with saving the chord because of ".$e->getMessage()."!");
+            ExceptionObject::setResponseCode(409, "Chord already exists!");
         }
     }
 
