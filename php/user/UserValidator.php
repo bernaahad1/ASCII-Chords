@@ -45,6 +45,3 @@ abstract class UserValidator {
         }
     }
 }
-
-// Test validatePassword method
-// echo UserValidator::validatePassword("12Aaaaa3") ? 'true' : 'false';

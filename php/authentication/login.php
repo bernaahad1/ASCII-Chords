@@ -15,9 +15,6 @@ if (isset($_SESSION['email'])) {
     $email = $loginInput['email'];
     $password = $loginInput['password'];
 
-
-
-    // $user = new User(null, null, null, $loginInput['email'], $loginInput['password']);
     try {
         UserRequestHandler::login($loginInput['email'], $loginInput['password']);
 
