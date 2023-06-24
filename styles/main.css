@@ -9,12 +9,45 @@
 body {
   min-height: 100vh;
   background-color: #f1f1f1;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
 }
 
 .content {
-  margin: 0 10%;
   background-color: #f1f1f1;
-  /* box-shadow: 0 0 4px 0px #0000003d; */
-  padding-top: 10%;
-  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+#app {
+  flex-grow: 1;
+  display: flex;
+}
+
+home-container {
+  flex-grow: 1;
+  display: flex;
+}
+
+create-melody-component,
+chord-list-component,
+login-form-component,
+registration-form-component,
+favorites-list-component,
+user-profile {
+  padding: 0 10%;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  create-melody-component,
+  chord-list-component,
+  login-form-component,
+  registration-form-component,
+  favorites-list-component,
+  user-profile {
+    padding: 0 5%;
+  }
 }

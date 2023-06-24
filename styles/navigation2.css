@@ -52,7 +52,7 @@ li {
 .menu {
   display: flex;
   gap: 1em;
-  font-size: 18px;
+  font-size: 22px;
   width: 100%;
   justify-content: space-between;
 }
