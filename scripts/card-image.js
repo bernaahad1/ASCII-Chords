@@ -25,8 +25,6 @@ function createChordImageTemplate() {
       .note {
         position: absolute;
         left: 0;
-        /* z-index: 1; */
-        /* width: 20%; */
         left: 50%;
       }
       .note img {
@@ -41,18 +39,17 @@ function createChordImageTemplate() {
         top: 45%;
         left: -10%;
       }
+
       .note .sign{
         position: absolute;
         width: 30%;
         left: -40%
       }
-      
       </style>
   
-        <div class="image-container">
-          <img class="lines" src="../assets/images/lines.png" />
-          
-        </div>
+      <div class="image-container">
+        <img class="lines" src="../assets/images/lines.png" />
+      </div>
     `;
 
   const templateElement = document.createElement("template");
@@ -100,6 +97,7 @@ class ChordImage extends HTMLElement {
       this.container.innerHTML += `<div class="note" id="note-${
         this.chords[note]
       }">
+
       ${signElement ? signElement : ""}
             <img src="../assets/images/note.png" />
             <div id="note-line-${this.chords[note]}"></div>
@@ -117,7 +115,6 @@ class ChordImage extends HTMLElement {
 
       noteElement.style.width = "20%";
 
-      //Bottom
       const bottom = (this.chords[note] - 2) * 8.5;
       noteElement.style.bottom = `${bottom}%`;
     });

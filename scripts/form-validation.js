@@ -82,7 +82,6 @@ function containsNumber(str) {
 }
 
 export function displayError(errorMessage, inputName, shadowRoot) {
-  console.log(inputName, shadowRoot);
   const errorElement = shadowRoot.getElementById(inputName + "-error");
 
   if (!errorElement) {
@@ -104,6 +103,4 @@ export function clearErrors() {
     element.innerHTML = "";
     element.classList.remove("error");
   });
-
-  // successMessage.innerHTML = "";
 }

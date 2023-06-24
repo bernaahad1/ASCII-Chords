@@ -192,10 +192,6 @@ class LoginForm extends HTMLElement {
         handleException(err);
       });
   };
-
-  connectedCallback() {
-    console.log("login-form component");
-  }
 }
 
 customElements.define("login-form-component", LoginForm);

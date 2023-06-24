@@ -188,9 +188,6 @@ function createCreateMelodyTemplate() {
 
 const createMelodyTemplate = createCreateMelodyTemplate();
 
-// TODO delete this when php endpoints are ready
-export let FavChordsTemp = [];
-
 class CreateMelody extends HTMLElement {
   #_shadowRoot = null;
   chords = null;
@@ -236,7 +233,6 @@ class CreateMelody extends HTMLElement {
 
         const container = this.#_shadowRoot.getElementById("melody-info");
 
-        //new:
         const chordInMelodyDiv = document.createElement("div");
         const number = this.melody.length - 1;
         chordInMelodyDiv.setAttribute("id", "div-chord-" + number);

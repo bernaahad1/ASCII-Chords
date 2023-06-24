@@ -26,14 +26,12 @@ function loadContent() {
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
-          // document.location.reload();
           location.hash = "#chords";
-
           onLogOut();
         }
       })
-      .catch(() => {
-        console.log("Error");
+      .catch((err) => {
+        console.log(err);
         location.hash = "#chords";
       });
 

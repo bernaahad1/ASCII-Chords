@@ -230,10 +230,6 @@ class RegistrationForm extends HTMLElement {
         handleException(err);
       });
   };
-
-  connectedCallback() {
-    console.log("login-form component");
-  }
 }
 
 customElements.define("registration-form-component", RegistrationForm);

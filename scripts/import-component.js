@@ -248,7 +248,6 @@ class ImportComponent extends HTMLElement {
         throw res;
       })
       .catch((message) => {
-        console.log("catch");
         handleException(message);
       });
   };

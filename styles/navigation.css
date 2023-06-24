@@ -1,90 +1,195 @@
-.navbar {
-  overflow: hidden;
-  background-color: #333;
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  justify-content: space-between;
-  padding: 0 20%;
-  font-size: 25px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 200;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.navbar a {
-  float: left;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
+#logo {
+  width: 50px;
+  height: 50px;
+}
+
+body {
+  font-family: cursive;
+}
+
+a {
   text-decoration: none;
 }
 
-.navbar .logo {
-  margin-left: 16px;
+li {
+  list-style: none;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: teal;
+  color: #fff;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 789;
+}
+
+.nav-links {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.nav-links a {
+  color: #fff;
+}
+
+.logo {
+  font-size: 32px;
+}
+
+.menu {
+  display: flex;
+  gap: 1em;
+  font-size: 22px;
+  width: 100%;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.menu li:hover {
+  background-color: #4c9e9e;
+  border-radius: 5px;
+  transition: 0.3s ease;
+}
+
+.menu li {
+  padding: 5px 14px;
+}
+
+/* dropdown menu */
+.services {
+  position: relative;
+}
+
+.dropdown {
+  background-color: rgb(1, 139, 139);
+  position: absolute;
+  display: none;
+  border-radius: 8px;
+  left: 0;
+  top: 38px;
+}
+
+.dropdown li {
+  padding: 0.5em 1em;
+  width: 8em;
+  text-align: center;
+}
+
+.dropdown li:hover {
+  background-color: #4c9e9e;
+}
+
+.services:hover .dropdown {
+  display: block;
+}
+
+input[type="checkbox"] {
+  display: none;
+}
+
+.hamburger {
+  display: none;
+  font-size: 24px;
+  user-select: none;
 }
 
 .navbar .tabs {
-  overflow: hidden;
   justify-content: center;
 }
 
-.navbar .tabs a {
-  float: none;
-  display: inline-block;
+.tabs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-.navbar .tabs button {
-  display: none;
-  background-color: #333;
-  color: white;
-  text-align: center;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: background-color 0.3s ease;
-}
-
-.navbar .tabs button:hover {
-  background-color: #111;
+#authentication-nav {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 #logout-nav {
-  display: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-/* Responsive Styles */
-@media screen and (max-width: 1100px) {
-  .navbar .tabs {
+@media (max-width: 768px) {
+  .menu {
     display: none;
+    position: absolute;
+    background-color: teal;
+    right: 0;
+    left: 0;
+    text-align: center;
+    padding: 16px 0;
   }
 
-  .navbar .tabs.show {
-    display: flex;
-  }
-
-  .navbar .tabs button {
+  .nav-links {
+    width: auto;
     display: block;
   }
-}
-@media screen and (min-width: 1101px) {
-  .navbar .tabs {
+
+  .menu li:hover {
+    display: inline-block;
+    background-color: #4c9e9e;
+    transition: 0.3s ease;
+  }
+
+  input[type="checkbox"]:checked ~ .menu {
     display: block;
   }
 
-  .navbar .tabs.show {
-    display: flex;
+  .hamburger {
+    display: block;
   }
 
-  .navbar .icon {
-    display: none;
+  .dropdown {
+    left: 50%;
+    top: 30px;
+    transform: translateX(35%);
   }
-}
 
-.navbar.nav--fixed {
-  position: fixed;
-  top: 0;
+  .dropdown li:hover {
+    background-color: #4c9e9e;
+  }
+
+  .tabs {
+    display: block;
+  }
+
+  #authentication-nav {
+    display: block;
+  }
+
+  #logout-nav {
+    display: block;
+  }
+
+  .tabs {
+    display: block;
+  }
 }

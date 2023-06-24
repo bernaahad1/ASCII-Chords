@@ -5,9 +5,6 @@ import { handleException } from "./utils.js";
 
 function createChordListTemplate() {
   const templateString = `
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
-  
-
     <style>
     *,
     ::after,
@@ -61,7 +58,6 @@ function createChordListTemplate() {
       margin-right: 10px;
       cursor: pointer;
     }
-    
     
     .export-csv {
       background-color: #2196f3;
@@ -169,9 +165,6 @@ function createChordListTemplate() {
 }
 
 const chordListTemplate = createChordListTemplate();
-
-// TODO delete this when php endpoints are ready
-export let FavChordsTemp = [];
 
 class ChordList extends HTMLElement {
   #_shadowRoot = null;
@@ -459,7 +452,7 @@ class ChordList extends HTMLElement {
         this.renderChords(chords);
       })
       .catch((err) => {
-        console.log("alo");
+        console.log(err);
       });
   }
 

@@ -1,4 +1,5 @@
 import { colors } from "./colors.js";
+import { handleException } from "./utils.js";
 
 function createUserProfileTemplate() {
   const templateString = `
@@ -151,16 +152,24 @@ class UserProfile extends HTMLElement {
         "Content-Type": "application/json"
       }
     })
-      .then((response) => response.json())
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+
+        if (res.ok) {
+          return;
+        }
+        throw res;
+      })
       .then((user) => {
-        console.log(user);
         this.user = user;
         this.removeInitialLoader();
         this.renderUser();
         this.setupEditButton();
       })
       .catch((err) => {
-        console.log(err);
+        handleException(err);
       });
   }
 
@@ -225,8 +234,6 @@ class UserProfile extends HTMLElement {
         loader.classList.add("hidden");
 
         saveButton.disabled = false;
-
-        console.log("User information saved:", this.user);
       })
       .catch((error) => {
         errorMessage.textContent = error;
