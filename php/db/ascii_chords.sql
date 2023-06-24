@@ -102,7 +102,8 @@ CREATE TABLE `users` (
 --
 ALTER TABLE `chords`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`,`description`);
+  ADD UNIQUE KEY (`name`),
+  ADD CONSTRAINT name_description UNIQUE (`name`,`description`);
 
 --
 -- Indexes for table `favourite_chords`
