@@ -127,11 +127,19 @@ class ImportComponent extends HTMLElement {
       let fileExtension = file.name.split(".").pop();
 
       if (fileExtension.toLowerCase() === "txt") {
+        if (!fileAsText) {
+          console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        }
+        
         this.importTXT(fileAsText);
         return;
       }
 
       if (fileExtension.toLowerCase() === "csv") {
+        if (!fileAsText) {
+          console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        }
+        
         this.importCSV(fileAsText);
         return;
       }
@@ -139,7 +147,7 @@ class ImportComponent extends HTMLElement {
       if (fileExtension.toLowerCase() === "json") {
         if (!fileAsText) {
         }
-        
+
         this.importJSON(fileAsText);
         return;
       }

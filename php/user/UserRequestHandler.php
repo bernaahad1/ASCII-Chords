@@ -148,7 +148,12 @@ class UserRequestHandler extends UserValidator {
 
     private static function updateUserFields($user, $userdata) : User {
         if ($userdata["username"] != null) {
-            $user->setUsername($userdata["username"]);
+            if (self::getUserById($userdata["username"]) == null) {
+                $user->setUsername($userdata["username"]);
+            } else {
+                ExceptionObject::setResponseCode(409, "This username is already taken!");
+            }
+            
         }
 
         if ($userdata["first_name"] != null) {
@@ -160,7 +165,12 @@ class UserRequestHandler extends UserValidator {
         }
 
         if ($userdata["email"] != null) {
-            $user->setEmail($userdata["email"]);
+            if (self::getUserById($userdata["email"]) == null) {
+                $user->setEmail($userdata["email"]);
+            } else {
+                ExceptionObject::setResponseCode(409, "This email is already taken!");
+            }
+            
         }
 
         return $user;

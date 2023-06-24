@@ -1,6 +1,13 @@
 import { onRegistration } from "./utils.js";
 import { colors } from "./colors.js";
 import { handleException } from "./utils.js";
+import {
+  validateEmail,
+  validateFamilyName,
+  validateName,
+  validatePassword,
+  validateUsername
+} from "./form-validation.js";
 
 function createRegistrationTemplate() {
   const templateString = `
@@ -58,8 +65,7 @@ function createRegistrationTemplate() {
       align-self: center;
       margin-bottom: 10%;
       margin-top: 10%;
-      font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
+      font-family: Arial, sans-serif;
       font-weight: 200;
     }
 
@@ -106,18 +112,20 @@ function createRegistrationTemplate() {
 
     <label for="username">
       <p>Username</p>
-      <input type="text" id="username" minlength="3" maxlength="10" required />
+      <input type="text" id="username" minlength="3" required />
       <p class="error" id="username-error"></p>
     </label>
 
     <label for="name">
       <p>Name</p>
       <input type="text" id="name" maxlength="50" required />
+      <span class="error" id="name-error"></span>
     </label>
 
     <label for="family-name">
       <p>Family name</p>
       <input type="text" id="family-name" maxlength="50" required />
+      <span class="error" id="family-name-error"></span>
     </label>
 
     <label for="email">
@@ -182,6 +190,18 @@ class RegistrationForm extends HTMLElement {
       email: form[3].value,
       password: form[4].value
     };
+
+    if (
+      !(
+        validateUsername(loginFormInput.username, this.#_shadowRoot) &&
+        validateName(loginFormInput.first_name, this.#_shadowRoot) &&
+        validateFamilyName(loginFormInput.last_name, this.#_shadowRoot) &&
+        validateEmail(loginFormInput.email, this.#_shadowRoot) &&
+        validatePassword(loginFormInput.password, this.#_shadowRoot)
+      )
+    ) {
+      return;
+    }
 
     fetch("../php/register/register.php", {
       method: "POST",

@@ -1,16 +1,20 @@
-export function validateUsername(usernameInput) {
-  const value = usernameInput.value.trim();
+export function validateUsername(usernameInput, shadowRoot) {
+  const value = usernameInput.trim();
 
-  if (value.length < 3 || value.length > 50) {
-    displayError("Username must be between 3 and 50 characters", "username");
+  if (value.length < 3) {
+    displayError(
+      "Username must have at least 3 characters",
+      "username",
+      shadowRoot
+    );
     return false;
   }
 
   return true;
 }
 
-export function validateName(nameInput) {
-  if (value.length === 0) {
+export function validateName(nameInput, shadowRoot) {
+  if (nameInput.length === 0) {
     displayError("Name is required", "name");
     return false;
   }
@@ -18,9 +22,9 @@ export function validateName(nameInput) {
   return true;
 }
 
-export function validateFamilyName(familyNameInput) {
-  if (value.length === 0) {
-    displayError("Family name is required");
+export function validateFamilyName(familyNameInput, shadowRoot) {
+  if (familyNameInput.length === 0) {
+    displayError("Family name is required", "family-name", shadowRoot);
 
     return false;
   }
@@ -28,28 +32,30 @@ export function validateFamilyName(familyNameInput) {
   return true;
 }
 
-export function validateEmail(emailInput) {
-  if (!isValidEmail(value)) {
-    displayError("Invalid email format", "email");
+export function validateEmail(emailInput, shadowRoot) {
+  if (!isValidEmail(emailInput)) {
+    displayError("Invalid email format", "email", shadowRoot);
     return false;
   }
 
   return true;
 }
 
-export function validatePassword(passwordInput) {
-  if (value.length < 6) {
-    displayError("Password have at least 6 characters", "password");
+export function validatePassword(passwordInput, shadowRoot) {
+  if (passwordInput.length <= 6) {
+    displayError("Password have at least 6 characters", "password", shadowRoot);
     return false;
   }
+
   if (
-    !containsUpperCase(value) ||
-    !containsLowerCase(value) ||
-    !containsNumber(value)
+    !containsUpperCase(passwordInput) ||
+    !containsLowerCase(passwordInput) ||
+    !containsNumber(passwordInput)
   ) {
     displayError(
       "Password must contain at least one uppercase letter, one lowercase letter, and one number",
-      "password"
+      "password",
+      shadowRoot
     );
 
     return false;
@@ -76,8 +82,9 @@ function containsNumber(str) {
 }
 
 export function displayError(errorMessage, inputName, shadowRoot) {
+  console.log(inputName, shadowRoot);
   const errorElement = shadowRoot.getElementById(inputName + "-error");
-  console.log(errorElement, inputName);
+
   if (!errorElement) {
     return;
   }
