@@ -448,7 +448,9 @@ class ChordList extends HTMLElement {
         this.chords = chords;
         this.renderChords(chords);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.log("alo");
+      });
   }
 
   connectedCallback() {
