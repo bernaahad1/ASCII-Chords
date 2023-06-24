@@ -173,9 +173,9 @@ function createCreateMelodyTemplate() {
     <div id="melody-info"></div>
     <div id="melody-buttons">
     <button type="button" id="play_melody" class="melody-options">Play Melody</button>
-    <button type="button" id="export-melody-csv" class="melody-options">Export to CSV!</button>
-    <button type="button" id="export-melody-json" class="melody-options">Export to JSON!</button>
-    <button type="button" id="export-melody-ascii" class="melody-options">Export to ASCII!</button>
+    <button type="button" id="export-melody-csv" class="melody-options">Export as CSV</button>
+    <button type="button" id="export-melody-ascii" class="melody-options">Export as ASCII</button>
+    <button type="button" id="export-melody-json" class="melody-options">Export as JSON</button>
     </div>
     <section id="create-melody"></section>
    
