@@ -9,18 +9,21 @@ class ChordRequestHandler extends ChordsValidator {
 
         $connection = (new Db())->getConnection();
 
-        $selectStatement = $connection->prepare("SELECT DISTINCT c.id, c.name, c.description,
-        case f.user_id
-            when null then 0
-            when ? then 1 
-            else 0
-        end as is_favourite 
-    FROM `chords` c 
-    LEFT JOIN (SELECT * 
-               FROM `favourite_chords` f
-               WHERE f.deleted = 0) f 
-        ON c.id = f.chord_id
-        WHERE c.deleted = 0");
+        $selectStatement = $connection->prepare("SELECT c.id, c.name, c.description, MAX(
+            case f.user_id
+                when null then 0
+                when ? then 1 
+                else 0
+            end) as is_favourite
+    
+        FROM chords c 
+        LEFT JOIN (SELECT * 
+                   FROM favourite_chords f
+                   WHERE f.deleted = 0) f 
+            ON c.id = f.chord_id
+            WHERE c.deleted = 0
+            group by  c.name, c.description
+            order by c.id");
         $selectStatement->execute([$userId]);
 
         $chords = [];
